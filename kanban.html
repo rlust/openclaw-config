@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAL & Randy - Kanban Board</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .column {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            max-height: 600px;
+        }
+        
+        .column-header {
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .column-content {
+            padding: 12px;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 12px;
+            cursor: move;
+            transition: all 0.2s;
+            border-left: 4px solid #667eea;
+        }
+        
+        .card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #333;
+        }
+        
+        .card-date {
+            font-size: 0.85em;
+            color: #999;
+        }
+        
+        .card-delete {
+            display: none;
+            margin-top: 8px;
+            padding: 4px 8px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+        }
+        
+        .card:hover .card-delete {
+            display: block;
+        }
+        
+        .add-card-form {
+            padding: 12px;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .add-card-form input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        
+        .add-card-form button {
+            padding: 8px 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .add-card-form button:hover {
+            background: #764ba2;
+        }
+        
+        .stats {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+        
+        .stat {
+            border-left: 4px solid #667eea;
+            padding-left: 16px;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔴 HAL & Randy Kanban</h1>
+            <p>Track projects, ideas, and ways to improve our productivity</p>
+        </header>
+        
+        <div class="board" id="board"></div>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" id="total-tasks">0</div>
+                <div class="stat-label">Total Tasks</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="in-progress">0</div>
+                <div class="stat-label">In Progress</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="completed">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="ideas">0</div>
+                <div class="stat-label">Ideas</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const COLUMNS = [
+            { id: 'backlog', title: 'Backlog', color: '#667eea' },
+            { id: 'in-progress', title: 'In Progress', color: '#f0ad4e' },
+            { id: 'done', title: 'Done', color: '#5cb85c' },
+            { id: 'ideas', title: 'Ideas', color: '#5bc0de' },
+            { id: 'relationship', title: 'Relationship Builders', color: '#e74c3c' }
+        ];
+        
+        let board = {};
+        
+        // Initialize board
+        function initBoard() {
+            const saved = localStorage.getItem('hal-kanban');
+            if (saved) {
+                board = JSON.parse(saved);
+            } else {
+                COLUMNS.forEach(col => {
+                    board[col.id] = [];
+                });
+            }
+            render();
+        }
+        
+        // Save to localStorage
+        function saveBoard() {
+            localStorage.setItem('hal-kanban', JSON.stringify(board));
+            updateStats();
+        }
+        
+        // Render board
+        function render() {
+            const boardEl = document.getElementById('board');
+            boardEl.innerHTML = '';
+            
+            COLUMNS.forEach(col => {
+                const columnEl = document.createElement('div');
+                columnEl.className = 'column';
+                
+                const header = document.createElement('div');
+                header.className = 'column-header';
+                header.textContent = col.title + ` (${board[col.id].length})`;
+                
+                const content = document.createElement('div');
+                content.className = 'column-content';
+                content.id = `column-${col.id}`;
+                content.ondrop = (e) => drop(e, col.id);
+                content.ondragover = (e) => dragover(e);
+                
+                board[col.id].forEach((task, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.draggable = true;
+                    card.ondragstart = (e) => dragstart(e, col.id, idx);
+                    
+                    card.innerHTML = `
+                        <div class="card-title">${task.title}</div>
+                        <div class="card-date">${task.date}</div>
+                        <button class="card-delete" onclick="deleteCard('${col.id}', ${idx})">Delete</button>
+                    `;
+                    content.appendChild(card);
+                });
+                
+                const form = document.createElement('div');
+                form.className = 'add-card-form';
+                form.innerHTML = `
+                    <input type="text" id="input-${col.id}" placeholder="Add new task..." onkeypress="if(event.key==='Enter') addCard('${col.id}')">
+                    <button onclick="addCard('${col.id}')">+</button>
+                `;
+                
+                columnEl.appendChild(header);
+                columnEl.appendChild(content);
+                columnEl.appendChild(form);
+                boardEl.appendChild(columnEl);
+            });
+            
+            updateStats();
+        }
+        
+        // Add card
+        function addCard(columnId) {
+            const input = document.getElementById(`input-${columnId}`);
+            const title = input.value.trim();
+            
+            if (title) {
+                const date = new Date().toLocaleDateString();
+                board[columnId].push({ title, date });
+                input.value = '';
+                saveBoard();
+                render();
+            }
+        }
+        
+        // Delete card
+        function deleteCard(columnId, idx) {
+            board[columnId].splice(idx, 1);
+            saveBoard();
+            render();
+        }
+        
+        // Drag handlers
+        let draggedCard = null;
+        
+        function dragstart(e, columnId, idx) {
+            draggedCard = { columnId, idx, task: board[columnId][idx] };
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        
+        function dragover(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+        
+        function drop(e, targetColumnId) {
+            e.preventDefault();
+            if (draggedCard) {
+                // Remove from old column
+                board[draggedCard.columnId].splice(draggedCard.idx, 1);
+                // Add to new column
+                board[targetColumnId].push(draggedCard.task);
+                saveBoard();
+                render();
+            }
+        }
+        
+        // Update stats
+        function updateStats() {
+            const total = Object.values(board).reduce((sum, col) => sum + col.length, 0);
+            const inProgress = board['in-progress'].length;
+            const completed = board['done'].length;
+            const ideas = board['ideas'].length;
+            
+            document.getElementById('total-tasks').textContent = total;
+            document.getElementById('in-progress').textContent = inProgress;
+            document.getElementById('completed').textContent = completed;
+            document.getElementById('ideas').textContent = ideas;
+        }
+        
+        // Initialize on load
+        initBoard();
+    </script>
+</body>
+</html>

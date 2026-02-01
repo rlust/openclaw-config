@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAL & Randy - Kanban + Calendar v3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-button {
+            padding: 8px 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.95em;
+        }
+
+        .control-button:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .control-button.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .filter-status {
+            margin-left: auto;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .bulk-action-bar {
+            background: #667eea;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-left: auto;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .bulk-action-bar.hidden {
+            display: none;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .bulk-selection-count {
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .bulk-action-btn {
+            padding: 6px 12px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+
+        .bulk-action-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .bulk-cancel-btn {
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+
+        .bulk-cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .stats {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .stat {
+            border-left: 4px solid #667eea;
+            padding-left: 16px;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+        
+        .board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .column {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            max-height: 700px;
+        }
+        
+        .column-header {
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .column-content {
+            padding: 12px;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border: 2px dashed transparent;
+            transition: all 0.2s;
+            min-height: 100px;
+        }
+        
+        .column-content.drag-over {
+            border: 2px dashed #667eea;
+            background-color: rgba(102, 126, 234, 0.1);
+            border-radius: 6px;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 12px;
+            cursor: grab;
+            transition: all 0.2s;
+            border-left: 4px solid #667eea;
+            position: relative;
+        }
+
+        .card.priority-high {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .card.priority-medium {
+            border-left-color: #ffc107;
+            background: #fffbf0;
+        }
+
+        .card.priority-low {
+            border-left-color: #28a745;
+            background: #f0fdf4;
+        }
+
+        .card.selected {
+            background-color: #e3f2fd;
+            border: 2px solid #667eea;
+            border-left: 4px solid #667eea;
+        }
+        
+        .card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            cursor: grab;
+        }
+        
+        .card.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .card-checkbox {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .card.bulk-mode .card-checkbox {
+            display: block;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            gap: 8px;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            color: #333;
+            flex: 1;
+            word-break: break-word;
+            padding-right: 30px;
+        }
+
+        .card-priority {
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.75em;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .card-priority.high {
+            background: #dc3545;
+            color: white;
+        }
+
+        .card-priority.medium {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .card-priority.low {
+            background: #28a745;
+            color: white;
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.85em;
+            flex-wrap: wrap;
+        }
+
+        .card-recurring-badge {
+            display: inline-block;
+            background: #d4f4dd;
+            color: #2d7a3d;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+        
+        .card-date {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+        
+        .card-date.overdue {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .card-date.today {
+            background: #f3e5f5;
+            color: #6a1b9a;
+            font-weight: bold;
+        }
+
+        .card-assigned {
+            display: inline-block;
+            background: #e8eaf6;
+            color: #667eea;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        
+        .card-created {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 4px;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+        
+        .card-btn {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .card-edit {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .card-delete {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .card-btn:hover {
+            opacity: 0.8;
+        }
+        
+        .add-card-form {
+            padding: 12px;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            gap: 8px;
+            flex-direction: column;
+        }
+        
+        .add-card-form input,
+        .add-card-form select {
+            padding: 8px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        
+        .add-card-form button {
+            padding: 8px 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .add-card-form button:hover {
+            background: #764ba2;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-left: 4px solid #667eea;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-width: 400px;
+            animation: slideIn 0.3s ease-out;
+            z-index: 1000;
+        }
+        
+        .notification.success {
+            border-left-color: #5cb85c;
+        }
+        
+        .notification.error {
+            border-left-color: #ff6b6b;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .modal-content h2 {
+            margin-bottom: 16px;
+        }
+        
+        .modal-content input,
+        .modal-content textarea,
+        .modal-content select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        
+        .modal-content textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+        
+        .modal-buttons button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .modal-buttons .save {
+            background: #667eea;
+            color: white;
+        }
+        
+        .modal-buttons .cancel {
+            background: #dee2e6;
+            color: #333;
+        }
+
+        .archive-item {
+            background: #f8f9fa;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .archive-item button {
+            padding: 4px 8px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .no-tasks {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔴 HAL & Randy Kanban + Calendar v3</h1>
+            <p>Integrated task tracking with priorities, assignments, recurring tasks, and bulk operations</p>
+        </header>
+
+        <div class="controls">
+            <button class="control-button" id="todayBtn" onclick="toggleTodayFilter()">📅 Today Only</button>
+            <button class="control-button" id="randyBtn" onclick="toggleAssigneeFilter('Randy')">👤 Randy</button>
+            <button class="control-button" id="halBtn" onclick="toggleAssigneeFilter('HAL')">🤖 HAL</button>
+            <button class="control-button" id="bulkModeBtn" onclick="toggleBulkMode()">☑️ Bulk Mode</button>
+            <span class="filter-status" id="filterStatus"></span>
+            <div class="bulk-action-bar hidden" id="bulkActionBar">
+                <span class="bulk-selection-count" id="selectionCount">0 selected</span>
+                <button class="bulk-action-btn" onclick="bulkMarkDone()">Mark Done</button>
+                <button class="bulk-cancel-btn" onclick="cancelBulkSelection()">Cancel</button>
+            </div>
+            <button class="control-button" style="margin-left: auto;" onclick="showArchive()">📦 Archive (<span id="archiveCount">0</span>)</button>
+        </div>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" id="total-tasks">0</div>
+                <div class="stat-label">Total Tasks</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="in-progress">0</div>
+                <div class="stat-label">In Progress</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="completed">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="overdue">0</div>
+                <div class="stat-label">Overdue</div>
+            </div>
+        </div>
+        
+        <div class="board" id="board"></div>
+    </div>
+    
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <h2>Edit Task</h2>
+            <input type="text" id="editTitle" placeholder="Task title...">
+            <div class="form-group">
+                <label>Priority:</label>
+                <select id="editPriority">
+                    <option value="low">🟢 Low</option>
+                    <option value="medium">🟡 Medium</option>
+                    <option value="high">🔴 High</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Assigned To:</label>
+                <select id="editAssigned">
+                    <option value="Both">Both</option>
+                    <option value="Randy">Randy</option>
+                    <option value="HAL">HAL</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Recurring:</label>
+                <select id="editRecurring">
+                    <option value="none">None</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+            </div>
+            <label>Due Date:</label>
+            <input type="date" id="editDate">
+            <div class="modal-buttons">
+                <button class="save" onclick="saveEdit()">Save</button>
+                <button class="cancel" onclick="closeEdit()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="archiveModal">
+        <div class="modal-content">
+            <h2>📦 Archived Tasks</h2>
+            <div id="archiveList"></div>
+            <div class="modal-buttons">
+                <button class="cancel" onclick="closeArchive()">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const COLUMNS = [
+            { id: 'backlog', title: 'Backlog', color: '#667eea' },
+            { id: 'in-progress', title: 'In Progress', color: '#f0ad4e' },
+            { id: 'done', title: 'Done', color: '#5cb85c' },
+            { id: 'ideas', title: 'Ideas', color: '#5bc0de' },
+            { id: 'relationship', title: 'Relationship Builders', color: '#e74c3c' }
+        ];
+        
+        const RECURRENCE_TYPES = {
+            none: 'None',
+            daily: 'Daily',
+            weekly: 'Weekly',
+            monthly: 'Monthly'
+        };
+        
+        let board = {};
+        let archive = [];
+        let recurringTemplates = {};
+        let editingCard = null;
+        let draggedElement = null;
+        let bulkMode = false;
+        let selectedCards = new Set();
+        let filters = {
+            todayOnly: false,
+            assignedTo: null
+        };
+        
+        function initBoard() {
+            const saved = localStorage.getItem('hal-kanban-calendar-v3');
+            const archivedSaved = localStorage.getItem('hal-kanban-archive-v3');
+            const recurringTemplatesSaved = localStorage.getItem('hal-kanban-recurring-v3');
+            
+            if (saved) {
+                board = JSON.parse(saved);
+            } else {
+                COLUMNS.forEach(col => {
+                    board[col.id] = [];
+                });
+            }
+            if (archivedSaved) {
+                archive = JSON.parse(archivedSaved);
+            }
+            if (recurringTemplatesSaved) {
+                recurringTemplates = JSON.parse(recurringTemplatesSaved);
+            }
+            
+            archiveOldTasks();
+            processRecurringTasks();
+            render();
+        }
+        
+        function saveBoard() {
+            localStorage.setItem('hal-kanban-calendar-v3', JSON.stringify(board));
+            localStorage.setItem('hal-kanban-archive-v3', JSON.stringify(archive));
+            localStorage.setItem('hal-kanban-recurring-v3', JSON.stringify(recurringTemplates));
+            updateStats();
+        }
+
+        function archiveOldTasks() {
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            
+            const doneTasks = board['done'] || [];
+            for (let i = doneTasks.length - 1; i >= 0; i--) {
+                const task = doneTasks[i];
+                if (task.completedDate) {
+                    const completedDate = new Date(task.completedDate);
+                    if (completedDate < thirtyDaysAgo) {
+                        archive.push(task);
+                        doneTasks.splice(i, 1);
+                    }
+                }
+            }
+        }
+
+        function processRecurringTasks() {
+            Object.keys(recurringTemplates).forEach(templateId => {
+                const template = recurringTemplates[templateId];
+                const lastCreated = new Date(template.lastCreated || 0);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                let shouldCreate = false;
+                
+                if (template.recurring === 'daily') {
+                    const nextDay = new Date(lastCreated);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    nextDay.setHours(0, 0, 0, 0);
+                    shouldCreate = today >= nextDay;
+                } else if (template.recurring === 'weekly') {
+                    const nextWeek = new Date(lastCreated);
+                    nextWeek.setDate(nextWeek.getDate() + 7);
+                    nextWeek.setHours(0, 0, 0, 0);
+                    shouldCreate = today >= nextWeek;
+                } else if (template.recurring === 'monthly') {
+                    const nextMonth = new Date(lastCreated);
+                    nextMonth.setMonth(nextMonth.getMonth() + 1);
+                    nextMonth.setHours(0, 0, 0, 0);
+                    shouldCreate = today >= nextMonth;
+                }
+                
+                if (shouldCreate) {
+                    const newTask = JSON.parse(JSON.stringify(template));
+                    newTask.created = new Date().toLocaleDateString();
+                    newTask.recurring = template.recurring;
+                    newTask.isRecurringInstance = true;
+                    newTask.templateId = templateId;
+                    
+                    board[template.columnId].push(newTask);
+                    template.lastCreated = new Date().toISOString();
+                }
+            });
+        }
+
+        function shouldShowCard(columnId, task) {
+            if (filters.todayOnly) {
+                if (!task.dueDate) return false;
+                const today = new Date().toISOString().split('T')[0];
+                if (task.dueDate !== today) return false;
+            }
+            
+            if (filters.assignedTo) {
+                if (task.assignedTo !== 'Both' && task.assignedTo !== filters.assignedTo) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        function updateFilterStatus() {
+            let status = [];
+            if (filters.todayOnly) status.push('📅 Today Only');
+            if (filters.assignedTo) status.push(`${filters.assignedTo}'s Tasks`);
+            
+            document.getElementById('filterStatus').textContent = status.length > 0 ? `Filters: ${status.join(' + ')}` : '';
+        }
+
+        function toggleTodayFilter() {
+            filters.todayOnly = !filters.todayOnly;
+            document.getElementById('todayBtn').classList.toggle('active', filters.todayOnly);
+            updateFilterStatus();
+            render();
+        }
+
+        function toggleAssigneeFilter(assignee) {
+            if (filters.assignedTo === assignee) {
+                filters.assignedTo = null;
+            } else {
+                filters.assignedTo = assignee;
+            }
+            document.getElementById('randyBtn').classList.toggle('active', filters.assignedTo === 'Randy');
+            document.getElementById('halBtn').classList.toggle('active', filters.assignedTo === 'HAL');
+            updateFilterStatus();
+            render();
+        }
+
+        function toggleBulkMode() {
+            bulkMode = !bulkMode;
+            selectedCards.clear();
+            document.getElementById('bulkModeBtn').classList.toggle('active', bulkMode);
+            document.getElementById('bulkActionBar').classList.toggle('hidden', !bulkMode);
+            render();
+            showNotification(bulkMode ? '☑️ Bulk mode enabled' : '☑️ Bulk mode disabled');
+        }
+
+        function cancelBulkSelection() {
+            selectedCards.clear();
+            document.getElementById('bulkActionBar').classList.add('hidden');
+            render();
+        }
+
+        function updateBulkSelectionDisplay() {
+            const count = selectedCards.size;
+            document.getElementById('selectionCount').textContent = `${count} selected`;
+            if (count === 0) {
+                document.getElementById('bulkActionBar').classList.add('hidden');
+            } else {
+                document.getElementById('bulkActionBar').classList.remove('hidden');
+            }
+        }
+
+        function getCardKey(columnId, idx) {
+            return `${columnId}:${idx}`;
+        }
+
+        function selectCard(columnId, idx, event) {
+            const key = getCardKey(columnId, idx);
+            
+            if (event && event.shiftKey) {
+                // Shift+click for range selection
+                if (selectedCards.has(key)) {
+                    selectedCards.delete(key);
+                } else {
+                    selectedCards.add(key);
+                }
+            } else {
+                if (selectedCards.has(key)) {
+                    selectedCards.delete(key);
+                } else {
+                    selectedCards.add(key);
+                }
+            }
+            
+            updateBulkSelectionDisplay();
+            render();
+        }
+
+        function bulkMarkDone() {
+            const tasksToMove = [];
+            selectedCards.forEach(key => {
+                const [columnId, idx] = key.split(':');
+                const actualIdx = parseInt(idx);
+                if (board[columnId] && board[columnId][actualIdx]) {
+                    tasksToMove.push({ columnId, actualIdx, task: board[columnId][actualIdx] });
+                }
+            });
+            
+            // Sort in reverse order to maintain indices when removing
+            tasksToMove.sort((a, b) => b.actualIdx - a.actualIdx);
+            
+            tasksToMove.forEach(({ columnId, actualIdx, task }) => {
+                board[columnId].splice(actualIdx, 1);
+                task.completedDate = new Date().toISOString();
+                board['done'].push(task);
+            });
+            
+            selectedCards.clear();
+            document.getElementById('bulkActionBar').classList.add('hidden');
+            saveBoard();
+            render();
+            showNotification(`✅ ${tasksToMove.length} task(s) marked as done!`);
+        }
+
+        function showNotification(message, type = 'success') {
+            const notif = document.createElement('div');
+            not
