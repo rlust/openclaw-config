@@ -1,0 +1,147 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.1.30",
+    "lastTouchedAt": "2026-01-31T21:59:24.122Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-01-31T21:59:24.110Z",
+    "lastRunVersion": "2026.1.30",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "update": {
+    "checkOnStart": true
+  },
+  "browser": {
+    "enabled": true,
+    "evaluateEnabled": true
+  },
+  "ui": {
+    "assistant": {
+      "name": "HAL"
+    }
+  },
+  "auth": {
+    "profiles": {
+      "anthropic:default": {
+        "provider": "anthropic",
+        "mode": "api_key"
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "anthropic/claude-haiku-4-5"
+      },
+      "models": {
+        "anthropic/claude-haiku-4-5": {
+          "alias": "haiku",
+          "params": {
+            "cacheControlTtl": "1h"
+          }
+        },
+        "anthropic/claude-sonnet-4-5": {
+          "alias": "sonnet",
+          "params": {
+            "cacheControlTtl": "1h"
+          }
+        }
+      },
+      "workspace": "/Users/randylust/.openclaw/workspace",
+      "contextPruning": {
+        "mode": "cache-ttl",
+        "ttl": "1h"
+      },
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "heartbeat": {
+        "every": "30m"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
+    }
+  },
+  "tools": {
+    "web": {
+      "search": {
+        "enabled": true
+      },
+      "fetch": {
+        "enabled": true
+      }
+    }
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true
+  },
+  "hooks": {
+    "internal": {
+      "enabled": true,
+      "entries": {
+        "boot-md": {
+          "enabled": true
+        },
+        "session-memory": {
+          "enabled": true
+        },
+        "command-logger": {
+          "enabled": true
+        }
+      }
+    }
+  },
+  "web": {
+    "enabled": true
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "dmPolicy": "pairing",
+      "botToken": "8424447008:AAGrWk-r_dZawO5nr2O_vWL55H2cafVc1qk",
+      "groupPolicy": "allowlist",
+      "streamMode": "partial"
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "auth": {
+      "mode": "token",
+      "token": "60953b0ac83e08157942471d26ede303a995b622bed3fa48"
+    },
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    }
+  },
+  "skills": {
+    "install": {
+      "nodeManager": "npm"
+    },
+    "entries": {
+      "goplaces": {
+        "apiKey": "AIzaSyAJOvn61TXCLLuAk1HwuRoYJx2b5_9aBsU"
+      },
+      "local-places": {
+        "apiKey": "AIzaSyAJOvn61TXCLLuAk1HwuRoYJx2b5_9aBsU"
+      }
+    }
+  },
+  "plugins": {
+    "entries": {
+      "telegram": {
+        "enabled": true
+      }
+    }
+  }
+}
