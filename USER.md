@@ -21,6 +21,8 @@
 - Dog: Zoey
 
 **Interests & Tech:**
+- **Photography:**
+  - Website: [rlust.com](https://rlust.com)
 - Big into Home Automation (uses Home Assistant)
   - RV Home Assistant: http://192.168.100.234
   - Aspire motorhome areas: Kitchen, Bedroom, Living Room, Bathrooms, Media, Security

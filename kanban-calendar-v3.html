@@ -3,899 +3,419 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HAL & Randy - Kanban + Calendar v3</title>
+    <title>HAL Kanban v3 (Shared)</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg-color: #1e1e1e;
+            --column-bg: #2d2d2d;
+            --card-bg: #3d3d3d;
+            --text-color: #e0e0e0;
+            --accent-color: #ff4d4d; /* HAL Red */
+            --highlight-color: #4CAF50;
+            --border-radius: 8px;
         }
-        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
             padding: 20px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            color: white;
-            margin-bottom: 20px;
-        }
-        
-        header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        
-        header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-
-        .controls {
-            background: white;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 20px;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .control-button {
-            padding: 8px 16px;
-            border: 2px solid #dee2e6;
-            border-radius: 6px;
-            background: white;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-            font-size: 0.95em;
-        }
-
-        .control-button:hover {
-            border-color: #667eea;
-            color: #667eea;
-        }
-
-        .control-button.active {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
-
-        .filter-status {
-            margin-left: auto;
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        .bulk-action-bar {
-            background: #667eea;
-            color: white;
-            padding: 12px 16px;
-            border-radius: 6px;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            margin-left: auto;
-            animation: slideDown 0.3s ease-out;
-        }
-
-        .bulk-action-bar.hidden {
-            display: none;
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-10px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .bulk-selection-count {
-            font-weight: 600;
-            font-size: 0.95em;
-        }
-
-        .bulk-action-btn {
-            padding: 6px 12px;
-            background: white;
-            color: #667eea;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9em;
-            transition: all 0.2s;
-        }
-
-        .bulk-action-btn:hover {
-            background: #f0f0f0;
-        }
-
-        .bulk-cancel-btn {
-            padding: 6px 12px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9em;
-            transition: all 0.2s;
-        }
-
-        .bulk-cancel-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-        
-        .stats {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .stat {
-            border-left: 4px solid #667eea;
-            padding-left: 16px;
-        }
-        
-        .stat-value {
-            font-size: 2em;
-            font-weight: bold;
-            color: #667eea;
-        }
-        
-        .stat-label {
-            color: #999;
-            font-size: 0.9em;
-            margin-top: 4px;
-        }
-        
-        .board {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .column {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
-            height: fit-content;
-            max-height: 700px;
+            height: 100vh;
+            box-sizing: border-box;
         }
-        
-        .column-header {
-            padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        h1 { margin: 0 0 20px 0; color: var(--accent-color); display: flex; align-items: center; gap: 10px; }
+        .controls { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; }
+        button {
+            background-color: var(--card-bg);
+            border: 1px solid #555;
             color: white;
-            border-radius: 8px 8px 0 0;
-            font-weight: bold;
-            font-size: 1.1em;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
         }
+        button:hover { background-color: #555; }
+        button.active { background-color: var(--accent-color); border-color: var(--accent-color); }
         
-        .column-content {
-            padding: 12px;
-            flex: 1;
-            overflow-y: auto;
+        .board {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            flex-grow: 1;
+            padding-bottom: 20px;
+        }
+        .column {
+            background-color: var(--column-bg);
+            min-width: 300px;
+            width: 300px;
+            border-radius: var(--border-radius);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .column-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .task-list {
+            flex-grow: 1;
+            min-height: 100px;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            border: 2px dashed transparent;
-            transition: all 0.2s;
-            min-height: 100px;
         }
-        
-        .column-content.drag-over {
-            border: 2px dashed #667eea;
-            background-color: rgba(102, 126, 234, 0.1);
-            border-radius: 6px;
-        }
-        
         .card {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 12px;
+            background-color: var(--card-bg);
+            padding: 10px;
+            border-radius: 4px;
             cursor: grab;
-            transition: all 0.2s;
-            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            border-left: 4px solid transparent;
             position: relative;
         }
-
-        .card.priority-high {
-            border-left-color: #dc3545;
-            background: #fff5f5;
-        }
-
-        .card.priority-medium {
-            border-left-color: #ffc107;
-            background: #fffbf0;
-        }
-
-        .card.priority-low {
-            border-left-color: #28a745;
-            background: #f0fdf4;
-        }
-
-        .card.selected {
-            background-color: #e3f2fd;
-            border: 2px solid #667eea;
-            border-left: 4px solid #667eea;
+        .card:active { cursor: grabbing; }
+        .card.priority-high { border-left-color: #ff4444; }
+        .card.priority-medium { border-left-color: #ffbb33; }
+        .card.priority-low { border-left-color: #00C851; }
+        
+        .card-title { font-weight: 500; margin-bottom: 5px; }
+        .card-meta { display: flex; justify-content: space-between; font-size: 0.8em; color: #aaa; margin-top: 8px; }
+        .badge { padding: 2px 6px; border-radius: 3px; background: #555; font-size: 0.75em; }
+        .badge-hal { background: #673AB7; } /* Purple for HAL */
+        
+        .add-task-form { margin-top: 10px; display: flex; flex-direction: column; gap: 5px; background: #333; padding: 10px; border-radius: 4px; }
+        input, select, textarea {
+            background: #444; border: 1px solid #555; color: white; padding: 6px; border-radius: 3px;
         }
         
-        .card:hover {
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-            cursor: grab;
-        }
-        
-        .card.dragging {
-            opacity: 0.5;
-            cursor: grabbing;
-        }
-
-        .card-checkbox {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            display: none;
-        }
-
-        .card.bulk-mode .card-checkbox {
-            display: block;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
-            gap: 8px;
-        }
-        
-        .card-title {
-            font-weight: 600;
-            color: #333;
-            flex: 1;
-            word-break: break-word;
-            padding-right: 30px;
-        }
-
-        .card-priority {
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 0.75em;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        .card-priority.high {
-            background: #dc3545;
-            color: white;
-        }
-
-        .card-priority.medium {
-            background: #ffc107;
-            color: #333;
-        }
-
-        .card-priority.low {
-            background: #28a745;
-            color: white;
-        }
-
-        .card-meta {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-bottom: 8px;
-            font-size: 0.85em;
-            flex-wrap: wrap;
-        }
-
-        .card-recurring-badge {
-            display: inline-block;
-            background: #d4f4dd;
-            color: #2d7a3d;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75em;
-            font-weight: 600;
-        }
-        
-        .card-date {
-            display: inline-block;
-            background: #e3f2fd;
-            color: #1976d2;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8em;
-        }
-        
-        .card-date.overdue {
-            background: #ffebee;
-            color: #c62828;
-        }
-        
-        .card-date.today {
-            background: #f3e5f5;
-            color: #6a1b9a;
-            font-weight: bold;
-        }
-
-        .card-assigned {
-            display: inline-block;
-            background: #e8eaf6;
-            color: #667eea;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 0.8em;
-            font-weight: 600;
-        }
-        
-        .card-created {
-            font-size: 0.8em;
-            color: #999;
-            margin-top: 4px;
-        }
-        
-        .card-actions {
-            display: flex;
-            gap: 4px;
-            margin-top: 8px;
-        }
-        
-        .card-btn {
-            padding: 4px 8px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8em;
-            flex: 1;
-            text-align: center;
-        }
-        
-        .card-edit {
-            background: #fff3cd;
-            color: #856404;
-        }
-        
-        .card-delete {
-            background: #ff6b6b;
-            color: white;
-        }
-        
-        .card-btn:hover {
-            opacity: 0.8;
-        }
-        
-        .add-card-form {
-            padding: 12px;
-            border-top: 1px solid #dee2e6;
-            display: flex;
-            gap: 8px;
-            flex-direction: column;
-        }
-        
-        .add-card-form input,
-        .add-card-form select {
-            padding: 8px;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-        
-        .add-card-form button {
-            padding: 8px 12px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        
-        .add-card-form button:hover {
-            background: #764ba2;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: white;
-            border-left: 4px solid #667eea;
-            padding: 16px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            max-width: 400px;
-            animation: slideIn 0.3s ease-out;
-            z-index: 1000;
-        }
-        
-        .notification.success {
-            border-left-color: #5cb85c;
-        }
-        
-        .notification.error {
-            border-left-color: #ff6b6b;
-        }
-        
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
+        /* Modal */
         .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            justify-content: center;
-            align-items: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000;
         }
-        
-        .modal.active {
-            display: flex;
-        }
-        
         .modal-content {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            max-width: 400px;
-            width: 90%;
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-        
-        .modal-content h2 {
-            margin-bottom: 16px;
-        }
-        
-        .modal-content input,
-        .modal-content textarea,
-        .modal-content select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 12px;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-        
-        .modal-content textarea {
-            resize: vertical;
-            min-height: 60px;
-        }
-
-        .form-group {
-            margin-bottom: 12px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 4px;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .modal-buttons {
-            display: flex;
-            gap: 8px;
-            justify-content: flex-end;
-        }
-        
-        .modal-buttons button {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        
-        .modal-buttons .save {
-            background: #667eea;
-            color: white;
-        }
-        
-        .modal-buttons .cancel {
-            background: #dee2e6;
-            color: #333;
-        }
-
-        .archive-item {
-            background: #f8f9fa;
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .archive-item button {
-            padding: 4px 8px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8em;
-        }
-
-        .no-tasks {
-            text-align: center;
-            padding: 20px;
-            color: #999;
-            font-style: italic;
+            background: var(--column-bg); padding: 20px; border-radius: 8px; width: 400px;
+            display: flex; flex-direction: column; gap: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🔴 HAL & Randy Kanban + Calendar v3</h1>
-            <p>Integrated task tracking with priorities, assignments, recurring tasks, and bulk operations</p>
-        </header>
 
-        <div class="controls">
-            <button class="control-button" id="todayBtn" onclick="toggleTodayFilter()">📅 Today Only</button>
-            <button class="control-button" id="randyBtn" onclick="toggleAssigneeFilter('Randy')">👤 Randy</button>
-            <button class="control-button" id="halBtn" onclick="toggleAssigneeFilter('HAL')">🤖 HAL</button>
-            <button class="control-button" id="bulkModeBtn" onclick="toggleBulkMode()">☑️ Bulk Mode</button>
-            <span class="filter-status" id="filterStatus"></span>
-            <div class="bulk-action-bar hidden" id="bulkActionBar">
-                <span class="bulk-selection-count" id="selectionCount">0 selected</span>
-                <button class="bulk-action-btn" onclick="bulkMarkDone()">Mark Done</button>
-                <button class="bulk-cancel-btn" onclick="cancelBulkSelection()">Cancel</button>
-            </div>
-            <button class="control-button" style="margin-left: auto;" onclick="showArchive()">📦 Archive (<span id="archiveCount">0</span>)</button>
-        </div>
-        
-        <div class="stats">
-            <div class="stat">
-                <div class="stat-value" id="total-tasks">0</div>
-                <div class="stat-label">Total Tasks</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value" id="in-progress">0</div>
-                <div class="stat-label">In Progress</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value" id="completed">0</div>
-                <div class="stat-label">Completed</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value" id="overdue">0</div>
-                <div class="stat-label">Overdue</div>
-            </div>
-        </div>
-        
-        <div class="board" id="board"></div>
+    <h1>🔴 HAL Project Board <span style="font-size:0.5em; opacity:0.6;">v3 (Shared)</span></h1>
+
+    <div class="controls">
+        <button id="refreshBtn">🔄 Refresh</button>
+        <button onclick="toggleFilter('today')" id="btnToday">📅 Today Only</button>
+        <button onclick="toggleFilter('randy')" id="btnRandy">👤 Randy</button>
+        <button onclick="toggleFilter('hal')" id="btnHAL">🤖 HAL</button>
+        <span style="flex-grow:1"></span>
+        <span id="status">Connecting...</span>
     </div>
-    
-    <div class="modal" id="editModal">
+
+    <div class="board" id="board">
+        <!-- Columns generated by JS -->
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
         <div class="modal-content">
-            <h2>Edit Task</h2>
-            <input type="text" id="editTitle" placeholder="Task title...">
-            <div class="form-group">
-                <label>Priority:</label>
-                <select id="editPriority">
-                    <option value="low">🟢 Low</option>
-                    <option value="medium">🟡 Medium</option>
-                    <option value="high">🔴 High</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Assigned To:</label>
-                <select id="editAssigned">
-                    <option value="Both">Both</option>
-                    <option value="Randy">Randy</option>
-                    <option value="HAL">HAL</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Recurring:</label>
-                <select id="editRecurring">
-                    <option value="none">None</option>
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                </select>
-            </div>
-            <label>Due Date:</label>
+            <h3>Edit Task</h3>
+            <input type="text" id="editTitle">
+            <textarea id="editDesc" rows="3"></textarea>
+            <select id="editPriority">
+                <option value="high">🔴 High</option>
+                <option value="medium">🟡 Medium</option>
+                <option value="low">🟢 Low</option>
+            </select>
+            <select id="editAssignee">
+                <option value="both">Both</option>
+                <option value="Randy">👤 Randy</option>
+                <option value="HAL">🤖 HAL</option>
+            </select>
             <input type="date" id="editDate">
-            <div class="modal-buttons">
-                <button class="save" onclick="saveEdit()">Save</button>
-                <button class="cancel" onclick="closeEdit()">Cancel</button>
+            <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:10px;">
+                <button onclick="deleteTask()">🗑 Delete</button>
+                <button onclick="closeModal()">Cancel</button>
+                <button onclick="saveEdit()" style="background:var(--accent-color)">Save</button>
             </div>
         </div>
     </div>
 
-    <div class="modal" id="archiveModal">
-        <div class="modal-content">
-            <h2>📦 Archived Tasks</h2>
-            <div id="archiveList"></div>
-            <div class="modal-buttons">
-                <button class="cancel" onclick="closeArchive()">Close</button>
+<script>
+    const API_URL = ''; // Relative URL for portability (works on localhost, LAN, Tailscale)
+    let boardData = { columns: [], archive: [] };
+    let currentFilter = { today: false, assignee: null };
+    let editingTaskId = null;
+    let editingColumnId = null;
+
+    // --- Data Sync ---
+
+    async function loadData() {
+        document.getElementById('status').textContent = 'Syncing...';
+        try {
+            const res = await fetch(`${API_URL}/data`);
+            if (!res.ok) throw new Error('Failed to load');
+            boardData = await res.json();
+            renderBoard();
+            document.getElementById('status').textContent = '✅ Synced';
+        } catch (e) {
+            console.error(e);
+            document.getElementById('status').textContent = '❌ Offline (Run server script)';
+        }
+    }
+
+    async function saveData() {
+        document.getElementById('status').textContent = 'Saving...';
+        try {
+            await fetch(`${API_URL}/data`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(boardData)
+            });
+            document.getElementById('status').textContent = '✅ Saved';
+        } catch (e) {
+            console.error(e);
+            document.getElementById('status').textContent = '❌ Save Failed';
+        }
+    }
+
+    async function syncToCalendar(task) {
+        if (!task.dueDate) return;
+        try {
+            await fetch(`${API_URL}/calendar`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(task)
+            });
+        } catch (e) {
+            console.error("Calendar sync failed", e);
+        }
+    }
+
+    // --- Rendering ---
+
+    function renderBoard() {
+        const board = document.getElementById('board');
+        board.innerHTML = '';
+
+        boardData.columns.forEach(col => {
+            const colEl = document.createElement('div');
+            colEl.className = 'column';
+            colEl.innerHTML = `
+                <div class="column-header">
+                    ${col.title} <span style="opacity:0.5">${col.tasks.length}</span>
+                </div>
+                <div class="task-list" id="${col.id}" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <!-- Tasks go here -->
+                </div>
+                ${col.id === 'backlog' || col.id === 'todo' || col.id === 'ideas' ? renderAddForm(col.id) : ''}
+            `;
+            
+            const listEl = colEl.querySelector('.task-list');
+            
+            // Sort by priority
+            const priorityOrder = { high: 0, medium: 1, low: 2 };
+            const sortedTasks = [...col.tasks].sort((a,b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+
+            sortedTasks.forEach(task => {
+                if (shouldShow(task)) {
+                    listEl.appendChild(createCard(task, col.id));
+                }
+            });
+
+            board.appendChild(colEl);
+        });
+    }
+
+    function createCard(task, colId) {
+        const div = document.createElement('div');
+        div.className = `card priority-${task.priority}`;
+        div.draggable = true;
+        div.ondragstart = (e) => drag(e, task.id, colId);
+        div.onclick = () => openEdit(task.id, colId); // Simple edit trigger
+
+        const isOverdue = task.dueDate && new Date(task.dueDate) < new Date().setHours(0,0,0,0);
+        const dateDisplay = task.dueDate ? `<span style="${isOverdue ? 'color:#ff4444' : ''}">📅 ${task.dueDate}</span>` : '';
+        const assigneeBadge = task.assignee !== 'both' ? `<span class="badge ${task.assignee === 'HAL' ? 'badge-hal' : ''}">${task.assignee}</span>` : '';
+
+        div.innerHTML = `
+            <div class="card-title">${task.title}</div>
+            <div style="font-size:0.8em; color:#888">${task.description || ''}</div>
+            <div class="card-meta">
+                ${dateDisplay}
+                ${assigneeBadge}
             </div>
-        </div>
-    </div>
+        `;
+        return div;
+    }
+
+    function renderAddForm(colId) {
+        return `
+            <div class="add-task-form">
+                <input type="text" id="input-${colId}" placeholder="+ Add item...">
+                <div style="display:flex; gap:5px">
+                    <select id="prio-${colId}" style="width:70px">
+                        <option value="high">High</option>
+                        <option value="medium" selected>Med</option>
+                        <option value="low">Low</option>
+                    </select>
+                    <button onclick="addTask('${colId}')" style="flex-grow:1">Add</button>
+                </div>
+            </div>
+        `;
+    }
+
+    // --- Logic ---
+
+    function shouldShow(task) {
+        if (currentFilter.today) {
+            const today = new Date().toISOString().split('T')[0];
+            if (task.dueDate !== today) return false;
+        }
+        if (currentFilter.assignee) {
+            if (task.assignee !== 'both' && task.assignee !== currentFilter.assignee) return false;
+        }
+        return true;
+    }
+
+    function addTask(colId) {
+        const input = document.getElementById(`input-${colId}`);
+        const prio = document.getElementById(`prio-${colId}`);
+        const title = input.value.trim();
+        if (!title) return;
+
+        const newTask = {
+            id: 't' + Date.now(),
+            title: title,
+            priority: prio.value,
+            assignee: 'both',
+            dueDate: '',
+            description: ''
+        };
+
+        const col = boardData.columns.find(c => c.id === colId);
+        col.tasks.push(newTask);
+        input.value = '';
+        saveData();
+        renderBoard();
+    }
+
+    // --- Drag & Drop ---
+
+    function allowDrop(ev) { ev.preventDefault(); }
+    function drag(ev, taskId, colId) {
+        ev.dataTransfer.setData("text/plain", JSON.stringify({taskId, colId}));
+    }
+    function drop(ev, targetColId) { // Simplified drop (append to list)
+        ev.preventDefault();
+        // Traverse up to find the column div ID if dropped on a child
+        let target = ev.target;
+        while (target && !target.classList.contains('task-list')) {
+            target = target.parentElement;
+        }
+        if (!target) return;
+        const finalColId = target.id;
+
+        const data = JSON.parse(ev.dataTransfer.getData("text/plain"));
+        moveTask(data.taskId, data.colId, finalColId);
+    }
+
+    function moveTask(taskId, fromColId, toColId) {
+        if (fromColId === toColId) return;
+
+        const fromCol = boardData.columns.find(c => c.id === fromColId);
+        const toCol = boardData.columns.find(c => c.id === toColId);
+        const taskIdx = fromCol.tasks.findIndex(t => t.id === taskId);
+        
+        if (taskIdx > -1) {
+            const [task] = fromCol.tasks.splice(taskIdx, 1);
+            toCol.tasks.push(task);
+            
+            // Auto archive if done
+            if (toColId === 'done') {
+                task.completedAt = new Date().toISOString();
+            }
+            saveData();
+            renderBoard();
+        }
+    }
+
+    // --- Editing ---
+
+    function openEdit(taskId, colId) {
+        const col = boardData.columns.find(c => c.id === colId);
+        const task = col.tasks.find(t => t.id === taskId);
+        editingTaskId = taskId;
+        editingColumnId = colId;
+
+        document.getElementById('editTitle').value = task.title;
+        document.getElementById('editDesc').value = task.description;
+        document.getElementById('editPriority').value = task.priority;
+        document.getElementById('editAssignee').value = task.assignee;
+        document.getElementById('editDate').value = task.dueDate;
+        
+        document.getElementById('editModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('editModal').style.display = 'none';
+        editingTaskId = null;
+    }
+
+    function saveEdit() {
+        if (!editingTaskId) return;
+        const col = boardData.columns.find(c => c.id === editingColumnId);
+        const task = col.tasks.find(t => t.id === editingTaskId);
+
+        task.title = document.getElementById('editTitle').value;
+        task.description = document.getElementById('editDesc').value;
+        task.priority = document.getElementById('editPriority').value;
+        task.assignee = document.getElementById('editAssignee').value;
+        const newDate = document.getElementById('editDate').value;
+        
+        if (newDate !== task.dueDate) {
+            task.dueDate = newDate;
+            syncToCalendar(task);
+        }
+
+        saveData();
+        renderBoard();
+        closeModal();
+    }
+
+    function deleteTask() {
+        if (!confirm('Delete this task?')) return;
+        const col = boardData.columns.find(c => c.id === editingColumnId);
+        col.tasks = col.tasks.filter(t => t.id !== editingTaskId);
+        saveData();
+        renderBoard();
+        closeModal();
+    }
+
+    // --- Init ---
+    document.getElementById('refreshBtn').onclick = loadData;
     
-    <script>
-        const COLUMNS = [
-            { id: 'backlog', title: 'Backlog', color: '#667eea' },
-            { id: 'in-progress', title: 'In Progress', color: '#f0ad4e' },
-            { id: 'done', title: 'Done', color: '#5cb85c' },
-            { id: 'ideas', title: 'Ideas', color: '#5bc0de' },
-            { id: 'relationship', title: 'Relationship Builders', color: '#e74c3c' }
-        ];
+    function toggleFilter(type) {
+        if (type === 'today') currentFilter.today = !currentFilter.today;
+        if (type === 'randy') currentFilter.assignee = currentFilter.assignee === 'Randy' ? null : 'Randy';
+        if (type === 'hal') currentFilter.assignee = currentFilter.assignee === 'HAL' ? null : 'HAL';
         
-        const RECURRENCE_TYPES = {
-            none: 'None',
-            daily: 'Daily',
-            weekly: 'Weekly',
-            monthly: 'Monthly'
-        };
+        // UI updates
+        document.getElementById('btnToday').classList.toggle('active', currentFilter.today);
+        document.getElementById('btnRandy').classList.toggle('active', currentFilter.assignee === 'Randy');
+        document.getElementById('btnHAL').classList.toggle('active', currentFilter.assignee === 'HAL');
         
-        let board = {};
-        let archive = [];
-        let recurringTemplates = {};
-        let editingCard = null;
-        let draggedElement = null;
-        let bulkMode = false;
-        let selectedCards = new Set();
-        let filters = {
-            todayOnly: false,
-            assignedTo: null
-        };
-        
-        function initBoard() {
-            const saved = localStorage.getItem('hal-kanban-calendar-v3');
-            const archivedSaved = localStorage.getItem('hal-kanban-archive-v3');
-            const recurringTemplatesSaved = localStorage.getItem('hal-kanban-recurring-v3');
-            
-            if (saved) {
-                board = JSON.parse(saved);
-            } else {
-                COLUMNS.forEach(col => {
-                    board[col.id] = [];
-                });
-            }
-            if (archivedSaved) {
-                archive = JSON.parse(archivedSaved);
-            }
-            if (recurringTemplatesSaved) {
-                recurringTemplates = JSON.parse(recurringTemplatesSaved);
-            }
-            
-            archiveOldTasks();
-            processRecurringTasks();
-            render();
-        }
-        
-        function saveBoard() {
-            localStorage.setItem('hal-kanban-calendar-v3', JSON.stringify(board));
-            localStorage.setItem('hal-kanban-archive-v3', JSON.stringify(archive));
-            localStorage.setItem('hal-kanban-recurring-v3', JSON.stringify(recurringTemplates));
-            updateStats();
-        }
+        renderBoard();
+    }
 
-        function archiveOldTasks() {
-            const thirtyDaysAgo = new Date();
-            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-            
-            const doneTasks = board['done'] || [];
-            for (let i = doneTasks.length - 1; i >= 0; i--) {
-                const task = doneTasks[i];
-                if (task.completedDate) {
-                    const completedDate = new Date(task.completedDate);
-                    if (completedDate < thirtyDaysAgo) {
-                        archive.push(task);
-                        doneTasks.splice(i, 1);
-                    }
-                }
-            }
-        }
-
-        function processRecurringTasks() {
-            Object.keys(recurringTemplates).forEach(templateId => {
-                const template = recurringTemplates[templateId];
-                const lastCreated = new Date(template.lastCreated || 0);
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                
-                let shouldCreate = false;
-                
-                if (template.recurring === 'daily') {
-                    const nextDay = new Date(lastCreated);
-                    nextDay.setDate(nextDay.getDate() + 1);
-                    nextDay.setHours(0, 0, 0, 0);
-                    shouldCreate = today >= nextDay;
-                } else if (template.recurring === 'weekly') {
-                    const nextWeek = new Date(lastCreated);
-                    nextWeek.setDate(nextWeek.getDate() + 7);
-                    nextWeek.setHours(0, 0, 0, 0);
-                    shouldCreate = today >= nextWeek;
-                } else if (template.recurring === 'monthly') {
-                    const nextMonth = new Date(lastCreated);
-                    nextMonth.setMonth(nextMonth.getMonth() + 1);
-                    nextMonth.setHours(0, 0, 0, 0);
-                    shouldCreate = today >= nextMonth;
-                }
-                
-                if (shouldCreate) {
-                    const newTask = JSON.parse(JSON.stringify(template));
-                    newTask.created = new Date().toLocaleDateString();
-                    newTask.recurring = template.recurring;
-                    newTask.isRecurringInstance = true;
-                    newTask.templateId = templateId;
-                    
-                    board[template.columnId].push(newTask);
-                    template.lastCreated = new Date().toISOString();
-                }
-            });
-        }
-
-        function shouldShowCard(columnId, task) {
-            if (filters.todayOnly) {
-                if (!task.dueDate) return false;
-                const today = new Date().toISOString().split('T')[0];
-                if (task.dueDate !== today) return false;
-            }
-            
-            if (filters.assignedTo) {
-                if (task.assignedTo !== 'Both' && task.assignedTo !== filters.assignedTo) {
-                    return false;
-                }
-            }
-            
-            return true;
-        }
-
-        function updateFilterStatus() {
-            let status = [];
-            if (filters.todayOnly) status.push('📅 Today Only');
-            if (filters.assignedTo) status.push(`${filters.assignedTo}'s Tasks`);
-            
-            document.getElementById('filterStatus').textContent = status.length > 0 ? `Filters: ${status.join(' + ')}` : '';
-        }
-
-        function toggleTodayFilter() {
-            filters.todayOnly = !filters.todayOnly;
-            document.getElementById('todayBtn').classList.toggle('active', filters.todayOnly);
-            updateFilterStatus();
-            render();
-        }
-
-        function toggleAssigneeFilter(assignee) {
-            if (filters.assignedTo === assignee) {
-                filters.assignedTo = null;
-            } else {
-                filters.assignedTo = assignee;
-            }
-            document.getElementById('randyBtn').classList.toggle('active', filters.assignedTo === 'Randy');
-            document.getElementById('halBtn').classList.toggle('active', filters.assignedTo === 'HAL');
-            updateFilterStatus();
-            render();
-        }
-
-        function toggleBulkMode() {
-            bulkMode = !bulkMode;
-            selectedCards.clear();
-            document.getElementById('bulkModeBtn').classList.toggle('active', bulkMode);
-            document.getElementById('bulkActionBar').classList.toggle('hidden', !bulkMode);
-            render();
-            showNotification(bulkMode ? '☑️ Bulk mode enabled' : '☑️ Bulk mode disabled');
-        }
-
-        function cancelBulkSelection() {
-            selectedCards.clear();
-            document.getElementById('bulkActionBar').classList.add('hidden');
-            render();
-        }
-
-        function updateBulkSelectionDisplay() {
-            const count = selectedCards.size;
-            document.getElementById('selectionCount').textContent = `${count} selected`;
-            if (count === 0) {
-                document.getElementById('bulkActionBar').classList.add('hidden');
-            } else {
-                document.getElementById('bulkActionBar').classList.remove('hidden');
-            }
-        }
-
-        function getCardKey(columnId, idx) {
-            return `${columnId}:${idx}`;
-        }
-
-        function selectCard(columnId, idx, event) {
-            const key = getCardKey(columnId, idx);
-            
-            if (event && event.shiftKey) {
-                // Shift+click for range selection
-                if (selectedCards.has(key)) {
-                    selectedCards.delete(key);
-                } else {
-                    selectedCards.add(key);
-                }
-            } else {
-                if (selectedCards.has(key)) {
-                    selectedCards.delete(key);
-                } else {
-                    selectedCards.add(key);
-                }
-            }
-            
-            updateBulkSelectionDisplay();
-            render();
-        }
-
-        function bulkMarkDone() {
-            const tasksToMove = [];
-            selectedCards.forEach(key => {
-                const [columnId, idx] = key.split(':');
-                const actualIdx = parseInt(idx);
-                if (board[columnId] && board[columnId][actualIdx]) {
-                    tasksToMove.push({ columnId, actualIdx, task: board[columnId][actualIdx] });
-                }
-            });
-            
-            // Sort in reverse order to maintain indices when removing
-            tasksToMove.sort((a, b) => b.actualIdx - a.actualIdx);
-            
-            tasksToMove.forEach(({ columnId, actualIdx, task }) => {
-                board[columnId].splice(actualIdx, 1);
-                task.completedDate = new Date().toISOString();
-                board['done'].push(task);
-            });
-            
-            selectedCards.clear();
-            document.getElementById('bulkActionBar').classList.add('hidden');
-            saveBoard();
-            render();
-            showNotification(`✅ ${tasksToMove.length} task(s) marked as done!`);
-        }
-
-        function showNotification(message, type = 'success') {
-            const notif = document.createElement('div');
-            not
+    loadData();
+    setInterval(loadData, 30000); // Auto refresh every 30s
+</script>
+</body>
+</html>

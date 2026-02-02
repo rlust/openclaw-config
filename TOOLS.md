@@ -19,16 +19,29 @@ Skills define *how* tools work. This file is for *your* specifics — the stuff 
 **Tool:** `memo` CLI
 **Access:** Direct access via Mac mini
 
-## Home Assistant
+## Home Assistant (Aspire RV)
 
-**Location:** RV (Aspire motorhome)
+**Location:** RV (Aspire motorhome) - Currently in Naples, FL
 **URL:** http://192.168.100.234:8123
 **Access:** Long-lived access token stored in `.credentials`
+**Script:** `scripts/ha-helper.sh`
 
 **Areas:**
 - Aspire: Kitchen, Bedroom, Living Room, Bathroom Mid, Bathroom Rear, Media, Security
 - Outside: Awning, Outside, Location, Golf Cart
 - Coach Systems
+
+## Home Assistant (Newark Home)
+
+**Location:** Newark, OH (House)
+**URL:** https://ykm02dybhyaob0myui6lj13x8kl7n996.ui.nabu.casa
+**Access:** Long-lived access token stored in `.credentials`
+**Script:** `scripts/ha-newark.sh`
+
+**Key Systems:**
+- **Security:** Alarm (HAI OmniLink + Alarmo), Locks
+- **Garage:** Door status
+- **Cameras:** EZVIZ
 
 ---
 

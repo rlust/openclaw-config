@@ -1,0 +1,12 @@
+# Sensitive credentials - DO NOT COMMIT
+.credentials
+google.key
+*.key
+*.secret
+.env
+.env.local
+
+# System files
+.DS_Store
+node_modules/
+*.log
