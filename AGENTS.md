@@ -8,11 +8,18 @@ If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out w
 
 ## Every Session
 
-Before doing anything else:
-1. Read `SOUL.md` — this is who you are
-2. Read `USER.md` — this is who you're helping
-3. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
-4. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+**Keep it light.** On session start, load only:
+1. `SOUL.md` — who you are
+2. `USER.md` — who you're helping
+3. `IDENTITY.md` — your name/persona
+4. `memory/YYYY-MM-DD.md` (today only) — recent context
+
+**Skip:** `MEMORY.md`, old daily notes, prior conversations. Pull them **on demand** when the task actually requires it. Use `memory_search` for specific lookups.
+
+**On session end:** Save a brief daily summary to `memory/YYYY-MM-DD.md`:
+- What we covered
+- Decisions made
+- Open items
 
 Don't ask permission. Just do it.
 
@@ -40,6 +47,46 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - When you learn a lesson → update AGENTS.md, TOOLS.md, or the relevant skill
 - When you make a mistake → document it so future-you doesn't repeat it
 - **Text > Brain** 📝
+
+## Model Routing (Cost Control)
+
+**Default Model:** Haiku (cheaper, faster) — use for everything.
+
+**Premium Model:** Sonnet — escalate ONLY when the task requires:
+- Architecture decisions
+- Production code or client-facing writing
+- Security work
+- Complex multi-step reasoning
+
+**Rule:** If unsure, start with default. Escalate only if the result falls short.
+
+## Budget & Cost Tracking
+
+**Daily Cap:** $5 (alert at 75% = $3.75)  
+**Monthly Cap:** $100 (alert at 75% = $75)  
+**Report:** Token usage after completing any task
+
+Track spend in `memory/2026-02-DD.md` with:
+- Task description
+- Model used
+- Estimated tokens (input + output)
+- Estimated cost
+- Running daily/monthly total
+
+## Pacing & Rate Limits
+
+**API Call Pacing:**
+- Minimum 5 seconds between API calls
+- Minimum 10 seconds between web searches
+- Maximum 5 searches per batch, then 2-minute cooldown
+
+**Batch Operations:**
+- Combine similar operations into single requests
+- Reduces overhead and respects rate limits
+
+**Rate Limit Handling:**
+- On 429 error: STOP, wait 5 minutes, retry once
+- If still failing: alert Randy and pause operations
 
 ## Safety
 

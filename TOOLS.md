@@ -19,6 +19,14 @@ Skills define *how* tools work. This file is for *your* specifics — the stuff 
 **Tool:** `memo` CLI
 **Access:** Direct access via Mac mini
 
+## ElevenLabs TTS (Voice)
+
+**Setup:** Active ✓
+**API Key:** Stored in `.credentials-elevenlabs`
+**Voice:** Rachel (female)
+**Format:** Audio + Text in Telegram
+**Usage:** I'll automatically send voice responses alongside text messages via Telegram
+
 ## Home Assistant (Aspire RV)
 
 **Location:** RV (Aspire motorhome) - Currently in Naples, FL
@@ -42,6 +50,24 @@ Skills define *how* tools work. This file is for *your* specifics — the stuff 
 - **Security:** Alarm (HAI OmniLink + Alarmo), Locks
 - **Garage:** Door status
 - **Cameras:** EZVIZ
+
+## Telegram Group Topics (HAL Group)
+**Group ID:** `-1003858096289`
+- **🏠 Home & Security:** Thread ID `31`
+- **💻 Code & Dev:** Thread ID `32`
+- **🧠 Brain & Memory:** Thread ID `33`
+- **💬 General / Lobby:** Thread ID `34`
+
+## Wyze Docker Bridge (Newark)
+
+**Location:** Newark, OH (Proxmox Server)
+**URL:** http://100.82.85.95:5050
+**Status:** Active (Feb 2026)
+**Cameras:**
+- **Newark:** foyer, family-room, kitchen
+- **Outside:** londondale-backyard, shed-cam, office-cam, dash
+- **Aspire RV:** aspire-rt, aspire-lt
+**Access:** Direct HTTP snapshots (e.g., `/snapshot/foyer.jpg`)
 
 ---
 

@@ -27,6 +27,14 @@
           "assignee": "HAL",
           "dueDate": "2026-02-06",
           "description": "n8n workflow manager"
+        },
+        {
+          "id": "t4",
+          "title": "Loveable Fidelity Project",
+          "priority": "medium",
+          "assignee": "HAL",
+          "dueDate": "",
+          "description": "Troubleshooting fix for database app"
         }
       ]
     },
@@ -41,14 +49,6 @@
           "assignee": "both",
           "dueDate": "2026-02-15",
           "description": "2024 Rental Summary Draft & Reporting"
-        },
-        {
-          "id": "t4",
-          "title": "Loveable Fidelity Project",
-          "priority": "medium",
-          "assignee": "HAL",
-          "dueDate": "",
-          "description": "Troubleshooting fix for database app"
         }
       ]
     },

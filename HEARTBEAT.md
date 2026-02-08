@@ -2,17 +2,17 @@
 
 # Proactive Monitoring
 
-## Rate Limit Monitoring (Feb 2, 2026 - ACTIVE)
-**Context:** Applied Gemini fallback + increased token allowances
+## Rate Limit Monitoring
+**Context:** Credit added to OpenRouter (Feb 6). Dual LLM support verified.
 **Goal:** Keep responses flowing with Claude + Gemini dual LLM support
 **Watch for:** Any 429 errors or slow responses
-**Status:** ENABLED - Dual LLM failover active
+**Status:** ACTIVE - Credit confirmed, models responding
 
 ## Checks to run on heartbeat:
 1. **Rate limit check** - Look for 429 errors in logs
 2. **Aspire RV Home Assistant** - Check for updates & alerts
 3. **Newark Home Assistant (Security & Temp)**
-   - **Temp Alert:** Notify if internal temp < 41°F (Check: `sensor.family_room_temperature`, `sensor.h5075_cb13_temperature`)
+   - **Temp Alert:** Notify if internal temp < 40°F (Check: `sensor.family_room_temperature`, `sensor.h5075_cb13_temperature`)
    - **Security Alert:** Notify if alarm triggered or doors open (Check: `binary_sensor.doors_hai`, `alarm_control_panel.omnilink_area_1`)
    - **Motion Alert:** Notify if indoor motion detected (Check: `binary_sensor.motion_kitchen`, `binary_sensor.hai_motion_shop`)
 4. OpenClaw news/updates on web
