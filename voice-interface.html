@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAL Voice Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .status {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .status.listening {
+            color: #10b981;
+            font-weight: 500;
+        }
+
+        .status.processing {
+            color: #f59e0b;
+            font-weight: 500;
+        }
+
+        .mic-button {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 60px;
+            cursor: pointer;
+            margin: 30px auto;
+            transition: all 0.2s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .mic-button:active {
+            transform: scale(0.95);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .mic-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .mic-button.recording {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
+            }
+            50% {
+                box-shadow: 0 10px 40px rgba(239, 68, 68, 0.6);
+            }
+        }
+
+        .response-box {
+            background: #f3f4f6;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .response-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .audio-player {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .transcript {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+            padding: 10px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #999;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .error {
+            color: #ef4444;
+            font-size: 14px;
+            padding: 10px;
+            background: #fee2e2;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e5e7eb;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="avatar">🔴</div>
+            <h1>HAL</h1>
+            <div class="status" id="status">Ready to listen</div>
+        </div>
+
+        <button class="mic-button" id="micButton" title="Press and hold to record">🎤</button>
+
+        <div class="response-box" id="responseBox" style="display: none;">
+            <div id="responseContent"></div>
+        </div>
+
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div class="footer">
+            <p>Press and hold the microphone to speak</p>
+            <p style="margin-top: 10px; font-size: 11px;">Voice powered by ElevenLabs</p>
+        </div>
+    </div>
+
+    <script>
+        const micButton = document.getElementById('micButton');
+        const statusEl = document.getElementById('status');
+        const responseBox = document.getElementById('responseBox');
+        const responseContent = document.getElementById('responseContent');
+        const errorEl = document.getElementById('error');
+
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+
+        // Initialize Web Audio API
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = async () => {
+                    isRecording = false;
+                    micButton.classList.remove('recording');
+                    statusEl.textContent = 'Processing...';
+                    statusEl.classList.add('processing');
+                    micButton.disabled = true;
+
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    audioChunks =

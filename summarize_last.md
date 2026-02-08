@@ -1,0 +1,1 @@
+- The bot will now commit changes to GitHub after every update
