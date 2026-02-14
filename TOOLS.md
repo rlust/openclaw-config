@@ -12,7 +12,7 @@ Skills define *how* tools work. This file is for *your* specifics — the stuff 
 
 **Access:**
 - Direct AppleScript access via Mac mini
-- App-specific password stored in `.credentials`
+- App-specific password stored in `.credentials` (not in version control)
 
 ## Apple Notes
 
@@ -22,7 +22,7 @@ Skills define *how* tools work. This file is for *your* specifics — the stuff 
 ## ElevenLabs TTS (Voice)
 
 **Setup:** Active ✓
-**API Key:** Stored in `.credentials-elevenlabs`
+**API Key:** Stored in `.credentials-elevenlabs` (not in version control)
 **Voice:** Rachel (female)
 **Format:** Audio + Text in Telegram
 **Usage:** I'll automatically send voice responses alongside text messages via Telegram
@@ -30,8 +30,8 @@ Skills define *how* tools work. This file is for *your* specifics — the stuff 
 ## Home Assistant (Aspire RV)
 
 **Location:** RV (Aspire motorhome) - Currently in Naples, FL
-**URL:** http://192.168.100.234:8123
-**Access:** Long-lived access token stored in `.credentials`
+**URL:** Local network IP (stored in `.credentials`)
+**Access:** Long-lived access token stored in `.credentials` (not in version control)
 **Script:** `scripts/ha-helper.sh`
 
 **Areas:**
@@ -42,8 +42,8 @@ Skills define *how* tools work. This file is for *your* specifics — the stuff 
 ## Home Assistant (Newark Home)
 
 **Location:** Newark, OH (House)
-**URL:** https://ykm02dybhyaob0myui6lj13x8kl7n996.ui.nabu.casa
-**Access:** Long-lived access token stored in `.credentials`
+**URL:** Nabu Casa remote URL (stored in `.credentials`)
+**Access:** Long-lived access token stored in `.credentials` (not in version control)
 **Script:** `scripts/ha-newark.sh`
 
 **Key Systems:**
@@ -52,22 +52,23 @@ Skills define *how* tools work. This file is for *your* specifics — the stuff 
 - **Cameras:** EZVIZ
 
 ## Telegram Group Topics (HAL Group)
-**Group ID:** `-1003858096289`
-- **🏠 Home & Security:** Thread ID `31`
-- **💻 Code & Dev:** Thread ID `32`
-- **🧠 Brain & Memory:** Thread ID `33`
-- **💬 General / Lobby:** Thread ID `34`
+
+**Group:** Configured in OpenClaw config
+- **🏠 Home & Security:** Thread ID configured
+- **💻 Code & Dev:** Thread ID configured
+- **🧠 Brain & Memory:** Thread ID configured
+- **💬 General / Lobby:** Thread ID configured
 
 ## Wyze Docker Bridge (Newark)
 
 **Location:** Newark, OH (Proxmox Server)
-**URL:** http://100.82.85.95:5050
+**URL:** Local network IP (stored in `.credentials`)
 **Status:** Active (Feb 2026)
 **Cameras:**
 - **Newark:** foyer, family-room, kitchen
 - **Outside:** londondale-backyard, shed-cam, office-cam, dash
 - **Aspire RV:** aspire-rt, aspire-lt
-**Access:** Direct HTTP snapshots (e.g., `/snapshot/foyer.jpg`)
+**Access:** Direct HTTP snapshots configured
 
 ---
 
