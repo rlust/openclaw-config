@@ -5,6 +5,8 @@ google.key
 *.secret
 .env
 .env.local
+.openclaw/
+.tmp/
 
 # System files
 .DS_Store
