@@ -1,7 +1,5 @@
 # Proactive Monitoring
 
-# Proactive Monitoring
-
 ## Rate Limit Monitoring
 **Context:** Credit added to OpenRouter (Feb 6). Dual LLM support verified.
 **Goal:** Keep responses flowing with Claude + Gemini dual LLM support

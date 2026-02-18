@@ -1,0 +1,16 @@
+{
+  "domain": "rv_c_bridge",
+  "name": "RV-C Bridge",
+  "version": "0.2.0",
+  "documentation": "https://github.com/rlust/rv-c-bridge",
+  "issue_tracker": "https://github.com/rlust/rv-c-bridge/issues",
+  "codeowners": ["@rlust"],
+  "config_flow": true,
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "requirements": [],
+  "dependencies": ["mqtt"],
+  "homeassistant": {
+    "min_version": "2024.1.0"
+  }
+}

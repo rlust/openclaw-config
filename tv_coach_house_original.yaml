@@ -1,0 +1,818 @@
+views:
+  - title: TV Coach House
+    path: tv-coach-house
+    type: sections
+    sections:
+      - type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: |
+                  # 🍎 Apple TV — Coach House
+              - type: media-control
+                entity: media_player.apple_tv_4k_aspire
+              - type: markdown
+                content: |
+                  ## ⭐ Favorites
+              - type: grid
+                columns: 3
+                square: false
+                cards:
+                  - type: button
+                    name: YouTube
+                    icon: mdi:youtube
+                    icon_color: red
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: YouTube
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                    double_tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: menu
+                  - type: button
+                    name: Paramount+
+                    icon: mdi:plus-circle
+                    icon_color: blue
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: Paramount+
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                    double_tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: menu
+                  - type: button
+                    name: Netflix
+                    icon: mdi:netflix
+                    icon_color: red
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: Netflix
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                    double_tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: menu
+                  - type: button
+                    name: DIRECTV
+                    icon: mdi:satellite-variant
+                    icon_color: blue
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: DIRECTV
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                    double_tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: menu
+                  - type: button
+                    name: Peacock
+                    icon: mdi:feather
+                    icon_color: teal
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: Peacock
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                    double_tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: menu
+                  - type: button
+                    name: Music
+                    icon: mdi:music
+                    icon_color: deep-purple
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: Music
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                    double_tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: menu
+              - type: markdown
+                content: |
+                  ## 🎛️ Quick Controls
+              - type: grid
+                columns: 4
+                square: false
+                cards:
+                  - type: button
+                    name: Home
+                    icon: mdi:home
+                    tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                  - type: button
+                    name: Menu
+                    icon: mdi:menu
+                    tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: menu
+                  - type: button
+                    name: Play/Pause
+                    icon: mdi:play-pause
+                    tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: play_pause
+                  - type: button
+                    name: Siri
+                    icon: mdi:microphone
+                    tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: siri
+              - type: markdown
+                content: |
+                  ## 🎮 Navigation
+              - type: grid
+                columns: 3
+                square: false
+                cards:
+                  - type: button
+                    icon: mdi:arrow-up-bold
+                    tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: up
+                  - type: button
+                    icon: mdi:checkbox-blank-circle
+                    name: Select
+                    tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: select
+                  - type: button
+                    icon: mdi:arrow-down-bold
+                    tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: down
+                  - type: button
+                    icon: mdi:arrow-left-bold
+                    tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: left
+                  - type: button
+                    icon: mdi:home-outline
+                    name: Top
+                    tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: top_menu
+                  - type: button
+                    icon: mdi:arrow-right-bold
+                    tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: right
+              - type: markdown
+                content: |
+                  ## 📺 Streaming
+              - type: grid
+                columns: 4
+                square: false
+                cards:
+                  - type: button
+                    name: Prime Video
+                    icon: mdi:amazon
+                    icon_color: amber
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: Prime Video
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                    double_tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: menu
+                  - type: button
+                    name: Hulu
+                    icon: mdi:alpha-h-circle
+                    icon_color: green
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: Hulu
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                    double_tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: menu
+                  - type: button
+                    name: HBO Max
+                    icon: mdi:alpha-h-circle-outline
+                    icon_color: deep-purple
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: HBO Max
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                    double_tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: menu
+                  - type: button
+                    name: Disney+
+                    icon: mdi:plus-circle-outline
+                    icon_color: indigo
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: Disney+
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                    double_tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: menu
+                  - type: button
+                    name: Plex
+                    icon: mdi:plex
+                    icon_color: amber
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: Plex
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                    double_tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: menu
+                  - type: button
+                    name: Pluto TV
+                    icon: mdi:television-classic
+                    icon_color: cyan
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: Pluto TV
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                    double_tap_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: menu
+              - type: markdown
+                content: |
+                  ## 🏈 Live TV & Sports
+              - type: grid
+                columns: 4
+                square: false
+                cards:
+                  - type: button
+                    name: YouTube TV
+                    icon: mdi:television-play
+                    icon_color: red
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: YouTube TV
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                  - type: button
+                    name: ESPN
+                    icon: mdi:alpha-e-circle
+                    icon_color: red
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: ESPN
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                  - type: button
+                    name: FOX Sports
+                    icon: mdi:trophy
+                    icon_color: orange
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: FOX Sports
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                  - type: button
+                    name: NFL
+                    icon: mdi:football
+                    icon_color: brown
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: NFL
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+              - type: markdown
+                content: |
+                  ## 🧰 Utilities
+              - type: grid
+                columns: 4
+                square: false
+                cards:
+                  - type: button
+                    name: Protect
+                    icon: mdi:cctv
+                    icon_color: teal
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: Protect
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                  - type: button
+                    name: Photos
+                    icon: mdi:image
+                    icon_color: pink
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: Photos
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                  - type: button
+                    name: Settings
+                    icon: mdi:cog
+                    icon_color: grey
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: Settings
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                  - type: button
+                    name: App Store
+                    icon: mdi:store
+                    icon_color: indigo
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: App Store
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+              - type: markdown
+                content: |
+                  ## 🗞️ News
+              - type: grid
+                columns: 4
+                square: false
+                cards:
+                  - type: button
+                    name: CBS News
+                    icon: mdi:newspaper-variant
+                    icon_color: blue
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: CBS News
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                  - type: button
+                    name: Fox News
+                    icon: mdi:alpha-f-circle
+                    icon_color: blue
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: Fox News
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                  - type: button
+                    name: WSJ
+                    icon: mdi:finance
+                    icon_color: grey
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: WSJ
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+                  - type: button
+                    name: The Weather Channel
+                    icon: mdi:weather-partly-cloudy
+                    icon_color: cyan
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.apple_tv_4k_aspire
+                      data:
+                        source: The Weather Channel
+                    hold_action:
+                      action: call-service
+                      service: remote.send_command
+                      target:
+                        entity_id: remote.apple_tv_4k_aspire
+                      data:
+                        command: home
+          - type: grid
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: markdown
+                    content: |
+                      ## 🔊 Volume (Coach House TV)
+                  - type: grid
+                    columns: 3
+                    square: false
+                    cards:
+                      - type: button
+                        name: Vol -
+                        icon: mdi:volume-minus
+                        tap_action:
+                          action: call-service
+                          service: media_player.volume_down
+                          target:
+                            entity_id: media_player.coach_house_tv_samsung
+                      - type: button
+                        name: Mute
+                        icon: mdi:volume-off
+                        tap_action:
+                          action: call-service
+                          service: script.mute_coach_house_tv
+                      - type: button
+                        name: Vol +
+                        icon: mdi:volume-plus
+                        tap_action:
+                          action: call-service
+                          service: media_player.volume_up
+                          target:
+                            entity_id: media_player.coach_house_tv_samsung
+              - type: vertical-stack
+                cards:
+                  - type: markdown
+                    content: |
+                      ## 🔊 Volume (Coach House TV)
+                  - type: grid
+                    columns: 5
+                    square: false
+                    cards:
+                      - type: button
+                        name: Vol -
+                        icon: mdi:volume-minus
+                        tap_action:
+                          action: call-service
+                          service: media_player.volume_down
+                          target:
+                            entity_id: media_player.coach_house_tv_samsung
+                      - type: button
+                        name: Mute
+                        icon: mdi:volume-mute
+                        tap_action:
+                          action: call-service
+                          service: media_player.volume_mute
+                          target:
+                            entity_id: media_player.coach_house_tv_samsung
+                          data:
+                            is_volume_muted: true
+                      - type: button
+                        name: Toggle
+                        icon: mdi:volume-off
+                        tap_action:
+                          action: call-service
+                          service: media_player.volume_mute
+                          target:
+                            entity_id: media_player.coach_house_tv_samsung
+                          data:
+                            is_volume_muted: >-
+                              {{ not state_attr('media_player.coach_house_tv_samsung','is_volume_muted') }}
+                      - type: button
+                        name: Unmute
+                        icon: mdi:volume-high
+                        tap_action:
+                          action: call-service
+                          service: media_player.volume_mute
+                          target:
+                            entity_id: media_player.coach_house_tv_samsung
+                          data:
+                            is_volume_muted: false
+                      - type: button
+                        name: Vol +
+                        icon: mdi:volume-plus
+                        tap_action:
+                          action: call-service
+                          service: media_player.volume_up
+                          target:
+                            entity_id: media_player.coach_house_tv_samsung
+                  - type: grid
+                    columns: 5
+                    square: false
+                    cards:
+                      - type: button
+                        name: 10%
+                        icon: mdi:volume-low
+                        tap_action:
+                          action: call-service
+                          service: media_player.volume_set
+                          target:
+                            entity_id: media_player.coach_house_tv_samsung
+                          data:
+                            volume_level: 0.1
+                      - type: button
+                        name: 20%
+                        icon: mdi:volume-medium
+                        tap_action:
+                          action: call-service
+                          service: media_player.volume_set
+                          target:
+                            entity_id: media_player.coach_house_tv_samsung
+                          data:
+                            volume_level: 0.2
+                      - type: button
+                        name: 30%
+                        icon: mdi:volume-high
+                        tap_action:
+                          action: call-service
+                          service: media_player.volume_set
+                          target:
+                            entity_id: media_player.coach_house_tv_samsung
+                          data:
+                            volume_level: 0.3
+                      - type: button
+                        name: 40%
+                        icon: mdi:volume-high
+                        tap_action:
+                          action: call-service
+                          service: media_player.volume_set
+                          target:
+                            entity_id: media_player.coach_house_tv_samsung
+                          data:
+                            volume_level: 0.4
+                      - type: button
+                        name: 60%
+                        icon: mdi:volume-high
+                        tap_action:
+                          action: call-service
+                          service: media_player.volume_set
+                          target:
+                            entity_id: media_player.coach_house_tv_samsung
+                          data:
+                            volume_level: 0.6

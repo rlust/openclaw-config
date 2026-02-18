@@ -6,7 +6,7 @@
 - **What to call them:** Randy
 - **Pronouns:** he/him
 - **Timezone:** America/New_York (EST/EDT)
-- **Notes:** Currently in Naples, FL
+- **Notes:** Often winters in Naples, FL; warm months in Newark, OH (current location varies).
 
 ## Context
 
@@ -24,10 +24,7 @@
 - **Photography:**
   - Website: [rlust.com](https://rlust.com)
 - Big into Home Automation (uses Home Assistant)
-  - RV Home Assistant: http://192.168.100.234
-  - Aspire motorhome areas: Kitchen, Bedroom, Living Room, Bathrooms, Media, Security
-  - Outside: Awning, Golf Cart, Location tracking
-  - Coach Systems integration
+  - Uses Home Assistant for RV + Newark (see TOOLS.md for endpoints/areas/scripts).
 - Follows AI developments on YouTube
 - Wants updates on OpenClaw capabilities
 

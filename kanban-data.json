@@ -5,14 +5,6 @@
       "title": "Backlog",
       "tasks": [
         {
-          "id": "t1",
-          "title": "Google Project NEST",
-          "priority": "medium",
-          "assignee": "both",
-          "dueDate": "",
-          "description": "Home Assistant integration"
-        },
-        {
           "id": "t2",
           "title": "MCP Integration",
           "priority": "medium",
@@ -29,12 +21,68 @@
           "description": "n8n workflow manager"
         },
         {
-          "id": "t4",
-          "title": "Loveable Fidelity Project",
+          "id": "rvc1",
+          "title": "RV-C Bridge: Research PGN list for Entegra Aspire",
+          "priority": "high",
+          "assignee": "both",
+          "dueDate": "2026-02-28",
+          "description": "Compile full PGN list for Entegra Aspire. Map battery, tanks, temps, generator, solar. Use USB CAN adapter to capture live data."
+        },
+        {
+          "id": "rvc2",
+          "title": "RV-C Bridge: PCB schematic v0.1 (KiCad)",
+          "priority": "high",
+          "assignee": "HAL",
+          "dueDate": "2026-03-15",
+          "description": "Design schematic: STM32L476 + TJA1055 CAN transceiver + ESP32-WROOM-32. 12V power supply. DB9 connector."
+        },
+        {
+          "id": "rvc3",
+          "title": "RV-C Bridge: Firmware CAN RX + PGN dispatcher",
+          "priority": "high",
+          "assignee": "HAL",
+          "dueDate": "2026-03-15",
+          "description": "Firmware skeleton: CAN init, RX interrupt, PGN dispatch table. Test on breadboard with STM32 dev board."
+        },
+        {
+          "id": "rvc4",
+          "title": "RV-C Bridge: Battery decoder (PGN 65100)",
+          "priority": "high",
+          "assignee": "HAL",
+          "dueDate": "2026-03-20",
+          "description": "Decode voltage (0.05V/LSB), current (0.1A/LSB signed), SOC (0.4%/LSB). Unit tests. Validate against live Aspire data."
+        },
+        {
+          "id": "rvc5",
+          "title": "RV-C Bridge: Tank level decoder (PGN 65099)",
           "priority": "medium",
           "assignee": "HAL",
-          "dueDate": "",
-          "description": "Troubleshooting fix for database app"
+          "dueDate": "2026-03-20",
+          "description": "Decode tank type (fresh/gray/black) and level percentage. Unit tests."
+        },
+        {
+          "id": "rvc6",
+          "title": "RV-C Bridge: REST API (battery, tanks, temps)",
+          "priority": "medium",
+          "assignee": "HAL",
+          "dueDate": "2026-03-25",
+          "description": "HTTP server on ESP32: GET /api/battery, /api/tanks, /api/temps. JSON responses. MQTT publish to coach/# topics."
+        },
+        {
+          "id": "rvc7",
+          "title": "RV-C Bridge: Home Assistant MQTT integration",
+          "priority": "medium",
+          "assignee": "HAL",
+          "dueDate": "2026-03-31",
+          "description": "HA custom component with MQTT auto-discovery. Sensors for battery, tanks, temps. config_flow for device IP + MQTT broker."
+        },
+        {
+          "id": "rvc8",
+          "title": "RV-C Bridge: BOM pricing & sourcing",
+          "priority": "medium",
+          "assignee": "HAL",
+          "dueDate": "2026-02-28",
+          "description": "Price all components. Target BOM < $60. Get quotes for 100-unit run from Mouser/DigiKey."
         }
       ]
     },
@@ -43,24 +91,67 @@
       "title": "In Progress",
       "tasks": [
         {
-          "id": "t3",
-          "title": "Lust Rentals Tax Reporting",
+          "id": "rvc13",
+          "title": "RV-C Bridge: Hardware architecture v0.1 (dual CAN + Ethernet + isolation)",
           "priority": "high",
-          "assignee": "both",
-          "dueDate": "2026-02-15",
-          "description": "2024 Rental Summary Draft & Reporting"
+          "assignee": "HAL",
+          "dueDate": "2026-02-20",
+          "description": "Define the custom board architecture: MCU selection, dual CAN transceivers (isolated), Ethernet PHY/magnetics, automotive power input, connectors, termination strategy, and TX safety gate. Deliverables: block diagram + pin plan + v0.1 BOM.\n\n\u2705 hardware-v0.1.md + bom-v0.1.csv + pinmap-v0.1.md committed to GitHub."
         }
       ]
     },
     {
       "id": "done",
       "title": "Done",
-      "tasks": []
+      "tasks": [
+        {
+          "id": "rvc10",
+          "title": "RV-C Bridge: Buy USB CAN adapter for live testing",
+          "priority": "high",
+          "assignee": "Randy",
+          "dueDate": "2026-02-21",
+          "description": "Decision: use existing Pi + CAN HAT setup (already connected to Aspire). Skip separate USB-CAN adapter for now. \u2705"
+        },
+        {
+          "id": "rvc9",
+          "title": "RV-C Bridge: GitHub repo + docs",
+          "priority": "high",
+          "assignee": "HAL",
+          "dueDate": "2026-02-17",
+          "description": "Create private GitHub repo rlust/rv-c-bridge. README, architecture docs, hardware BOM, firmware skeleton, HA integration.\n\nStatus: GitHub repo created + initial scaffold committed (docs/ firmware/ HA skeleton). \u2705"
+        },
+        {
+          "id": "t3",
+          "title": "Lust Rentals Tax Reporting",
+          "priority": "high",
+          "assignee": "both",
+          "dueDate": "2026-02-15",
+          "description": "2024 Rental Summary Draft & Reporting",
+          "completedAt": "2026-02-14T16:50:35.089Z"
+        }
+      ]
     },
     {
       "id": "ideas",
       "title": "Ideas",
-      "tasks": []
+      "tasks": [
+        {
+          "id": "t4",
+          "title": "Loveable Fidelity Project",
+          "priority": "medium",
+          "assignee": "Randy",
+          "dueDate": "",
+          "description": "Troubleshooting fix for database app"
+        },
+        {
+          "id": "t1",
+          "title": "Google Project NEST",
+          "priority": "medium",
+          "assignee": "both",
+          "dueDate": "",
+          "description": "Home Assistant integration"
+        }
+      ]
     },
     {
       "id": "relationship",

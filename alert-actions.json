@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "notes": "Maps Telegram inline-button callback_data tokens to cron jobs and fix actions.",
+  "monitors": {
+    "kanban": {
+      "jobId": "065f0f71-1a0f-42e4-ad60-6279d34b7fd8",
+      "description": "Kanban Server Monitor",
+      "fix": {
+        "restartCommand": "nohup /opt/homebrew/bin/python3 /Users/randylust/.openclaw/workspace/scripts/kanban-server-v3.py >/tmp/kanban-server-v3.log 2>&1 &"
+      }
+    },
+    "lustrentals": {
+      "jobId": "250494eb-df1a-43c8-bbde-096b7c56ce1f",
+      "description": "Lust Rentals App Monitor"
+    },
+    "waterheater": {
+      "jobId": "665d955c-8ea9-4ce6-abfb-9e2086ae33f3",
+      "description": "Water Heater Temperature Monitor"
+    }
+  }
+}

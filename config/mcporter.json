@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "ha-aspire": {
+      "baseUrl": "http://192.168.100.127:8123/api/mcp",
+      "description": "Home Assistant MCP (JSON-RPC)",
+      "headers": {
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIxMzQ0NTk2ZDc3OWI0OWUyYTAwMGZjMDIwZDk2Y2JiZSIsImlhdCI6MTc3MTMzNjYzMSwiZXhwIjoyMDg2Njk2NjMxfQ.LXATP8GR5Tf1cvG__5738Virm8iInztiIXZjpZMO6pI"
+      }
+    }
+  },
+  "imports": []
+}

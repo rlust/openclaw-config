@@ -1,0 +1,533 @@
+views:
+  - title: TV Coach House
+    path: tv-coach-house
+    cards:
+
+      - type: custom:bubble-card
+        card_type: custom
+        style: |
+          ha-card {
+            background: rgba(15, 15, 15, 0.72);
+            border-radius: 28px;
+            backdrop-filter: blur(18px);
+            box-shadow: 0 22px 45px rgba(0,0,0,0.35);
+            padding: 12px 16px;
+          }
+        cards:
+          - type: custom:bubble-card
+            card_type: media
+            entity: media_player.apple_tv_4k_aspire
+            name: Apple TV — Coach House
+            show_source: true
+            show_artist: true
+            show_progress: true
+            show_volume: false
+          - type: custom:bubble-card
+            card_type: chips
+            alignment: justify
+            chips:
+              - type: button
+                name: Siri
+                icon: mdi:microphone
+                tap_action:
+                  action: call-service
+                  service: remote.send_command
+                  target: {entity_id: remote.apple_tv_4k_aspire}
+                  data: {command: siri}
+              - type: button
+                name: Menu
+                icon: mdi:menu
+                tap_action:
+                  action: call-service
+                  service: remote.send_command
+                  target: {entity_id: remote.apple_tv_4k_aspire}
+                  data: {command: menu}
+              - type: button
+                name: Home
+                icon: mdi:home
+                tap_action:
+                  action: call-service
+                  service: remote.send_command
+                  target: {entity_id: remote.apple_tv_4k_aspire}
+                  data: {command: home}
+              - type: button
+                name: Play/Pause
+                icon: mdi:play-pause
+                tap_action:
+                  action: call-service
+                  service: remote.send_command
+                  target: {entity_id: remote.apple_tv_4k_aspire}
+                  data: {command: play_pause}
+          - type: custom:bubble-card
+            card_type: dpad
+            entity: remote.apple_tv_4k_aspire
+            commands:
+              up: up
+              down: down
+              left: left
+              right: right
+              center: select
+              back: top_menu
+
+      - type: custom:bubble-card
+        card_type: tiles
+        title: ⭐ Favorites
+        columns: 4
+        cards:
+          - type: custom:bubble-card
+            card_type: button
+            name: YouTube
+            icon: mdi:youtube
+            icon_color: red
+            tap_action: &source
+              action: call-service
+              service: media_player.select_source
+              target: {entity_id: media_player.apple_tv_4k_aspire}
+              data: {source: YouTube}
+            hold_action: &home
+              action: call-service
+              service: remote.send_command
+              target: {entity_id: remote.apple_tv_4k_aspire}
+              data: {command: home}
+            double_tap_action: &menu
+              action: call-service
+              service: remote.send_command
+              target: {entity_id: remote.apple_tv_4k_aspire}
+              data: {command: menu}
+          - type: custom:bubble-card
+            card_type: button
+            name: Netflix
+            icon: mdi:netflix
+            icon_color: red
+            tap_action:
+              <<: *source
+              data: {source: Netflix}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card_type: button
+            name: Paramount+
+            icon: mdi:plus-circle
+            icon_color: blue
+            tap_action:
+              <<: *source
+              data: {source: Paramount+}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card_type: button
+            name: Peacock
+            icon: mdi:feather
+            icon_color: teal
+            tap_action:
+              <<: *source
+              data: {source: Peacock}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card_type: button
+            name: DIRECTV
+            icon: mdi:satellite-variant
+            icon_color: blue
+            tap_action:
+              <<: *source
+              data: {source: DIRECTV}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card_type: button
+            name: Prime Video
+            icon: mdi:amazon
+            icon_color: amber
+            tap_action:
+              <<: *source
+              data: {source: Prime Video}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card_type: button
+            name: Disney+
+            icon: mdi:plus-circle-outline
+            icon_color: indigo
+            tap_action:
+              <<: *source
+              data: {source: Disney+}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card_type: button
+            name: Music
+            icon: mdi:music
+            icon_color: deep-purple
+            tap_action:
+              <<: *source
+              data: {source: Music}
+            hold_action: *home
+            double_tap_action: *menu
+
+      - type: custom:bubble-card
+        card_type: tiles
+        title: 🎬 Streaming Apps
+        columns: 4
+        cards:
+          - type: custom:bubble-card
+            card_type: button
+            name: Hulu
+            icon: mdi:alpha-h-circle
+            icon_color: green
+            tap_action:
+              <<: *source
+              data: {source: Hulu}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card_type: button
+            name: HBO Max
+            icon: mdi:alpha-h-circle-outline
+            icon_color: deep-purple
+            tap_action:
+              <<: *source
+              data: {source: HBO Max}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card_type: button
+            name: Plex
+            icon: mdi:plex
+            icon_color: amber
+            tap_action:
+              <<: *source
+              data: {source: Plex}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card type: button
+            name: Pluto TV
+            icon: mdi:television-classic
+            icon_color: cyan
+            tap_action:
+              <<: *source
+              data: {source: Pluto TV}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card_type: button
+            name: Apple TV+
+            icon: mdi:apple
+            icon_color: grey
+            tap_action:
+              <<: *source
+              data: {source: Apple TV+}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card type: button
+            name: Peacock Extra
+            icon: mdi:feather
+            icon_color: teal
+            tap_action:
+              <<: *source
+              data: {source: Peacock}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card type: button
+            name: Tubi
+            icon: mdi:alpha-t-circle
+            icon_color: orange
+            tap_action:
+              <<: *source
+              data: {source: Tubi}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card_type: button
+            name: Crackle
+            icon: mdi:television
+            icon_color: deep-orange
+            tap_action:
+              <<: *source
+              data: {source: Crackle}
+            hold_action: *home
+            double_tap_action: *menu
+
+      - type: custom:bubble-card
+        card_type: tiles
+        title: 🏈 Live TV & Sports
+        columns: 4
+        cards:
+          - type: custom:bubble-card
+            card_type: button
+            name: YouTube TV
+            icon: mdi:television-play
+            icon_color: red
+            tap_action:
+              <<: *source
+              data: {source: YouTube TV}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card_type: button
+            name: ESPN
+            icon: mdi:alpha-e-circle
+            icon_color: red
+            tap_action:
+              <<: *source
+              data: {source: ESPN}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card_type: button
+            name: FOX Sports
+            icon: mdi:trophy
+            icon_color: orange
+            tap_action:
+              <<: *source
+              data: {source: FOX Sports}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card_type: button
+            name: NFL
+            icon: mdi:football
+            icon_color: brown
+            tap_action:
+              <<: *source
+              data: {source: NFL}
+            hold_action: *home
+            double_tap_action: *menu
+
+      - type: custom:bubble-card
+        card_type: tiles
+        title: 🧰 Utilities
+        columns: 4
+        cards:
+          - type: custom:bubble-card
+            card_type: button
+            name: Protect
+            icon: mdi:cctv
+            icon_color: teal
+            tap_action:
+              <<: *source
+              data: {source: Protect}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card_type: button
+            name: Photos
+            icon: mdi:image
+            icon_color: pink
+            tap_action:
+              <<: *source
+              data: {source: Photos}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card_type: button
+            name: Settings
+            icon: mdi:cog
+            icon_color: grey
+            tap_action:
+              <<: *source
+              data: {source: Settings}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card_type: button
+            name: App Store
+            icon: mdi:store
+            icon_color: indigo
+            tap_action:
+              <<: *source
+              data: {source: App Store}
+            hold_action: *home
+            double_tap_action: *menu
+
+      - type: custom:bubble-card
+        card type: tiles
+        title: 🗞 News & Info
+        columns: 4
+        cards:
+          - type: custom:bubble-card
+            card type: button
+            name: CBS News
+            icon: mdi:newspaper-variant
+            icon_color: blue
+            tap_action:
+              <<: *source
+              data: {source: CBS News}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card type: button
+            name: Fox News
+            icon: mdi:alpha-f-circle
+            icon_color: blue
+            tap_action:
+              <<: *source
+              data: {source: Fox News}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card type: button
+            name: WSJ
+            icon: mdi:finance
+            icon_color: grey
+            tap_action:
+              <<: *source
+              data: {source: WSJ}
+            hold_action: *home
+            double_tap_action: *menu
+          - type: custom:bubble-card
+            card type: button
+            name: Weather Channel
+            icon: mdi:weather-partly-cloudy
+            icon_color: cyan
+            tap_action:
+              <<: *source
+              data: {source: The Weather Channel}
+            hold_action: *home
+            double_tap_action: *menu
+
+      - type: custom:bubble-card
+        card_type: custom
+        title: Navigation & Scenes
+        cards:
+          - type: custom:bubble-card
+            card type: grid
+            columns: 3
+            cards:
+              - type: custom:bubble-card
+                card type: button
+                icon: mdi:arrow-up-bold
+                tap_action: {action: call-service, service: remote.send_command,
+                  target: {entity_id: remote.apple_tv_4k_aspire}, data: {command: up}}
+              - type: custom:bubble-card
+                card type: button
+                icon: mdi:checkbox-blank-circle
+                name: Select
+                tap_action: {action: call-service, service: remote.send_command,
+                  target: {entity_id: remote.apple_tv_4k_aspire}, data: {command: select}}
+              - type: custom:bubble-card
+                card type: button
+                icon: mdi:arrow-down-bold
+                tap_action: {action: call-service, service: remote.send_command,
+                  target: {entity_id: remote.apple_tv_4k_aspire}, data: {command: down}}
+              - type: custom:bubble-card
+                card type: button
+                icon: mdi:arrow-left-bold
+                tap_action: {action: call-service, service: remote.send_command,
+                  target: {entity_id: remote.apple_tv_4k_aspire}, data: {command: left}}
+              - type: custom:bubble-card
+                card type: button
+                icon: mdi:home-outline
+                name: Top
+                tap_action: {action: call-service, service: remote.send_command,
+                  target: {entity_id: remote.apple_tv_4k_aspire}, data: {command: top_menu}}
+              - type: custom:bubble-card
+                card type: button
+                icon: mdi:arrow-right-bold
+                tap_action: {action: call-service, service: remote.send_command,
+                  target: {entity_id: remote.apple_tv_4k_aspire}, data: {command: right}}
+          - type: custom:bubble-card
+            card_type: chips
+            chips:
+              - type: button
+                name: Lights Down
+                icon: mdi:lightbulb-night
+                tap_action: {action: call-service, service: scene.turn_on,
+                  target: {entity_id: scene.tv_coach_lights_low}}
+              - type: button
+                name: Shades
+                icon: mdi:blinds
+                tap_action: {action: call-service, service: cover.toggle,
+                  target: {entity_id: cover.coach_house_shades}}
+              - type: button
+                name: All Off
+                icon: mdi:power
+                icon_color: red
+                tap_action: {action: call-service, service: script.coach_house_all_off}
+
+      - type: custom:bubble-card
+        card_type: custom
+        title: Coach House Audio
+        cards:
+          - type: custom:bubble-card
+            card type: slider
+            entity: media_player.coach_house_tv_samsung
+            name: TV Volume
+            step: 0.05
+          - type: custom:bubble-card
+            card type: chips
+            chips:
+              - type: button
+                name: Mute
+                icon: mdi:volume-off
+                tap_action: {action: call-service, service: media_player.volume_mute,
+                  target: {entity_id: media_player.coach_house_tv_samsung}, data: {is_volume_muted: true}}
+              - type: button
+                name: Toggle
+                icon: mdi:volume-variant
+                tap_action: {action: call-service, service: script.mute_coach_house_tv}
+              - type: button
+                name: Unmute
+                icon: mdi:volume-high
+                tap_action: {action: call-service, service: media_player.volume_mute,
+                  target: {entity_id: media_player.coach_house_tv_samsung}, data: {is_volume_muted: false}}
+          - type: custom:bubble-card
+            card type: tiles
+            columns: 5
+            cards:
+              - type: custom:bubble-card
+                card type: button
+                name: 10%
+                icon: mdi:volume-low
+                tap_action: {action: call-service, service: media_player.volume_set,
+                  target: {entity_id: media_player.coach_house_tv_samsung}, data: {volume_level: 0.1}}
+              - type: custom:bubble-card
+                card type: button
+                name: 20%
+                icon: mdi:volume-medium
+                tap_action: {action: call-service, service: media_player.volume_set,
+                  target: {entity_id: media_player.coach_house_tv_samsung}, data: {volume_level: 0.2}}
+              - type: custom:bubble-card
+                card type: button
+                name: 30%
+                icon: mdi:volume-high
+                tap_action: {action: call-service, service: media_player.volume_set,
+                  target: {entity_id: media_player.coach_house_tv_samsung}, data: {volume_level: 0.3}}
+              - type: custom:bubble-card
+                card type: button
+                name: 40%
+                icon: mdi:volume-high
+                tap_action: {action: call-service, service: media_player.volume_set,
+                  target: {entity_id: media_player.coach_house_tv_samsung}, data: {volume_level: 0.4}}
+              - type: custom:bubble-card
+                card type: button
+                name: 60%
+                icon: mdi:volume-high
+                tap_action: {action: call-service, service: media_player.volume_set,
+                  target: {entity_id: media_player.coach_house_tv_samsung}, data: {volume_level: 0.6}}
+          - type: custom:bubble-card
+            card type: tiles
+            columns: 3
+            title: Media Scenes
+            cards:
+              - type: custom:bubble-card
+                card type: button
+                name: Movie Night
+                icon: mdi:movie-open
+                tap_action: {action: call-service, service: scene.turn_on,
+                  target: {entity_id: scene.movie_night_coach_house}}
+              - type: custom:bubble-card
+                card type: button
+                name: News Mode
+                icon: mdi:newspaper-variant
+                tap_action: {action: call-service, service: scene.turn_on,
+                  target: {entity_id: scene.news_mode}}
+              - type: custom:bubble-card
+                card type: button
+                name: Music Lounge
+                icon: mdi:music-circle
+                tap_action: {action: call-service, service: scene.turn_on,
+                  target: {entity_id: scene.music_lounge}}

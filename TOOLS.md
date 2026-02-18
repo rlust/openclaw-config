@@ -29,7 +29,7 @@ Skills define *how* tools work. This file is for *your* specifics — the stuff 
 
 ## Home Assistant (Aspire RV)
 
-**Location:** RV (Aspire motorhome) - Currently in Naples, FL
+**Location:** RV (Aspire motorhome) — location varies seasonally
 **URL:** Local network IP (stored in `.credentials`)
 **Access:** Long-lived access token stored in `.credentials` (not in version control)
 **Script:** `scripts/ha-helper.sh`

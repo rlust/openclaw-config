@@ -1,5 +1,6 @@
 # Sensitive credentials - DO NOT COMMIT
 .credentials
+.credentials-*
 google.key
 *.key
 *.secret
@@ -7,8 +8,12 @@ google.key
 .env.local
 .openclaw/
 .tmp/
+tmp_reports/
+lust-rentals-v2/
 
 # System files
 .DS_Store
 node_modules/
 *.log
+
+roc-mqtt-custom/

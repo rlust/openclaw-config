@@ -7,13 +7,9 @@
 - **Memory Strategy:** Daily logs in `memory/YYYY-MM-DD.md`; long-term facts curated here.
 
 ## Operational Preferences
-- **Model Strategy:** Haiku default (fast, cheap), Sonnet only for architecture/code/security/complex reasoning.
-- **Caching:** 30m TTL on all models (reduced from 10m).
-- **Ollama for non-critical:** All heartbeat & monitoring use free ollama/llama3.2.
+- **Operational rules (models/budget/monitoring):** See `AGENTS.md` and `HEARTBEAT.md`.
 - **Communication:** Telegram is primary for alerts/chat.
 - **Privacy:** Private data stays private. No external leaks.
-- **Monitoring:** Strict heartbeat checks for security/temp alerts (see HEARTBEAT.md).
-- **Budget discipline:** $5/day cap, $100/month cap; alert at 75% threshold.
 
 ## Active Projects & Context (Feb 2026)
 - **Lust Rentals App:** Active & Enhanced.
