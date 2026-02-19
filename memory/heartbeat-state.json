@@ -1,7 +1,20 @@
 {
   "lastChecks": {
-    "rate_limits": 1770234220,
-    "ha_rv": 1770234220,
-    "ha_newark": 1770234220
+    "rate_limits": 1771518625,
+    "ha_rv": 1771518625,
+    "ha_newark": 1740000630
+  },
+  "lastAlert": {
+    "time": 1771518625,
+    "topic": "iCloud3 Apple Login Failed (401) +3 alerts; ESPHome Device Builder update 2025.12.7→2026.2.0; HA Core/OS/ZWave updates still pending"
+  },
+  "lastNewarkCheck": {
+    "time": 1740000630,
+    "alarm": "armed_away",
+    "family_room_temp": 50.54,
+    "h5075_temp": 50.18,
+    "doors": "closed",
+    "motion_kitchen": "off",
+    "alerts": "none"
   }
 }
