@@ -13,12 +13,14 @@
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(180deg,#0a1020,#0b1226);color:var(--text)}
     .shell{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
-    .sidebar{border-right:1px solid var(--line);background:#0a1328;padding:14px;position:sticky;top:0;height:100vh}
+    .sidebar{display:none}
+    .shell{grid-template-columns:1fr!important;padding:0}
     .brand{font-weight:700;font-size:18px;margin-bottom:2px}
     .brandSub{color:var(--muted);font-size:12px;margin-bottom:14px}
     .snav a{display:block;color:#d9e3ff;text-decoration:none;padding:9px 10px;border-radius:10px;margin-bottom:6px;border:1px solid transparent}
     .snav a:hover{background:#1b2a50;border-color:#2e467d}
-    .wrap{max-width:1400px;margin:0 auto;padding:18px}
+    .wrap{max-width:900px;margin:0 auto;padding:14px;background:#0b1020;min-height:100vh}
+    .top{display:none}
     .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
     .title{font-size:26px;font-weight:700}
     .subtitle{color:var(--muted);font-size:13px}
@@ -70,6 +72,11 @@
     .col.drop{outline:2px dashed #6ea8fe}
     .hide-mobile{display:block}
     .hide-tablet{display:block}
+    
+    /* Tab visibility */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    
     @media (max-width:1100px){
       .shell{grid-template-columns:1fr}
       .sidebar{width:140px;height:100vh;position:sticky;top:0}
@@ -99,17 +106,7 @@
 </head>
 <body>
   <div class="shell">
-    <aside class="sidebar">
-      <div class="brand">Mission Control</div>
-      <div class="brandSub">RLUST Operations</div>
-      <nav class="snav">
-        <a href="#overview">Dashboard</a>
-        <a href="#tasks">Tasks</a>
-        <a href="#discord-relations">Discord Relations</a>
-        <a href="#digest">Digest</a>
-        <a href="#diagnostics">Diagnostics</a>
-      </nav>
-    </aside>
+    <!-- Sidebar Hidden for Clean Layout -->
     <main>
   <div class="wrap">
     <div class="top">
@@ -124,16 +121,17 @@
 
     <div id="degraded" class="banner">⚠️ Degraded mode: repeated fallback/rate-limit signals detected.</div>
 
-    <nav class="navtabs">
-      <a href="#overview">Overview</a>
-      <a href="#run-controls">Run Controls</a>
-      <a href="#tasks">Tasks</a>
-      <a href="#discord-relations">Discord Relations</a>
-      <a href="#digest">Digest</a>
-      <a href="#diagnostics">Diagnostics</a>
-    </nav>
+    <!-- Minimal Top Bar Navigation -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;background:rgba(11,16,32,.6);padding:8px;border-radius:8px;border:1px solid #375086">
+      <a href="#overview" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">Overview</a>
+      <a href="#run-controls" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">Run Controls</a>
+      <a href="#tasks" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">Tasks</a>
+      <a href="#hvac-control" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">🌡️ HVAC</a>
+      <a href="#discord-relations" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">Discord</a>
+      <a href="#diagnostics" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">Diagnostics</a>
+    </div>
 
-    <div class="grid" id="overview">
+    <div class="grid" id="overview" style="display:none">
       <div class="card"><div class="kpi">Gateway Uptime</div><strong id="k_gateway" class="good">--</strong></div>
       <div class="card"><div class="kpi">Success Rate</div><strong id="k_success_rate" class="good">--</strong></div>
       <div class="card"><div class="kpi">Active Runs</div><strong id="k_active_runs">0</strong></div>
@@ -354,6 +352,68 @@
       </div>
     </div>
 
+    <div class="card" style="display:none;max-width:680px;margin:0 auto;padding:16px;background:linear-gradient(135deg,#121a31,#1a2847)" id="hvac-control">
+      <h3>🌡️ Aspire RV Climate Control</h3>
+      
+      <!-- Status Row -->
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;background:#0f1833;padding:10px;border-radius:8px">
+        <div>
+          <div style="font-size:11px;color:#9fb0d6">Current</div>
+          <div style="font-size:18px;font-weight:700;color:#86efac" id="hvac-current-temp">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:#9fb0d6">Outside</div>
+          <div style="font-size:18px;font-weight:700;color:#fde68a" id="hvac-outside-temp">—</div>
+        </div>
+      </div>
+      
+      <!-- Quick Controls -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div>
+          <label style="font-size:10px;color:#9fb0d6;display:block;margin-bottom:6px">TARGET TEMP</label>
+          <div style="display:flex;gap:6px">
+            <input id="hvac-target-temp" type="number" min="60" max="95" value="75" style="flex:1;padding:8px;border-radius:6px;border:1px solid #375086;background:#0e1630;color:#d9e3ff;font-size:14px;font-weight:600" />
+            <button onclick="hvacSetTemp()" style="padding:8px 12px;background:#22c55e;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px">SET</button>
+          </div>
+        </div>
+        
+        <div>
+          <label style="font-size:10px;color:#9fb0d6;display:block;margin-bottom:6px">MODE</label>
+          <div style="display:flex;gap:6px">
+            <select id="hvac-mode" style="flex:1;padding:8px;border-radius:6px;border:1px solid #375086;background:#0e1630;color:#d9e3ff;font-size:12px">
+              <option>off</option>
+              <option>heat</option>
+              <option>cool</option>
+              <option selected>auto</option>
+            </select>
+            <button onclick="hvacSetMode()" style="padding:8px 12px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px">SET</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Fan Control -->
+      <div style="margin-bottom:14px">
+        <label style="font-size:10px;color:#9fb0d6;display:block;margin-bottom:6px">FAN SPEED</label>
+        <div style="display:flex;gap:6px">
+          <select id="hvac-fan" style="flex:1;padding:8px;border-radius:6px;border:1px solid #375086;background:#0e1630;color:#d9e3ff;font-size:12px">
+            <option>off</option>
+            <option>low</option>
+            <option>medium</option>
+            <option>high</option>
+            <option selected>auto</option>
+          </select>
+          <button onclick="hvacSetFan()" style="padding:8px 12px;background:#f59e0b;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px">SET</button>
+        </div>
+      </div>
+      
+      <!-- Action Buttons -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        <button onclick="loadHvacStatus()" style="padding:8px;background:#6ea8fe;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">⟳ Refresh</button>
+        <button onclick="alert('Winter mode: auto-heat if temp drops below 40°F')" style="padding:8px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">❄️ Winter</button>
+        <button onclick="alert('Travel mode: low power, maintain 62°F')" style="padding:8px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">✈️ Travel</button>
+      </div>
+    </div>
+
     <div class="card" style="margin-top:12px;" id="diagnostics">
       <h3>Diagnostics</h3>
       <div class="mono" id="sessions">...</div>
@@ -427,6 +487,53 @@
   </aside>
 
 <script>
+// Tab navigation handler
+document.addEventListener('click', (e) => {
+  if (e.target.tagName === 'A' && e.target.href.includes('#')) {
+    e.preventDefault();
+    const tab = e.target.href.split('#')[1];
+    showTab(tab);
+  }
+});
+
+function showTab(tab) {
+  // Hide ALL divs with IDs (all tab panels)
+  const allPanels = ['overview', 'run-controls', 'tasks', 'workflows', 'thresholds', 'spawner', 'discord-relations', 'digest', 'diagnostics', 'hvac-control', 'cost-tracking', 'discord-integration'];
+  allPanels.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  
+  // Show the selected tab
+  const activeEl = document.getElementById(tab);
+  if (activeEl) {
+    activeEl.style.display = 'block';
+  }
+  
+  // Update nav links active state
+  document.querySelectorAll('.navtabs a, nav a').forEach(link => {
+    if (link.href.includes('#' + tab)) {
+      link.style.backgroundColor = '#6ea8fe';
+      link.style.color = '#08122d';
+      link.style.fontWeight = '600';
+    } else {
+      link.style.backgroundColor = '#22335c';
+      link.style.color = '#d9e3ff';
+      link.style.fontWeight = '400';
+    }
+  });
+  
+  // Load HVAC data if HVAC tab
+  if (tab === 'hvac-control') {
+    setTimeout(() => loadHvacStatus(), 100);
+  }
+}
+
+// Initialize: show overview by default
+window.addEventListener('DOMContentLoaded', () => {
+  showTab('overview');
+});
+
 async function get(url){const r=await fetch(url);return r.json();}
 async function post(url,b){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});return r.json();}
 
@@ -447,7 +554,7 @@ let successChartInstance = null;
 
 // Tab switching - shows only relevant content per tab
 function switchViewTab(tab) {
-  const navItems = ['nav-dashboard', 'nav-tasks', 'nav-workflows', 'nav-thresholds', 'nav-spawner', 'nav-discord', 'nav-analytics', 'nav-diagnostics'];
+  const navItems = ['nav-dashboard', 'nav-tasks', 'nav-workflows', 'nav-thresholds', 'nav-spawner', 'nav-discord', 'nav-hvac', 'nav-analytics', 'nav-diagnostics'];
   navItems.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.remove('active');
@@ -455,7 +562,7 @@ function switchViewTab(tab) {
   document.getElementById('nav-' + tab)?.classList.add('active');
   
   // Hide all content sections
-  const sections = ['overview', 'tasks', 'workflows', 'thresholds', 'spawner', 'run-controls', 'discord-integration', 'cost-tracking', 'diagnostics', 'digest', 'discord-relations'];
+  const sections = ['overview', 'tasks', 'workflows', 'thresholds', 'spawner', 'run-controls', 'discord-integration', 'hvac-control', 'cost-tracking', 'diagnostics', 'digest', 'discord-relations'];
   sections.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
@@ -469,6 +576,7 @@ function switchViewTab(tab) {
     'thresholds': ['thresholds'],
     'spawner': ['spawner', 'run-controls'],
     'discord': ['discord-integration'],
+    'hvac': ['hvac-control'],
     'analytics': ['cost-tracking'],
     'diagnostics': ['diagnostics']
   };
@@ -477,6 +585,11 @@ function switchViewTab(tab) {
     const el = document.getElementById(id);
     if (el) el.style.display = 'block';
   });
+  
+  // Load HVAC status when switching to HVAC tab
+  if (tab === 'hvac') {
+    loadHvacStatus();
+  }
 }
 
 function saveLaneMap(){ localStorage.setItem(laneMapKey, JSON.stringify(laneMap)); }
@@ -1255,6 +1368,56 @@ async function notifyDiscordAlert(severity, message, type) {
     message,
     type
   });
+}
+
+// HVAC Control Functions
+async function loadHvacStatus() {
+  const res = await get('/api/hvac/status');
+  if (res.ok && res.hvac) {
+    const h = res.hvac;
+    document.getElementById('hvac-current-temp').textContent = h.hvac?.current_temp ? `${h.hvac.current_temp}°F` : '—';
+    document.getElementById('hvac-target-temp').value = h.hvac?.target_temp || '75';
+    document.getElementById('hvac-mode').value = h.hvac?.mode || 'auto';
+    document.getElementById('hvac-fan').value = h.hvac?.fan_mode || 'auto';
+    document.getElementById('hvac-outside-temp').textContent = h.zones?.outside ? `${h.zones.outside}°F` : '—';
+    document.getElementById('hvac-status').innerHTML = '<span class="badge ok">✓ Online</span>';
+  } else {
+    document.getElementById('hvac-status').innerHTML = '<span class="badge bad">✗ Offline</span>';
+  }
+}
+
+async function hvacSetTemp() {
+  const temp = Number(document.getElementById('hvac-target-temp').value);
+  if (!temp || temp < 60 || temp > 95) return alert('Invalid temp (60-95°F)');
+  const res = await post('/api/hvac/control', { action: 'set-temp', temp });
+  if (res.ok) {
+    alert(`✓ Thermostat set to ${temp}°F`);
+    loadHvacStatus();
+  } else {
+    alert(`✗ Failed: ${res.error || 'Unknown error'}`);
+  }
+}
+
+async function hvacSetMode() {
+  const mode = document.getElementById('hvac-mode').value;
+  const res = await post('/api/hvac/control', { action: 'set-mode', mode });
+  if (res.ok) {
+    alert(`✓ Mode set to ${mode}`);
+    loadHvacStatus();
+  } else {
+    alert(`✗ Failed`);
+  }
+}
+
+async function hvacSetFan() {
+  const fan = document.getElementById('hvac-fan').value;
+  const res = await post('/api/hvac/control', { action: 'set-fan', fan });
+  if (res.ok) {
+    alert(`✓ Fan set to ${fan}`);
+    loadHvacStatus();
+  } else {
+    alert(`✗ Failed`);
+  }
 }
 
 async function saveThresholds() {
