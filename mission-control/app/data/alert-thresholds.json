@@ -1,0 +1,8 @@
+{
+  "tempLow": 36,
+  "tempHigh": 87,
+  "doorOpenAlert": true,
+  "motionAlert": true,
+  "rateLimitAlert": true,
+  "errorRateThreshold": 15
+}

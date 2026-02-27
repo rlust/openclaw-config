@@ -1,0 +1,22 @@
+[
+  {
+    "id": "wf-1772209664533",
+    "name": "Daily Rentals Check",
+    "description": "Verify database integrity and run hourly cron",
+    "steps": [],
+    "enabled": true,
+    "createdAt": "2026-02-27T16:27:44.533Z",
+    "lastRun": null,
+    "runCount": 0
+  },
+  {
+    "id": "wf-1772209834584",
+    "name": "Market Analysis",
+    "description": "fetch prices → analyze trends → generate report",
+    "steps": [],
+    "enabled": true,
+    "createdAt": "2026-02-27T16:30:34.584Z",
+    "lastRun": "2026-02-27T16:30:46.047Z",
+    "runCount": 1
+  }
+]

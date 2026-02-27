@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mission Control Pro</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root{--bg:#0b1020;--panel:#121a31;--panel2:#182445;--text:#e8ecff;--muted:#9fb0d6;--ok:#22c55e;--warn:#f59e0b;--bad:#ef4444;--line:#2a3a67;--accent:#6ea8fe}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
+    
+    .app{display:flex;height:100vh;flex-direction:column}
+    .header{background:linear-gradient(90deg,#0a1328,#1a2847);border-bottom:1px solid var(--line);padding:16px 24px;display:flex;justify-content:space-between;align-items:center}
+    .logo{font-size:18px;font-weight:700}
+    .status{display:flex;gap:24px}
+    .stat{font-size:12px}
+    .stat strong{color:var(--ok)}
+    .main{display:flex;flex:1;overflow:hidden}
+    
+    .nav{width:180px;background:#0a1328;border-right:1px solid var(--line);padding:12px;overflow-y:auto}
+    .nav button{display:block;width:100%;padding:12px;margin:6px 0;background:transparent;border:1px solid transparent;color:#d9e3ff;text-align:left;border-radius:8px;cursor:pointer;font-size:13px;transition:0.2s}
+    .nav button:hover{background:#1b2a50}
+    .nav button.active{background:var(--accent);color:#08122d;font-weight:600;border-color:var(--accent)}
+    
+    .view{flex:1;overflow-y:auto;padding:24px;display:none}
+    .view.active{display:block}
+    
+    h1{margin:0 0 20px;font-size:22px;font-weight:700}
+    h2{margin:20px 0 12px;font-size:14px;font-weight:600}
+    
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+    .kpi{background:var(--panel);border:1px solid var(--line);padding:16px;border-radius:10px}
+    .kpi-label{font-size:10px;color:var(--muted);margin-bottom:8px}
+    .kpi-value{font-size:24px;font-weight:700}
+    
+    .section{background:var(--panel);border:1px solid var(--line);padding:16px;border-radius:10px;margin-bottom:16px}
+    .section h2{margin-top:0;margin-bottom:16px}
+    
+    .form-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:12px}
+    .form-row.full{grid-template-columns:1fr}
+    input,textarea,select{background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:10px;border-radius:8px;font-size:12px;width:100%;font-family:inherit}
+    input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(110,168,254,0.1)}
+    
+    .buttons{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+    button{background:var(--accent);color:#08122d;border:none;padding:10px 16px;border-radius:8px;font-weight:600;cursor:pointer;font-size:12px}
+    button:hover{opacity:0.9}
+    button.secondary{background:#25365f;color:#d9e3ff}
+    
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    
+    .chart-box{background:var(--panel2);border:1px solid var(--line);padding:12px;border-radius:10px}
+    .chart-box canvas{max-height:250px}
+    
+    .list{background:var(--panel2);border:1px solid var(--line);border-radius:10px;max-height:250px;overflow-y:auto}
+    .item{padding:10px;border-bottom:1px solid var(--line);font-size:12px;display:flex;justify-content:space-between}
+    .item:last-child{border-bottom:none}
+    
+    .badge{display:inline-block;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:600;background:#22335c}
+    .badge.ok{background:#113a26;color:#86efac}
+    .badge.warn{background:#3b2f12;color:#fde68a}
+    .badge.bad{background:#3b1620;color:#fecaca}
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <div class="header">
+    <div><strong>🔴 Mission Control Pro</strong></div>
+    <div class="status">
+      <div class="stat">Gateway: <strong id="gw">—</strong></div>
+      <div class="stat">Success: <strong id="sr">—%</strong></div>
+      <div class="stat">Cost: <strong id="cost">$0</strong></div>
+      <button onclick="refreshAll()" style="margin-left:20px">⟳ Refresh</button>
+    </div>
+  </div>
+  
+  <div class="main">
+    <div class="nav">
+      <button class="active" onclick="showView('overview')">📊 Overview</button>
+      <button onclick="showView('health')">❤️ Health</button>
+      <button onclick="showView('tasks')">✓ Tasks</button>
+      <button onclick="showView('workflows')">⚙️ Workflows</button>
+      <button onclick="showView('thresholds')">🔔 Alerts</button>
+      <button onclick="showView('spawner')">🚀 Spawn</button>
+      <button onclick="showView('discord')">💬 Discord</button>
+      <button onclick="showView('analytics')">📈 Analytics</button>
+    </div>
+    
+    <div style="flex:1;overflow-y:auto">
+      <!-- OVERVIEW -->
+      <div id="overview" class="view active" style="padding:24px">
+        <h1>Dashboard Overview</h1>
+        <div class="kpis">
+          <div class="kpi"><div class="kpi-label">GATEWAY UPTIME</div><div class="kpi-value" id="kpi-uptime">—%</div></div>
+          <div class="kpi"><div class="kpi-label">SUCCESS RATE</div><div class="kpi-value" id="kpi-success">—%</div></div>
+          <div class="kpi"><div class="kpi-

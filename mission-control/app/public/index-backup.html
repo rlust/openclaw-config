@@ -1,0 +1,1231 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mission Control</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+  <style>
+    :root{
+      --bg:#0b1020;--panel:#121a31;--panel2:#182445;--text:#e8ecff;--muted:#9fb0d6;
+      --ok:#22c55e;--warn:#f59e0b;--bad:#ef4444;--line:#2a3a67;--accent:#6ea8fe;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(180deg,#0a1020,#0b1226);color:var(--text)}
+    .shell{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+    .sidebar{border-right:1px solid var(--line);background:#0a1328;padding:14px;position:sticky;top:0;height:100vh}
+    .brand{font-weight:700;font-size:18px;margin-bottom:2px}
+    .brandSub{color:var(--muted);font-size:12px;margin-bottom:14px}
+    .snav a{display:block;color:#d9e3ff;text-decoration:none;padding:9px 10px;border-radius:10px;margin-bottom:6px;border:1px solid transparent}
+    .snav a:hover{background:#1b2a50;border-color:#2e467d}
+    .wrap{max-width:1400px;margin:0 auto;padding:18px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .title{font-size:26px;font-weight:700}
+    .subtitle{color:var(--muted);font-size:13px}
+    button{background:var(--accent);color:#08122d;border:none;border-radius:10px;padding:8px 12px;font-weight:600;cursor:pointer}
+    button.ghost{background:#25365f;color:#d9e3ff}
+    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px}
+    .kpi{font-size:12px;color:var(--muted)}
+    .kpi strong{display:block;font-size:20px;color:var(--text);margin-top:4px}
+    .good{color:var(--ok)} .warn{color:var(--warn)} .bad{color:var(--bad)}
+    .two{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;margin-top:12px}
+    .controls input,.controls textarea{width:100%;margin:6px 0;background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:8px;border-radius:10px}
+    .controls .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .quick{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:#0e1630;border:1px solid var(--line);padding:10px;border-radius:10px;white-space:pre-wrap;max-height:200px;overflow:auto}
+    .kanban{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+    .col{background:#0f1833;border:1px solid var(--line);border-radius:12px;padding:10px;min-height:260px}
+    .col h4{margin:0 0 8px 0;font-size:13px;color:var(--muted)}
+    .ticket{background:#17244a;border:1px solid #314781;border-radius:10px;padding:8px;margin-bottom:8px;font-size:12px}
+    .p-low{border-color:#3b82f6}.p-medium{border-color:#f59e0b}.p-high{border-color:#ef4444}
+    .overdue{box-shadow:0 0 0 1px #ef4444 inset;background:#2a1620}
+    .badge{display:inline-block;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:700;margin-right:4px}
+    .b-ready{background:#123a26;color:#86efac;border:1px solid #1d5d3b}
+    .b-blocked{background:#3b1620;color:#fecaca;border:1px solid #7f1d1d}
+    .s-green{background:#113a26;color:#86efac;border:1px solid #1d5d3b}
+    .s-yellow{background:#3b2f12;color:#fde68a;border:1px solid #7c5e10}
+    .s-red{background:#3b1620;color:#fecaca;border:1px solid #7f1d1d}
+    .dep-link{color:#9ec2ff;text-decoration:underline;cursor:pointer}
+    .ticket .meta{color:var(--muted);font-size:11px;margin-top:4px}
+    .foot{margin-top:12px;color:var(--muted);font-size:12px}
+    .banner{display:none;margin-top:12px;padding:10px 12px;border-radius:10px;border:1px solid #7f1d1d;background:#3b0d0d;color:#fecaca;font-weight:600}
+    .drawer{position:fixed;right:0;top:0;height:100%;width:420px;max-width:92vw;background:#0f1833;border-left:1px solid #375086;transform:translateX(100%);transition:transform .2s ease;z-index:50;padding:14px;overflow:auto}
+    .drawer.open{transform:translateX(0)}
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:40}
+    .overlay.show{display:block}
+    .flow{display:grid;grid-template-columns:1fr 60px 1fr;gap:10px;align-items:start}
+    .flowCol{background:#0e1630;border:1px solid var(--line);border-radius:10px;padding:10px;min-height:180px}
+    .flowItem{padding:8px;border:1px solid #375086;background:#17244a;border-radius:8px;margin-bottom:8px;font-size:12px}
+    .flowArrow{display:flex;align-items:center;justify-content:center;color:#9ec2ff;font-size:22px}
+    .navtabs{position:sticky;top:0;z-index:30;display:flex;gap:8px;flex-wrap:wrap;background:rgba(11,16,32,.88);backdrop-filter:blur(6px);padding:8px;border:1px solid var(--line);border-radius:12px;margin-top:10px}
+    .navtabs a{color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px}
+    .maptable{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+    .maptable th,.maptable td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+    .filters{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 0}
+    .chip{background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:5px 10px;border-radius:999px;font-size:12px;cursor:pointer}
+    .chip.active{background:#6ea8fe;color:#08122d;border-color:#6ea8fe}
+    .ticket{cursor:grab}
+    .ticket.dragging{opacity:.5}
+    .col.drop{outline:2px dashed #6ea8fe}
+    @media (max-width:1100px){.shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.grid{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.kanban{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">Mission Control</div>
+      <div class="brandSub">RLUST Operations</div>
+      <nav class="snav">
+        <a href="#overview">Dashboard</a>
+        <a href="#tasks">Tasks</a>
+        <a href="#discord-relations">Discord Relations</a>
+        <a href="#digest">Digest</a>
+        <a href="#diagnostics">Diagnostics</a>
+      </nav>
+    </aside>
+    <main>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="title">Mission Control</div>
+        <div class="subtitle">Agent orchestration • Health • Run operations • Reliability</div>
+      </div>
+      <div>
+        <button onclick="refreshAll()">Refresh</button>
+      </div>
+    </div>
+
+    <div id="degraded" class="banner">⚠️ Degraded mode: repeated fallback/rate-limit signals detected.</div>
+
+    <nav class="navtabs">
+      <a href="#overview">Overview</a>
+      <a href="#run-controls">Run Controls</a>
+      <a href="#tasks">Tasks</a>
+      <a href="#discord-relations">Discord Relations</a>
+      <a href="#digest">Digest</a>
+      <a href="#diagnostics">Diagnostics</a>
+    </nav>
+
+    <div class="grid" id="overview">
+      <div class="card"><div class="kpi">Gateway Uptime</div><strong id="k_gateway" class="good">--</strong></div>
+      <div class="card"><div class="kpi">Success Rate</div><strong id="k_success_rate" class="good">--</strong></div>
+      <div class="card"><div class="kpi">Active Runs</div><strong id="k_active_runs">0</strong></div>
+      <div class="card"><div class="kpi">System Alerts</div><strong id="k_alerts" class="warn">0</strong></div>
+    </div>
+    <div class="grid" id="secondary-overview" style="margin-top:10px">
+      <div class="card"><div class="kpi">Last Model</div><strong id="k_model">--</strong></div>
+      <div class="card"><div class="kpi">Last Provider</div><strong id="k_provider">--</strong></div>
+      <div class="card"><div class="kpi">Last Success</div><strong id="k_success">--</strong></div>
+      <div class="card"><div class="kpi">Fallback Status</div><strong id="k_fallback" class="good">Nominal</strong></div>
+    </div>
+
+    <div class="two" id="run-controls">
+      <div class="card controls">
+        <h3>Run Controls</h3>
+        <div class="row">
+          <input id="agentId" value="discord-main" placeholder="agent id" />
+          <input id="label" value="mc-run" placeholder="label" />
+        </div>
+        <textarea id="task" rows="4">Create a short status summary.</textarea>
+        <div class="quick">
+          <button onclick="spawnRun()">Spawn/Run</button>
+          <button class="ghost" onclick="quickSpawn('Lust Rentals daily check: verify database, run hourly cron, report summary','lust-rentals')">📊 Rentals Daily</button>
+          <button class="ghost" onclick="quickSpawn('Investment portfolio scout: fetch latest NVDA, VRT, ANET, PLTR data, analyze sentiment','investment-scout')">📈 Stock Scout</button>
+          <button class="ghost" onclick="quickSpawn('RV-C HVAC diagnostics: check Aspire thermostat status and command queue','rvc-diagnostics')">🛠️ RV HVAC Check</button>
+          <button class="ghost" onclick="quickSpawn('Newark Home Assistant: check temperature, security status, list recent automations','ha-newark')">🏠 Newark HA</button>
+        </div>
+        <div class="row">
+          <input id="target" placeholder="cancel target" />
+          <input id="confirm" placeholder="type CONFIRM" />
+        </div>
+        <button class="ghost" onclick="cancelRun()">Cancel Request</button>
+        <h4>Run Output</h4>
+        <div id="spawnOut" class="mono">...</div>
+      </div>
+
+      <div class="card">
+        <h3>System Signals</h3>
+        <h4>Recent Errors</h4>
+        <div id="errors" class="mono">...</div>
+        <h4>Ops Status</h4>
+        <div id="ops" class="mono">...</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <h3>KANBAN: Workflows & Runs</h3>
+      <div class="filters" id="filters"></div>
+      <div class="filters" style="margin-top:8px">
+        <select id="timeRange" onchange="refreshAll()" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:6px 10px;border-radius:8px">
+          <option value="15">Last 15m</option>
+          <option value="60" selected>Last 1h</option>
+          <option value="240">Last 4h</option>
+          <option value="1440">Last 24h</option>
+        </select>
+        <button class="ghost" onclick="exportReport()">Export Incident Report</button>
+      </div>
+      <div class="kanban">
+        <div class="col">
+          <h4>Planned Workflows</h4>
+          <div id="kan_plan"></div>
+        </div>
+        <div class="col">
+          <h4>Recent Success</h4>
+          <div id="kan_done"></div>
+        </div>
+        <div class="col">
+          <h4>Needs Attention</h4>
+          <div id="kan_attention"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;" id="tasks">
+      <h3>Task Board (Persistent)</h3>
+      <div class="row" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:8px">
+        <input id="taskTitle" placeholder="Task title" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px" />
+        <input id="taskOwner" value="HAL" placeholder="Owner" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px" />
+        <select id="taskPriority" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px">
+          <option>low</option><option selected>medium</option><option>high</option>
+        </select>
+        <input id="taskDue" type="date" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px" />
+        <button onclick="addTask()">Add Task</button>
+      </div>
+      <div class="filters" id="ownerFilters" style="margin-top:8px"></div>
+      <div class="filters" style="margin-top:8px">
+        <button class="ghost" id="archToggle" onclick="toggleArchived()">Show Archived: Off</button>
+        <label style="display:flex;align-items:center;gap:6px">Assignee
+          <select id="taskAssigneeFilter" onchange="refreshAll()" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:6px;border-radius:8px">
+            <option value="all">All</option>
+          </select>
+        </label>
+        <label style="display:flex;align-items:center;gap:6px">Priority
+          <select id="taskPriorityFilter" onchange="refreshAll()" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:6px;border-radius:8px">
+            <option value="all">All</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </label>
+      </div>
+      <textarea id="taskDetails" rows="2" placeholder="Task details" style="width:100%;margin-top:8px;background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px"></textarea>
+      <div class="kanban" style="margin-top:10px;grid-template-columns:repeat(4,minmax(0,1fr))">
+        <div class="col" id="tb_backlog"><h4>Backlog <span id="count_backlog">0</span></h4></div>
+        <div class="col" id="tb_todo"><h4>To Do <span id="count_todo">0</span></h4></div>
+        <div class="col" id="tb_doing"><h4>In Progress <span id="count_doing">0</span></h4></div>
+        <div class="col" id="tb_done"><h4>Done <span id="count_done">0</span></h4></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;" id="discord-relations">
+      <h3>How Mission Control maps to Discord</h3>
+      <div class="mono" id="discordGuide">Flow: Task/Run action → Bound Agent → Model/Fallback chain → Discord channel output</div>
+      <div id="discordMap" class="mono">...</div>
+      <table class="maptable" id="discordTable">
+        <thead><tr><th>Discord Component</th><th>Purpose</th><th>Agent</th><th>Primary</th><th>Fallbacks</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="flow" style="margin-top:10px">
+        <div class="flowCol">
+          <h4>Discord Components</h4>
+          <div id="flowChannels"></div>
+        </div>
+        <div class="flowArrow">→</div>
+        <div class="flowCol">
+          <h4>Bound Agents / Models</h4>
+          <div id="flowAgents"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <h3>Dependency Radar</h3>
+      <div id="depRadar" class="mono">...</div>
+    </div>
+
+    <div class="card" style="margin-top:12px;" id="digest">
+      <h3>Daily Digest</h3>
+      <button class="ghost" onclick="buildDigest()">Generate Digest</button>
+      <button class="ghost" onclick="sendDigestToDiscord()">Send Digest to #agent-dashboard</button>
+      <div class="filters" style="margin-top:8px">
+        <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="schEnabled" onchange="saveSchedule()" /> Auto-send</label>
+        <label style="display:flex;align-items:center;gap:6px">Interval (min): <input id="schInterval" type="number" min="5" value="240" style="width:90px;background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:5px;border-radius:8px" onchange="saveSchedule()" /></label>
+      </div>
+      <div id="schStatus" class="mono" style="margin-top:8px"></div>
+      <div id="digestOut" class="mono" style="margin-top:8px">...</div>
+    </div>
+
+    <div class="card" style="margin-top:12px;" id="workflows">
+      <h3>Automation Workflows</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+        <input id="wfName" placeholder="Workflow name" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px" />
+        <textarea id="wfDescription" placeholder="Description" rows="1" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px"></textarea>
+        <button onclick="addWorkflow()">Create Workflow</button>
+      </div>
+      <div id="workflowList" class="mono" style="margin-top:8px">No workflows yet</div>
+      <h4 style="margin-top:12px">Quick Workflow Templates</h4>
+      <div class="quick">
+        <button class="ghost" onclick="createTemplateWorkflow('rentals-daily','Daily Rentals Check','fetch status → verify DB → run cron → report')">Template: Rentals Daily</button>
+        <button class="ghost" onclick="createTemplateWorkflow('market-scout','Market Analysis','fetch prices → analyze trends → generate report')">Template: Market Scout</button>
+        <button class="ghost" onclick="createTemplateWorkflow('ha-check','HA Health Check','get temperature → check security → list automations')">Template: HA Check</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;" id="thresholds">
+      <h3>Alert Thresholds</h3>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        <div>
+          <label style="display:block;margin-bottom:4px;color:#9fb0d6;font-size:12px">Min Temp (°F)</label>
+          <input id="threshTempLow" type="number" value="40" style="width:100%;background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px" />
+        </div>
+        <div>
+          <label style="display:block;margin-bottom:4px;color:#9fb0d6;font-size:12px">Max Temp (°F)</label>
+          <input id="threshTempHigh" type="number" value="95" style="width:100%;background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px" />
+        </div>
+        <div>
+          <label style="display:block;margin-bottom:4px;color:#9fb0d6;font-size:12px">Error Rate % Threshold</label>
+          <input id="threshErrorRate" type="number" value="20" style="width:100%;background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px" />
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+        <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="threshDoorAlert" checked /> Door Open Alert</label>
+        <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="threshMotionAlert" checked /> Motion Alert</label>
+        <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="threshRateLimitAlert" checked /> Rate Limit Alert</label>
+        <button onclick="saveThresholds()">Save Thresholds</button>
+      </div>
+      <div id="thresholdStatus" class="mono" style="margin-top:8px">Thresholds loaded</div>
+    </div>
+
+    <div class="card" style="margin-top:12px;" id="discord-integration">
+      <h3>Discord Integration</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div>
+          <label style="display:block;margin-bottom:4px;color:#9fb0d6;font-size:12px">Webhook URL</label>
+          <input id="discordWebhook" type="password" placeholder="https://discordapp.com/api/webhooks/..." style="width:100%;background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px;font-size:11px" />
+        </div>
+        <div>
+          <label style="display:block;margin-bottom:4px;color:#9fb0d6;font-size:12px">Report Channel ID</label>
+          <input id="discordChannel" type="text" placeholder="1476004285547417797" style="width:100%;background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px" />
+        </div>
+      </div>
+      <button onclick="saveDiscordConfig()">Save Discord Config</button>
+      <div id="discordStatus" style="margin-top:8px;color:#9fb0d6;font-size:12px">...</div>
+      
+      <h4 style="margin-top:12px">Send Test Messages</h4>
+      <div class="quick">
+        <button class="ghost" onclick="sendDiscordTest('info','Test message from Mission Control')">📨 Send Test</button>
+        <button class="ghost" onclick="sendDiscordTest('warn','⚠️ This is a warning alert')">⚠️ Send Warning</button>
+        <button class="ghost" onclick="sendDiscordTest('critical','🚨 This is a critical alert')">🚨 Send Critical</button>
+      </div>
+      
+      <h4 style="margin-top:12px">Auto-Notify Events</h4>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="notifyWorkflow" checked /> Workflow Completion</label>
+        <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="notifyTask" checked /> Task Created</label>
+        <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="notifyAlert" checked /> System Alerts</label>
+        <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="notifySpawn" /> Spawn Results</label>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;" id="diagnostics">
+      <h3>Diagnostics</h3>
+      <div class="mono" id="sessions">...</div>
+      <div class="mono" id="routing" style="margin-top:8px"></div>
+    </div>
+
+    <div class="card" style="margin-top:12px;" id="cost-tracking">
+      <h3>Cost Tracking & Analytics</h3>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">
+        <div class="card" style="background:#0f1833">
+          <div class="kpi">Total Estimated Cost</div>
+          <strong id="costTotal" class="good">$0.00</strong>
+        </div>
+        <div class="card" style="background:#0f1833">
+          <div class="kpi">Cost Per Run</div>
+          <strong id="costAvg" class="good">$0.00</strong>
+        </div>
+        <div class="card" style="background:#0f1833">
+          <div class="kpi">Most Used Model</div>
+          <strong id="costModel">--</strong>
+        </div>
+        <div class="card" style="background:#0f1833">
+          <div class="kpi">Budget Status</div>
+          <strong id="costBudget" class="good">On Track</strong>
+        </div>
+      </div>
+      <h4>Cost by Model</h4>
+      <div id="costByModel" class="mono" style="margin-bottom:12px">Loading...</div>
+      <h4 style="margin-top:12px">Charts & Trends</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+        <div style="background:#0f1833;border:1px solid #375086;border-radius:10px;padding:10px">
+          <canvas id="uptimeChart" style="max-height:250px"></canvas>
+        </div>
+        <div style="background:#0f1833;border:1px solid #375086;border-radius:10px;padding:10px">
+          <canvas id="costChart" style="max-height:250px"></canvas>
+        </div>
+      </div>
+      <div style="background:#0f1833;border:1px solid #375086;border-radius:10px;padding:10px">
+        <canvas id="modelChart" style="max-height:300px"></canvas>
+      </div>
+      <div style="background:#0f1833;border:1px solid #375086;border-radius:10px;padding:10px;margin-top:12px">
+        <canvas id="successChart" style="max-height:250px"></canvas>
+      </div>
+    </div>
+
+    <div class="foot">Auto-refresh every 20s • Safe-by-default cancel requires CONFIRM</div>
+  </div>
+    </main>
+  </div>
+
+  <div id="overlay" class="overlay" onclick="closeDrawer()"></div>
+  <aside id="taskDrawer" class="drawer">
+    <h3 id="drTitle">Task</h3>
+    <input id="drTaskTitle" placeholder="Title" style="width:100%;background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px;margin:6px 0" />
+    <textarea id="drTaskDetails" rows="4" placeholder="Details" style="width:100%;background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px;margin:6px 0"></textarea>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <input id="drOwner" placeholder="Owner" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px" />
+      <select id="drPriority" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px"><option>low</option><option>medium</option><option>high</option></select>
+    </div>
+    <input id="drDueDate" type="date" style="width:100%;background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px;margin:6px 0" />
+    <input id="drBlockedBy" placeholder="Blocked by task IDs (comma-separated)" style="width:100%;background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px;margin:6px 0" />
+    <div style="display:flex;gap:8px;margin:8px 0">
+      <button onclick="saveDrawerTask()">Save</button>
+      <button class="ghost" onclick="closeDrawer()">Close</button>
+    </div>
+    <h4>Add Comment</h4>
+    <textarea id="drComment" rows="2" placeholder="Add note to activity timeline" style="width:100%;background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px;margin:6px 0"></textarea>
+    <button class="ghost" onclick="saveDrawerComment()">Add Note</button>
+    <h4>Activity Timeline</h4>
+    <div id="drTimeline" class="mono"></div>
+  </aside>
+
+<script>
+async function get(url){const r=await fetch(url);return r.json();}
+async function post(url,b){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});return r.json();}
+
+let currentFilter = 'all';
+let currentOwner = 'all';
+let showArchived = false;
+let latestHistory = [];
+let selectedTaskId = null;
+let lastSnapshot = { ops:{}, errors:'', workflows:[], history:[] };
+const laneMapKey = 'mc-lane-map-v1';
+let laneMap = JSON.parse(localStorage.getItem(laneMapKey) || '{}');
+
+// Chart instances
+let uptimeChartInstance = null;
+let costChartInstance = null;
+let modelChartInstance = null;
+let successChartInstance = null;
+
+function saveLaneMap(){ localStorage.setItem(laneMapKey, JSON.stringify(laneMap)); }
+function ticket(id, html, meta=''){return `<div class="ticket" draggable="true" data-id="${id}">${html}${meta?`<div class="meta">${meta}</div>`:''}</div>`}
+
+function getChannelsFromWorkflows(workflows=[]){
+  return ['all', ...new Set((workflows||[]).map(w => (w.channel||'').replace('#','')).filter(Boolean))];
+}
+
+function renderFilters(workflows=[]){
+  const channels = getChannelsFromWorkflows(workflows);
+  filters.innerHTML = channels.map(c => `<button class="chip ${currentFilter===c?'active':''}" onclick="setFilter('${c}')">${c==='all'?'All':('#'+c)}</button>`).join('');
+}
+
+function setFilter(f){ currentFilter = f; renderKanban(window._workflows || [], latestHistory); renderFilters(window._workflows || []); }
+function setOwnerFilter(v){ currentOwner = v; renderTasks(window._tasks || []); renderOwnerFilters(window._tasks || []); }
+
+function passFilter(item){
+  if (currentFilter === 'all') return true;
+  const text = `${item.task||''} ${item.preview||''} ${item.agentId||''}`.toLowerCase();
+  return text.includes(currentFilter.toLowerCase());
+}
+
+function inRange(ts){
+  const mins = Number(timeRange?.value || 60);
+  const t = new Date(ts).getTime();
+  if (!t) return true;
+  return (Date.now() - t) <= mins * 60 * 1000;
+}
+
+function place(cardHtml, lane){
+  if (lane === 'done') return kan_done.insertAdjacentHTML('beforeend', cardHtml);
+  if (lane === 'attention') return kan_attention.insertAdjacentHTML('beforeend', cardHtml);
+  return kan_plan.insertAdjacentHTML('beforeend', cardHtml);
+}
+
+function renderKanban(workflows=[], history=[]){
+  window._workflows = workflows;
+  latestHistory = history || [];
+  kan_plan.innerHTML = ''; kan_done.innerHTML = ''; kan_attention.innerHTML = '';
+
+  for (const w of workflows) {
+    const id = `wf:${w.channel}`;
+    const html = ticket(id, `<strong>${w.channel}</strong><br>${(w.steps||[]).slice(0,2).join(' • ')}`);
+    place(html, laneMap[id] || 'plan');
+  }
+
+  const ok = history.filter(x=>x.ok).filter(passFilter).filter(x=>inRange(x.ts)).slice(0,8);
+  for (const x of ok) {
+    const id = `ok:${x.ts}:${x.agentId||'na'}:${(x.task||'').slice(0,20)}`;
+    const html = ticket(id, `<strong>${x.type}</strong> • ${x.agentId||'agent'}<br>${(x.preview||x.task||'').toString().slice(0,90)}`, x.ts);
+    place(html, laneMap[id] || 'done');
+  }
+
+  const bad = history.filter(x=>!x.ok).filter(passFilter).filter(x=>inRange(x.ts)).slice(0,8);
+  for (const x of bad) {
+    const id = `bad:${x.ts}:${x.agentId||'na'}:${(x.error||'').slice(0,20)}`;
+    const html = ticket(id, `<strong>${x.type}</strong> • ${x.agentId||'agent'}<br>${(x.error||'error').toString().slice(0,110)}`, x.ts);
+    place(html, laneMap[id] || 'attention');
+  }
+
+  if (!kan_plan.innerHTML) kan_plan.innerHTML = ticket('empty-plan', 'No workflow templates');
+  if (!kan_done.innerHTML) kan_done.innerHTML = ticket('empty-done', 'No completed runs yet');
+  if (!kan_attention.innerHTML) kan_attention.innerHTML = ticket('empty-attn', 'No active issues', 'All clear');
+  enableDnD();
+}
+
+function enableDnD(){
+  document.querySelectorAll('.ticket').forEach(t=>{
+    t.addEventListener('dragstart', ()=>t.classList.add('dragging'));
+    t.addEventListener('dragend', ()=>t.classList.remove('dragging'));
+  });
+  document.querySelectorAll('.col').forEach(c=>{
+    c.addEventListener('dragover', e=>{e.preventDefault(); c.classList.add('drop');});
+    c.addEventListener('dragleave', ()=>c.classList.remove('drop'));
+    c.addEventListener('drop', e=>{
+      e.preventDefault(); c.classList.remove('drop');
+      const dragging = document.querySelector('.ticket.dragging');
+      if (dragging) {
+        c.appendChild(dragging);
+        const lane = c.id === 'kan_done' ? 'done' : c.id === 'kan_attention' ? 'attention' : 'plan';
+        const id = dragging.getAttribute('data-id');
+        if (id) { laneMap[id] = lane; saveLaneMap(); }
+      }
+    });
+  });
+}
+
+function exportReport(){
+  const { ops, errors, history } = lastSnapshot;
+  const lines = [
+    '# Mission Control Incident Report',
+    `Generated: ${new Date().toISOString()}`,
+    '',
+    '## Ops Status',
+    `- lastSuccess: ${ops.lastSuccess || 'n/a'}`,
+    `- lastModel: ${ops.lastModel || 'n/a'}`,
+    `- lastProvider: ${ops.lastProvider || 'n/a'}`,
+    `- fallbackLikely: ${!!ops.fallbackLikely}`,
+    `- lastError: ${ops.lastError || 'none'}`,
+    '',
+    '## Recent Errors',
+    '```',
+    (errors || '(none)').trim(),
+    '```',
+    '',
+    '## Recent Run History',
+    ...(history||[]).slice(0,15).map(x => `- ${x.ts} | ${x.type} | ${x.agentId||'n/a'} | ok=${x.ok}`)
+  ];
+  const blob = new Blob([lines.join('\n')], {type:'text/markdown'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `mission-control-report-${new Date().toISOString().replace(/[:.]/g,'-')}.md`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+async function addTask(){
+  if(!taskTitle.value.trim()) return;
+  const res = await post('/api/tasks', {
+    title: taskTitle.value,
+    details: taskDetails.value,
+    owner: taskOwner.value || 'HAL',
+    priority: taskPriority.value,
+    dueDate: taskDue.value || '',
+    lane: 'todo'
+  });
+  if (res.ok && res.task && notifyTask?.checked) {
+    await notifyDiscordTask(res.task);
+  }
+  taskTitle.value=''; taskDetails.value=''; taskDue.value='';
+  await refreshAll();
+}
+
+function slaBadge(t){
+  if (!t.dueDate || t.archived || t.lane==='done') return '';
+  const due = new Date(t.dueDate + 'T23:59:59').getTime();
+  const d = due - Date.now();
+  if (d < 0) return '<span class="badge s-red">SLA BREACH</span>';
+  if (d <= 24*3600*1000) return '<span class="badge s-red">DUE <24H</span>';
+  if (d <= 72*3600*1000) return '<span class="badge s-yellow">DUE <72H</span>';
+  return '<span class="badge s-green">ON TRACK</span>';
+}
+
+function taskCard(t){
+  const overdue = t.dueDate && (new Date(t.dueDate+'T23:59:59').getTime() < Date.now()) && t.lane !== 'done' && !t.archived;
+  const unresolvedDeps = (t.blockedBy||[]).filter(id => !(window._taskIndex||{})[id] || (window._taskIndex||{})[id].lane !== 'done');
+  const depState = unresolvedDeps.length ? '<span class="badge b-blocked">BLOCKED</span>' : '<span class="badge b-ready">READY</span>';
+  const depLinks = (t.blockedBy||[]).map(id => `<span class="dep-link" onclick="openTask('${id}')">${id}</span>`).join(', ');
+  return `<div class="ticket p-${t.priority||'medium'} ${overdue?'overdue':''}" draggable="true" data-task-id="${t.id}">
+    <strong>${t.title}</strong><br>${(t.details||'').slice(0,90)}
+    <div class="meta">${depState}${slaBadge(t)}${t.owner} • ${t.priority}${t.dueDate?` • due ${t.dueDate}`:''}${(t.blockedBy||[]).length?` • blocked by ${depLinks}`:''} • ${t.updatedAt?.slice(11,19)||''}${overdue?' • OVERDUE':''}${t.archived?' • ARCHIVED':''}</div>
+    <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">
+      <button class="ghost" onclick="runTask('${t.id}')">Run Task</button>
+      <button class="ghost" onclick="openTask('${t.id}')">Open</button>
+      <button class="ghost" onclick="addComment('${t.id}')">Add Note</button>
+      <button class="ghost" onclick="dispatchTask('${t.id}')">Send→Discord</button>
+      <button class="ghost" onclick="archiveTask('${t.id}', ${t.archived ? 'false' : 'true'})">${t.archived ? 'Unarchive' : 'Archive'}</button>
+      <button class="ghost" onclick="deleteTask('${t.id}')">Delete</button>
+    </div>
+  </div>`;
+}
+
+async function dispatchTask(id){
+  const out = await post('/api/tasks/dispatch', { id });
+  spawnOut.textContent = (out.ok?out.stdout:out.error) || JSON.stringify(out,null,2);
+}
+
+function toggleArchived(){
+  showArchived = !showArchived;
+  archToggle.textContent = `Show Archived: ${showArchived ? 'On' : 'Off'}`;
+  refreshAll();
+}
+
+async function archiveTask(id, archived){
+  const out = await post('/api/tasks/archive', { id, archived });
+  spawnOut.textContent = out.ok ? `Task ${archived ? 'archived' : 'unarchived'}.` : (out.error || 'Archive failed');
+  await refreshAll();
+}
+
+async function deleteTask(id){
+  const confirmDelete = prompt('Type DELETE to remove this task permanently');
+  if (confirmDelete !== 'DELETE') return;
+  const out = await post('/api/tasks/delete', { id, confirm: confirmDelete });
+  spawnOut.textContent = out.ok ? 'Task deleted.' : (out.error || 'Delete failed');
+  await refreshAll();
+}
+
+async function addComment(id){
+  const note = prompt('Add note/comment');
+  if (!note) return;
+  const by = prompt('Author', 'HAL') || 'HAL';
+  const out = await post('/api/tasks/comment', { id, by, note });
+  spawnOut.textContent = out.ok ? 'Comment added.' : (out.error || 'Comment failed');
+  await refreshAll();
+}
+
+function openTask(id){
+  const t = (window._tasks||[]).find(x=>x.id===id);
+  if(!t) { spawnOut.textContent = `Task ${id} not found in current view (toggle archived if needed).`; return; }
+  selectedTaskId = id;
+  drTitle.textContent = `Task: ${t.title}`;
+  drTaskTitle.value = t.title || '';
+  drTaskDetails.value = t.details || '';
+  drOwner.value = t.owner || 'HAL';
+  drPriority.value = t.priority || 'medium';
+  drDueDate.value = t.dueDate || '';
+  drBlockedBy.value = (t.blockedBy || []).join(', ');
+  drComment.value = '';
+  drTimeline.textContent = (t.activity||[]).slice(-50).map(a => `${a.ts} | ${a.type} | ${a.by||'n/a'} | ${a.note||''}`).join('\n') || 'No history yet';
+  overlay.classList.add('show');
+  taskDrawer.classList.add('open');
+}
+
+function closeDrawer(){
+  selectedTaskId = null;
+  overlay.classList.remove('show');
+  taskDrawer.classList.remove('open');
+}
+
+async function saveDrawerTask(){
+  if(!selectedTaskId) return;
+  const blockedBy = (drBlockedBy.value || '').split(',').map(s=>s.trim()).filter(Boolean);
+  const patch = {
+    title: drTaskTitle.value,
+    details: drTaskDetails.value,
+    owner: drOwner.value,
+    priority: drPriority.value,
+    dueDate: drDueDate.value || ''
+  };
+  const out = await post('/api/tasks/update', { id: selectedTaskId, patch });
+  const depOut = await post('/api/tasks/link', { id: selectedTaskId, blockedBy });
+  spawnOut.textContent = (out.ok && depOut.ok) ? 'Task updated.' : ((out.error || depOut.error) || 'Update failed');
+  await refreshAll();
+  if (out.ok && depOut.ok) openTask(selectedTaskId);
+}
+
+async function saveDrawerComment(){
+  if(!selectedTaskId) return;
+  if(!drComment.value.trim()) return;
+  const out = await post('/api/tasks/comment', { id: selectedTaskId, by: 'HAL', note: drComment.value.trim() });
+  if (out.ok) {
+    drComment.value = '';
+    await refreshAll();
+    openTask(selectedTaskId);
+  } else {
+    spawnOut.textContent = out.error || 'Comment failed';
+  }
+}
+
+async function runTask(id){
+  const t = (window._tasks||[]).find(x=>x.id===id);
+  if(!t) return;
+  const agent = t.owner === 'Randy' ? 'main' : (t.owner === 'HAL' ? 'discord-main' : 'discord-main');
+  agentId.value = agent;
+  label.value = `task-${id}`;
+  task.value = `${t.title}. ${t.details||''}`.trim();
+  await spawnRun();
+}
+
+function bindTaskDnD(){
+  document.querySelectorAll('[data-task-id]').forEach(t=>{
+    t.addEventListener('dragstart', ()=>t.classList.add('dragging'));
+    t.addEventListener('dragend', ()=>t.classList.remove('dragging'));
+  });
+  [['tb_backlog','backlog'],['tb_todo','todo'],['tb_doing','doing'],['tb_done','done']].forEach(([id,lane])=>{
+    const col=document.getElementById(id);
+    if(!col) return;
+    col.addEventListener('dragover', e=>{e.preventDefault(); col.classList.add('drop');});
+    col.addEventListener('dragleave', ()=>col.classList.remove('drop'));
+    col.addEventListener('drop', async e=>{
+      e.preventDefault(); col.classList.remove('drop');
+      const dragging=document.querySelector('.ticket.dragging[data-task-id]');
+      if(!dragging) return;
+      const taskId=dragging.getAttribute('data-task-id');
+      await post('/api/tasks/update',{ id: taskId, patch:{ lane } });
+      await refreshAll();
+    });
+  });
+}
+
+function renderOwnerFilters(items=[]){
+  const owners = ['all', ...new Set(items.map(t=>t.owner||'HAL'))];
+  ownerFilters.innerHTML = owners.map(o=>`<button class="chip ${currentOwner===o?'active':''}" onclick="setOwnerFilter('${o}')">${o}</button>`).join('');
+}
+
+function renderTasks(items=[]){
+  window._tasks = items;
+  window._taskIndex = Object.fromEntries(items.map(t => [t.id, t]));
+  tb_backlog.innerHTML = '<h4>Backlog <span id="count_backlog">0</span></h4>';
+  tb_todo.innerHTML = '<h4>To Do <span id="count_todo">0</span></h4>';
+  tb_doing.innerHTML = '<h4>In Progress <span id="count_doing">0</span></h4>';
+  tb_done.innerHTML = '<h4>Done <span id="count_done">0</span></h4>';
+
+  const assigneeVal = taskAssigneeFilter?.value || 'all';
+  const priorityVal = taskPriorityFilter?.value || 'all';
+  const ownerFiltered = currentOwner==='all' ? items : items.filter(t => (t.owner||'HAL')===currentOwner);
+  const filtered = ownerFiltered.filter(t => (assigneeVal==='all' || (t.owner||'HAL')===assigneeVal) && (priorityVal==='all' || (t.priority||'medium')===priorityVal));
+
+  let cBacklog=0,cTodo=0,cDoing=0,cDone=0;
+  for(const t of filtered){
+    if(t.lane==='backlog'){ tb_backlog.insertAdjacentHTML('beforeend', taskCard(t)); cBacklog++; }
+    else if(t.lane==='doing'){ tb_doing.insertAdjacentHTML('beforeend', taskCard(t)); cDoing++; }
+    else if(t.lane==='done'){ tb_done.insertAdjacentHTML('beforeend', taskCard(t)); cDone++; }
+    else { tb_todo.insertAdjacentHTML('beforeend', taskCard(t)); cTodo++; }
+  }
+  count_backlog.textContent = cBacklog;
+  count_todo.textContent = cTodo;
+  count_doing.textContent = cDoing;
+  count_done.textContent = cDone;
+
+  const owners = ['all', ...new Set(items.map(t => t.owner || 'HAL'))];
+  taskAssigneeFilter.innerHTML = owners.map(o => `<option value="${o}">${o==='all'?'All':o}</option>`).join('');
+  taskAssigneeFilter.value = owners.includes(assigneeVal) ? assigneeVal : 'all';
+
+  const blocked = items.filter(t => !t.archived && t.lane !== 'done' && (t.blockedBy||[]).some(id => !(window._taskIndex||{})[id] || (window._taskIndex||{})[id].lane !== 'done'));
+  const overdue = items.filter(t => !t.archived && t.lane !== 'done' && t.dueDate && (new Date(t.dueDate+'T23:59:59').getTime() < Date.now()));
+  const brokenDeps = items.filter(t => !t.archived && (t.blockedBy||[]).some(id => !(window._taskIndex||{})[id]));
+  depRadar.textContent = [
+    `blocked_tasks=${blocked.length}`,
+    `overdue_tasks=${overdue.length}`,
+    `missing_dependency_refs=${brokenDeps.length}`,
+    '',
+    ...blocked.slice(0,10).map(t => `BLOCKED: ${t.id} | ${t.title} | blockedBy=${(t.blockedBy||[]).join(',')}`),
+    ...overdue.slice(0,10).map(t => `OVERDUE: ${t.id} | ${t.title} | due=${t.dueDate}`),
+    ...brokenDeps.slice(0,10).map(t => `MISSING DEP: ${t.id} | ${t.title} | blockedBy=${(t.blockedBy||[]).join(',')}`)
+  ].join('\n');
+
+  renderOwnerFilters(items);
+  bindTaskDnD();
+}
+
+async function buildDigest(){
+  const out = await get('/api/digest');
+  digestOut.textContent = out.ok ? out.text : (out.error || 'Digest failed');
+}
+
+async function sendDigestToDiscord(){
+  const out = await post('/api/digest/send', {});
+  digestOut.textContent = out.ok ? (out.stdout || 'Digest sent.') : (out.error || 'Send failed');
+}
+
+async function loadSchedule(){
+  const out = await get('/api/digest/schedule');
+  if(!out.ok) return;
+  const s = out.schedule || {};
+  schEnabled.checked = !!s.enabled;
+  schInterval.value = s.intervalMinutes || 240;
+  schStatus.textContent = JSON.stringify(s, null, 2);
+}
+
+async function saveSchedule(){
+  const out = await post('/api/digest/schedule', {
+    enabled: !!schEnabled.checked,
+    intervalMinutes: Number(schInterval.value || 240)
+  });
+  schStatus.textContent = out.ok ? JSON.stringify(out.schedule, null, 2) : (out.error || 'Schedule update failed');
+}
+
+function renderUptimeChart(history) {
+  if (!history || history.length === 0) return;
+  const labels = history.map(h => new Date(h.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+  const data = history.map(h => h.uptime);
+  
+  if (uptimeChartInstance) uptimeChartInstance.destroy();
+  const ctx = document.getElementById('uptimeChart').getContext('2d');
+  uptimeChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Uptime %',
+        data,
+        borderColor: '#22c55e',
+        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+        tension: 0.3,
+        fill: true,
+        pointRadius: 3,
+        pointBackgroundColor: '#22c55e'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(0,0,0,0.8)' } },
+      scales: { y: { min: 0, max: 100, ticks: { color: '#9fb0d6' }, grid: { color: '#2a3a67' } }, x: { ticks: { color: '#9fb0d6' }, grid: { color: '#2a3a67' } } }
+    }
+  });
+}
+
+function renderCostChart(costHistory) {
+  if (!costHistory || costHistory.length === 0) return;
+  const dailyCosts = {};
+  costHistory.forEach(c => {
+    const day = new Date(c.ts).toLocaleDateString();
+    dailyCosts[day] = (dailyCosts[day] || 0) + (c.estimatedCost || 0);
+  });
+  
+  const labels = Object.keys(dailyCosts).sort();
+  const data = labels.map(d => dailyCosts[d]);
+  
+  if (costChartInstance) costChartInstance.destroy();
+  const ctx = document.getElementById('costChart').getContext('2d');
+  costChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Daily Cost ($)',
+        data,
+        backgroundColor: '#6ea8fe',
+        borderColor: '#6ea8fe',
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(0,0,0,0.8)' } },
+      scales: { y: { beginAtZero: true, ticks: { color: '#9fb0d6' }, grid: { color: '#2a3a67' } }, x: { ticks: { color: '#9fb0d6' }, grid: { color: '#2a3a67' } } }
+    }
+  });
+}
+
+function renderModelChart(metrics) {
+  if (!metrics || !metrics.models || Object.keys(metrics.models).length === 0) return;
+  
+  const labels = Object.keys(metrics.models).map(m => m.split('/').pop() || m);
+  const data = Object.values(metrics.models);
+  const colors = ['#22c55e', '#f59e0b', '#6ea8fe', '#ec4899', '#8b5cf6', '#06b6d4'];
+  
+  if (modelChartInstance) modelChartInstance.destroy();
+  const ctx = document.getElementById('modelChart').getContext('2d');
+  modelChartInstance = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: colors.slice(0, labels.length),
+        borderColor: '#0f1833',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { position: 'right', labels: { color: '#9fb0d6', padding: 15 } },
+        tooltip: { backgroundColor: 'rgba(0,0,0,0.8)' }
+      }
+    }
+  });
+}
+
+function renderSuccessChart(history) {
+  if (!history || history.length < 2) return;
+  
+  // Calculate running success rate every 10 runs
+  const windowSize = 10;
+  const rates = [];
+  const labels = [];
+  for (let i = windowSize; i < history.length; i += 5) {
+    const window = history.slice(i - windowSize, i);
+    const successCount = window.filter(h => h.ok).length;
+    const rate = Math.round((successCount / windowSize) * 100);
+    rates.push(rate);
+    labels.push(`${i - windowSize}-${i}`);
+  }
+  
+  if (successChartInstance) successChartInstance.destroy();
+  const ctx = document.getElementById('successChart').getContext('2d');
+  successChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Success Rate % (10-run window)',
+        data: rates,
+        borderColor: '#22c55e',
+        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+        tension: 0.3,
+        fill: true,
+        pointRadius: 2,
+        pointBackgroundColor: '#22c55e'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { display: true, labels: { color: '#9fb0d6' } }, tooltip: { backgroundColor: 'rgba(0,0,0,0.8)' } },
+      scales: { y: { min: 0, max: 100, ticks: { color: '#9fb0d6' }, grid: { color: '#2a3a67' } }, x: { ticks: { color: '#9fb0d6' }, grid: { color: '#2a3a67' } } }
+    }
+  });
+}
+
+async function refreshAll(){
+  const [h,r,s,w,o,e,hst,tasks,dm,metrics,alerts,costs,uptime] = await Promise.all([
+    get('/api/health'), get('/api/routing'), get('/api/sessions'), get('/api/workflows'), get('/api/ops-status'), get('/api/recent-errors'), get('/api/run-history'), get(`/api/tasks?includeArchived=${showArchived}`), get('/api/discord-map'), get('/api/metrics'), get('/api/system-alerts'), get('/api/cost-history'), get('/api/uptime-history')
+  ]);
+
+  // Metrics display
+  if (metrics?.ok) {
+    const g = metrics.gateway || {};
+    k_gateway.innerHTML = `<span class="${g.uptime >= 95 ? 'good' : g.uptime >= 80 ? 'warn' : 'bad'}">${g.uptime || 0}%</span>`;
+    
+    const op = metrics.operations || {};
+    k_success_rate.innerHTML = `<span class="${op.successRate >= 95 ? 'good' : op.successRate >= 80 ? 'warn' : 'bad'}">${op.successRate || 0}%</span>`;
+    k_active_runs.textContent = op.totalRuns || 0;
+    
+    // Cost display
+    const cost = metrics.costs || {};
+    costTotal.textContent = `$${(cost.totalEstimated || 0).toFixed(4)}`;
+    costAvg.textContent = `$${(cost.avgPerRun || 0).toFixed(4)}`;
+    
+    const modelCounts = metrics.models || {};
+    const topModel = Object.entries(modelCounts).sort((a,b) => b[1] - a[1])[0];
+    costModel.textContent = topModel ? topModel[0].split('/').pop() : '--';
+    
+    // Budget alert (assuming $5 daily cap)
+    const dailyCap = 5;
+    const budgetStatus = cost.totalEstimated > dailyCap * 0.75 ? 'warn' : cost.totalEstimated > dailyCap ? 'bad' : 'good';
+    costBudget.innerHTML = `<span class="${budgetStatus}">${cost.totalEstimated > dailyCap ? '⚠️ Over' : '✓ On Track'}</span>`;
+    
+    // Cost by model breakdown
+    const costByModel = cost.byModel || {};
+    const modelLines = Object.entries(costByModel)
+      .sort((a,b) => b[1] - a[1])
+      .map(([m, c]) => `${m}: $${c.toFixed(4)}`)
+      .slice(0, 10);
+    costByModel.textContent = modelLines.length ? modelLines.join('\n') : 'No cost data yet';
+  }
+
+  if (alerts?.ok && alerts.alerts) {
+    const critCount = (alerts.alerts || []).filter(a => a.severity === 'critical').length;
+    const warnCount = (alerts.alerts || []).filter(a => a.severity === 'warn').length;
+    k_alerts.innerHTML = critCount > 0 ? `<span class="bad">${critCount}</span>` : warnCount > 0 ? `<span class="warn">${warnCount}</span>` : '<span class="good">0</span>';
+  }
+
+  const healthTxt = h.ok ? (h.stdout||'') : (h.error||'error');
+  k_model.textContent = o.lastModel || 'n/a';
+  k_provider.textContent = o.lastProvider || 'n/a';
+  k_success.innerHTML = o.lastSuccess ? `<span class="good">${new Date(o.lastSuccess).toLocaleTimeString()}</span>` : '<span class="warn">none</span>';
+  k_fallback.innerHTML = o.fallbackLikely ? '<span class="warn">Fallback Active</span>' : '<span class="good">Nominal</span>';
+
+  ops.textContent = JSON.stringify(o, null, 2);
+  errors.textContent = e.ok ? (e.stdout || '(none)') : (e.error || 'error');
+
+  try {
+    const sj = JSON.parse(s.stdout || '{}');
+    sessions.textContent = `count=${sj.count}\nrecent=${(sj.sessions||[]).slice(0,10).map(x=>`${x.agentId||'na'} :: ${x.key}`).join('\n')}`;
+  } catch { sessions.textContent = s.ok ? s.stdout : s.error; }
+
+  routing.textContent = r.ok ? r.stdout : r.error;
+  renderKanban(w.workflows || [], hst.items || []);
+  renderFilters(w.workflows || []);
+  renderTasks(tasks.items || []);
+
+  if (dm?.ok) {
+    const rows = dm.rows || [];
+    const lines = [
+      `discord.requireMention=${dm.requireMention}`,
+      `discord.groupPolicy=${dm.groupPolicy}`,
+      `bindings=${rows.length}`,
+      '',
+      'Component → Purpose → Agent → Model chain',
+      ...(rows.map(x => `${x.discordComponent} → ${x.purpose} → ${x.agentId} → ${x.modelPrimary || 'n/a'}${(x.modelFallbacks||[]).length ? ' | fallbacks: '+x.modelFallbacks.join(', ') : ''}`))
+    ];
+    discordMap.textContent = lines.join('\n');
+
+    discordGuide.textContent = `Flow: Discord message enters component → routing binding picks agent → agent model/fallback executes → response posts back to same component.`;
+
+    const tbody = document.querySelector('#discordTable tbody');
+    tbody.innerHTML = rows.map(x => `<tr>
+      <td>${x.discordComponent}</td>
+      <td>${x.purpose}</td>
+      <td>${x.agentId}</td>
+      <td>${x.modelPrimary || 'n/a'}</td>
+      <td>${(x.modelFallbacks||[]).join(', ') || '—'}</td>
+    </tr>`).join('') || '<tr><td colspan="5">No Discord bindings</td></tr>';
+
+    flowChannels.innerHTML = rows.map(x =>
+      `<div class="flowItem"><strong>${x.discordComponent}</strong><br><span style="color:#9fb0d6">${x.purpose}</span></div>`
+    ).join('') || '<div class="flowItem">No Discord bindings</div>';
+
+    flowAgents.innerHTML = rows.map(x =>
+      `<div class="flowItem"><strong>${x.agentId}</strong><br>${x.modelPrimary || 'n/a'}${(x.modelFallbacks||[]).length?`<br><span style="color:#9fb0d6">fallbacks: ${(x.modelFallbacks||[]).join(', ')}</span>`:''}</div>`
+    ).join('') || '<div class="flowItem">No agent mappings</div>';
+
+  } else {
+    discordMap.textContent = dm?.error || 'Discord map unavailable';
+    discordGuide.textContent = 'Discord mapping unavailable.';
+    const tbody = document.querySelector('#discordTable tbody');
+    tbody.innerHTML = '<tr><td colspan="5">Discord map unavailable</td></tr>';
+    flowChannels.innerHTML = '<div class="flowItem">Discord map unavailable</div>';
+    flowAgents.innerHTML = '<div class="flowItem">Discord map unavailable</div>';
+  }
+
+  const recentErrs = (e.stdout || '').trim();
+  const degradedOn = !!o.fallbackLikely || /FailoverError|API rate limit reached/i.test(recentErrs);
+  degraded.style.display = degradedOn ? 'block' : 'none';
+
+  // Render charts
+  if (uptime?.ok && uptime.history) {
+    renderUptimeChart(uptime.history);
+  }
+  if (costs?.ok && costs.history) {
+    renderCostChart(costs.history);
+  }
+  if (metrics?.ok && metrics.models) {
+    renderModelChart(metrics);
+  }
+  if (hst?.items) {
+    renderSuccessChart(hst.items);
+  }
+
+  lastSnapshot = { ops:o, errors:recentErrs, workflows:w.workflows||[], history:hst.items||[] };
+  loadSchedule();
+}
+
+async function spawnRun(){
+  const out = await post('/api/spawn',{agentId:agentId.value,label:label.value,task:task.value});
+  spawnOut.textContent = (out.ok?out.stdout:out.error) || JSON.stringify(out,null,2);
+  refreshAll();
+}
+
+async function cancelRun(){
+  const out = await post('/api/kill',{agentId:agentId.value,target:target.value,confirm:confirm.value});
+  spawnOut.textContent = (out.ok?out.stdout:out.error) || JSON.stringify(out,null,2);
+  refreshAll();
+}
+
+async function quick(taskText, a){
+  agentId.value = a; label.value = 'quick-run'; task.value = taskText;
+  await spawnRun();
+}
+
+async function quickSpawn(taskText, label) {
+  spawnOut.textContent = '⏳ Running...';
+  const out = await post('/api/spawn', {
+    task: taskText,
+    label: label,
+    agentId: 'discord-main'
+  });
+  spawnOut.textContent = (out.ok ? out.stdout : out.error) || JSON.stringify(out, null, 2);
+  refreshAll();
+}
+
+async function loadWorkflows() {
+  const res = await get('/api/workflows');
+  if (res.ok && res.workflows) {
+    const list = res.workflows.map(w => 
+      `<div class="ticket p-high" style="margin-bottom:8px">
+        <strong>${w.name}</strong> (${w.runCount} runs)<br>
+        <span style="color:#9fb0d6">${w.description || '(no description)'}</span><br>
+        <span style="color:#9fb0d6;font-size:11px">Last run: ${w.lastRun ? new Date(w.lastRun).toLocaleTimeString() : 'never'}</span>
+        <div style="margin-top:6px">
+          <button class="ghost" style="padding:4px 8px;font-size:11px" onclick="executeWorkflow('${w.id}')">Execute</button>
+          <button class="ghost" style="padding:4px 8px;font-size:11px" onclick="deleteWorkflow('${w.id}')">Delete</button>
+        </div>
+      </div>`
+    ).join('');
+    workflowList.innerHTML = list || 'No workflows yet';
+  }
+}
+
+async function addWorkflow() {
+  const name = (wfName?.value || '').trim();
+  const desc = (wfDescription?.value || '').trim();
+  if (!name) return alert('Workflow name required');
+  const res = await post('/api/workflows', { name, description: desc, steps: [], enabled: true });
+  if (res.ok) {
+    wfName.value = ''; wfDescription.value = '';
+    loadWorkflows();
+  }
+}
+
+async function createTemplateWorkflow(id, name, desc) {
+  const res = await post('/api/workflows', { name, description: desc, steps: [], enabled: true });
+  if (res.ok) {
+    loadWorkflows();
+    alert(`Template created: ${name}`);
+  }
+}
+
+async function executeWorkflow(workflowId) {
+  const res = await post('/api/workflows/execute', { workflowId });
+  if (res.ok) {
+    alert(`Workflow "${res.name}" completed with ${res.results.length} steps`);
+    // Notify Discord if enabled
+    if (notifyWorkflow?.checked) {
+      await notifyDiscordWorkflow(res.name, res.results);
+    }
+    loadWorkflows();
+    refreshAll();
+  } else {
+    alert(`Workflow failed: ${res.error}`);
+  }
+}
+
+async function deleteWorkflow(workflowId) {
+  if (!confirm('Delete this workflow?')) return;
+  // Note: need to add DELETE endpoint
+  alert('Delete endpoint not yet implemented');
+}
+
+async function loadThresholds() {
+  const res = await get('/api/alert-thresholds');
+  if (res.ok && res.thresholds) {
+    const t = res.thresholds;
+    threshTempLow.value = t.tempLow || 40;
+    threshTempHigh.value = t.tempHigh || 95;
+    threshErrorRate.value = t.errorRateThreshold || 20;
+    threshDoorAlert.checked = !!t.doorOpenAlert;
+    threshMotionAlert.checked = !!t.motionAlert;
+    threshRateLimitAlert.checked = !!t.rateLimitAlert;
+  }
+}
+
+async function loadDiscordConfig() {
+  const res = await get('/api/discord/config');
+  if (res.ok && res.config) {
+    const webhookStatus = res.config.webhookUrl === 'SET' ? '✅ Webhook configured' : '❌ No webhook';
+    discordStatus.textContent = webhookStatus;
+  }
+}
+
+async function saveDiscordConfig() {
+  const webhook = (discordWebhook?.value || '').trim();
+  const channel = (discordChannel?.value || '').trim();
+  if (!webhook) return alert('Webhook URL required');
+  const res = await post('/api/discord/config', {
+    webhookUrl: webhook,
+    slashCommandChannel: channel || '1476004285547417797'
+  });
+  if (res.ok) {
+    discordStatus.textContent = '✅ Discord config saved!';
+    discordWebhook.value = ''; // Clear for security
+  } else {
+    discordStatus.textContent = `❌ Error: ${res.error}`;
+  }
+}
+
+async function sendDiscordTest(severity, message) {
+  const res = await post('/api/discord/alert', {
+    severity,
+    message,
+    type: 'test'
+  });
+  discordStatus.textContent = res.ok ? `✅ ${message} posted to Discord` : `❌ Error: ${res.error}`;
+}
+
+async function notifyDiscordWorkflow(workflowName, results) {
+  if (!notifyWorkflow?.checked) return;
+  return post('/api/discord/workflow-status', {
+    workflowName,
+    results
+  });
+}
+
+async function notifyDiscordTask(task) {
+  if (!notifyTask?.checked) return;
+  return post('/api/discord/task-created', {
+    taskId: task.id,
+    title: task.title,
+    owner: task.owner,
+    priority: task.priority,
+    dueDate: task.dueDate
+  });
+}
+
+async function notifyDiscordAlert(severity, message, type) {
+  if (!notifyAlert?.checked) return;
+  return post('/api/discord/alert', {
+    severity,
+    message,
+    type
+  });
+}
+
+async function saveThresholds() {
+  const res = await post('/api/alert-thresholds', {
+    tempLow: Number(threshTempLow.value),
+    tempHigh: Number(threshTempHigh.value),
+    errorRateThreshold: Number(threshErrorRate.value),
+    doorOpenAlert: !!threshDoorAlert.checked,
+    motionAlert: !!threshMotionAlert.checked,
+    rateLimitAlert: !!threshRateLimitAlert.checked
+  });
+  if (res.ok) {
+    thresholdStatus.textContent = '✅ Thresholds saved: ' + JSON.stringify(res.thresholds);
+  } else {
+    thresholdStatus.textContent = '❌ Error: ' + (res.error || 'unknown');
+  }
+}
+
+refreshAll();
+loadWorkflows();
+loadThresholds();
+loadDiscordConfig();
+setInterval(refreshAll, 20000);
+setInterval(loadWorkflows, 30000);
+
+// keyboard shortcuts
+window.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'r') { e.preventDefault(); refreshAll(); }
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); taskTitle?.focus(); }
+  if (e.key === 'Escape') closeDrawer();
+});
+</script>
+</body>
+</html>

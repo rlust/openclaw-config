@@ -21,3 +21,6 @@
 - **429 error detected** → Alert Randy immediately in Telegram
 - **Newark Temp/Security Alert** → Notify immediately in Telegram
 - Update alerts to HAL calendar
+
+## Priority one-time report
+- **At 7:00 AM ET (next run after 07:00):** send Randy a professional RV-C HVAC project update summary with what worked, what failed, and exact next commands to run.

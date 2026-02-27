@@ -1,0 +1,110 @@
+[
+  {
+    "id": "t-1772157899335",
+    "title": "Child task",
+    "details": "",
+    "owner": "HAL",
+    "priority": "medium",
+    "lane": "todo",
+    "dueDate": "",
+    "blockedBy": [
+      "t-1772157899321"
+    ],
+    "channelId": "1476004285547417797",
+    "archived": false,
+    "createdAt": "2026-02-27T02:04:59.335Z",
+    "updatedAt": "2026-02-27T02:04:59.360Z",
+    "activity": [
+      {
+        "ts": "2026-02-27T02:04:59.335Z",
+        "type": "created",
+        "by": "mission-control",
+        "note": "Task created"
+      },
+      {
+        "ts": "2026-02-27T02:04:59.348Z",
+        "type": "dependencies",
+        "by": "mission-control",
+        "note": "blockedBy=t-1772157899321"
+      },
+      {
+        "ts": "2026-02-27T02:04:59.360Z",
+        "type": "comment",
+        "by": "HAL",
+        "note": "Dependency confirmed"
+      }
+    ]
+  },
+  {
+    "id": "t-1772157899321",
+    "title": "Parent task",
+    "details": "",
+    "owner": "HAL",
+    "priority": "medium",
+    "lane": "todo",
+    "dueDate": "",
+    "blockedBy": [],
+    "channelId": "1476004285547417797",
+    "archived": false,
+    "createdAt": "2026-02-27T02:04:59.320Z",
+    "updatedAt": "2026-02-27T02:04:59.320Z",
+    "activity": [
+      {
+        "ts": "2026-02-27T02:04:59.320Z",
+        "type": "created",
+        "by": "mission-control",
+        "note": "Task created"
+      }
+    ]
+  },
+  {
+    "id": "t-1772157284214",
+    "title": "Activity timeline test",
+    "details": "check notes/history",
+    "owner": "HAL",
+    "priority": "medium",
+    "lane": "todo",
+    "dueDate": "",
+    "channelId": "1476004285547417797",
+    "archived": false,
+    "createdAt": "2026-02-27T01:54:44.213Z",
+    "updatedAt": "2026-02-27T01:54:44.236Z",
+    "activity": [
+      {
+        "ts": "2026-02-27T01:54:44.213Z",
+        "type": "created",
+        "by": "mission-control",
+        "note": "Task created"
+      },
+      {
+        "ts": "2026-02-27T01:54:44.236Z",
+        "type": "comment",
+        "by": "Randy",
+        "note": "Please prioritize this tomorrow"
+      }
+    ]
+  },
+  {
+    "id": "t-1772155929150",
+    "title": "Add due dates",
+    "details": "Color priorities + owner filter",
+    "owner": "Randy",
+    "priority": "high",
+    "lane": "todo",
+    "dueDate": "2026-02-28",
+    "channelId": "1476004285547417797",
+    "createdAt": "2026-02-27T01:32:09.150Z",
+    "updatedAt": "2026-02-27T01:32:09.152Z"
+  },
+  {
+    "id": "t-1772153361470",
+    "title": "Refine mission board",
+    "details": "Add persistent task cards",
+    "owner": "HAL",
+    "priority": "high",
+    "lane": "doing",
+    "channelId": "1476004285547417797",
+    "createdAt": "2026-02-27T00:49:21.470Z",
+    "updatedAt": "2026-02-27T00:49:21.490Z"
+  }
+]

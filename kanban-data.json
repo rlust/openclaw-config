@@ -37,14 +37,6 @@
           "description": "Design schematic: STM32L476 + TJA1055 CAN transceiver + ESP32-WROOM-32. 12V power supply. DB9 connector."
         },
         {
-          "id": "rvc3",
-          "title": "RV-C Bridge: Firmware CAN RX + PGN dispatcher",
-          "priority": "high",
-          "assignee": "HAL",
-          "dueDate": "2026-03-15",
-          "description": "Firmware skeleton: CAN init, RX interrupt, PGN dispatch table. Test on breadboard with STM32 dev board."
-        },
-        {
           "id": "rvc4",
           "title": "RV-C Bridge: Battery decoder (PGN 65100)",
           "priority": "high",
@@ -97,6 +89,14 @@
           "assignee": "HAL",
           "dueDate": "2026-02-20",
           "description": "Define the custom board architecture: MCU selection, dual CAN transceivers (isolated), Ethernet PHY/magnetics, automotive power input, connectors, termination strategy, and TX safety gate. Deliverables: block diagram + pin plan + v0.1 BOM.\n\n\u2705 hardware-v0.1.md + bom-v0.1.csv + pinmap-v0.1.md committed to GitHub."
+        },
+        {
+          "id": "rvc3",
+          "title": "RV-C Bridge: Firmware CAN RX + PGN dispatcher",
+          "priority": "high",
+          "assignee": "HAL",
+          "dueDate": "2026-03-15",
+          "description": "Firmware skeleton: CAN init, RX interrupt, PGN dispatch table. Test on breadboard with STM32 dev board."
         }
       ]
     },
