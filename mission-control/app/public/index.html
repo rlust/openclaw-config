@@ -13,14 +13,14 @@
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(180deg,#0a1020,#0b1226);color:var(--text)}
     .shell{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
-    .sidebar{display:none}
-    .shell{grid-template-columns:1fr!important;padding:0}
+    .sidebar{border-right:1px solid var(--line);background:#0a1328;padding:8px;position:sticky;top:0;height:100vh;overflow-y:auto;width:140px}
+    .shell{grid-template-columns:140px 1fr!important;padding:0}
     .brand{font-weight:700;font-size:18px;margin-bottom:2px}
     .brandSub{color:var(--muted);font-size:12px;margin-bottom:14px}
     .snav a{display:block;color:#d9e3ff;text-decoration:none;padding:9px 10px;border-radius:10px;margin-bottom:6px;border:1px solid transparent}
     .snav a:hover{background:#1b2a50;border-color:#2e467d}
-    .wrap{max-width:900px;margin:0 auto;padding:14px;background:#0b1020;min-height:100vh}
-    .top{display:none}
+    .wrap{max-width:100%;margin:0;padding:0;background:#0b1020;min-height:100vh;display:flex;flex-direction:column}
+    .top{display:block;padding:12px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#0a1328,#1a2847)}
     .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
     .title{font-size:26px;font-weight:700}
     .subtitle{color:var(--muted);font-size:13px}
@@ -106,7 +106,17 @@
 </head>
 <body>
   <div class="shell">
-    <!-- Sidebar Hidden for Clean Layout -->
+    <aside class="sidebar">
+      <div class="brand" style="font-size:12px;font-weight:700;margin-bottom:12px;padding:4px">MC</div>
+      <nav class="snav" style="display:flex;flex-direction:column;gap:4px">
+        <a href="#overview" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Overview</a>
+        <a href="#run-controls" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Run</a>
+        <a href="#tasks" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Tasks</a>
+        <a href="#hvac-control" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">🌡️ HVAC</a>
+        <a href="#discord-relations" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Discord</a>
+        <a href="#diagnostics" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Diag</a>
+      </nav>
+    </aside>
     <main>
   <div class="wrap">
     <div class="top">
@@ -121,17 +131,7 @@
 
     <div id="degraded" class="banner">⚠️ Degraded mode: repeated fallback/rate-limit signals detected.</div>
 
-    <!-- Minimal Top Bar Navigation -->
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;background:rgba(11,16,32,.6);padding:8px;border-radius:8px;border:1px solid #375086">
-      <a href="#overview" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">Overview</a>
-      <a href="#run-controls" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">Run Controls</a>
-      <a href="#tasks" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">Tasks</a>
-      <a href="#hvac-control" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">🌡️ HVAC</a>
-      <a href="#discord-relations" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">Discord</a>
-      <a href="#diagnostics" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">Diagnostics</a>
-    </div>
-
-    <div class="grid" id="overview" style="display:none">
+    <div class="grid" id="overview" style="display:none;padding:12px;max-width:100%">
       <div class="card"><div class="kpi">Gateway Uptime</div><strong id="k_gateway" class="good">--</strong></div>
       <div class="card"><div class="kpi">Success Rate</div><strong id="k_success_rate" class="good">--</strong></div>
       <div class="card"><div class="kpi">Active Runs</div><strong id="k_active_runs">0</strong></div>
@@ -510,8 +510,8 @@ function showTab(tab) {
     activeEl.style.display = 'block';
   }
   
-  // Update nav links active state
-  document.querySelectorAll('.navtabs a, nav a').forEach(link => {
+  // Update sidebar nav links active state
+  document.querySelectorAll('.snav a').forEach(link => {
     if (link.href.includes('#' + tab)) {
       link.style.backgroundColor = '#6ea8fe';
       link.style.color = '#08122d';
