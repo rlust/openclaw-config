@@ -807,6 +807,89 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (req.url === '/api/scheduler/list') {
+    try {
+      const data = await readFile(resolve('./data/scheduler.json'), 'utf8');
+      const tasks = JSON.parse(data);
+      return json(res, 200, { ok: true, tasks });
+    } catch (e) {
+      return json(res, 200, { ok: true, tasks: [] });
+    }
+  }
+
+  if (req.url === '/api/scheduler/add' && req.method === 'POST') {
+    let body = '';
+    req.on('data', c => body += c);
+    req.on('end', async () => {
+      try {
+        const { task, time, freq } = JSON.parse(body || '{}');
+        let tasks = [];
+        try {
+          const data = await readFile(resolve('./data/scheduler.json'), 'utf8');
+          tasks = JSON.parse(data);
+        } catch (e) {}
+        
+        const newTask = {
+          id: Date.now(),
+          task,
+          time,
+          freq,
+          enabled: true,
+          nextRun: new Date().toISOString()
+        };
+        tasks.push(newTask);
+        await writeFile(resolve('./data/scheduler.json'), JSON.stringify(tasks, null, 2));
+        
+        pushHistory({ type: 'scheduler-add', task, time, freq });
+        return json(res, 200, { ok: true, id: newTask.id });
+      } catch (e) {
+        return json(res, 500, { ok: false, error: e.message });
+      }
+    });
+    return;
+  }
+
+  if (req.url === '/api/scheduler/toggle' && req.method === 'POST') {
+    let body = '';
+    req.on('data', c => body += c);
+    req.on('end', async () => {
+      try {
+        const { id, enabled } = JSON.parse(body || '{}');
+        const data = await readFile(resolve('./data/scheduler.json'), 'utf8');
+        let tasks = JSON.parse(data);
+        const task = tasks.find(t => t.id === id);
+        if (task) task.enabled = enabled;
+        await writeFile(resolve('./data/scheduler.json'), JSON.stringify(tasks, null, 2));
+        
+        pushHistory({ type: 'scheduler-toggle', id, enabled });
+        return json(res, 200, { ok: true });
+      } catch (e) {
+        return json(res, 500, { ok: false, error: e.message });
+      }
+    });
+    return;
+  }
+
+  if (req.url === '/api/scheduler/remove' && req.method === 'POST') {
+    let body = '';
+    req.on('data', c => body += c);
+    req.on('end', async () => {
+      try {
+        const { id } = JSON.parse(body || '{}');
+        const data = await readFile(resolve('./data/scheduler.json'), 'utf8');
+        let tasks = JSON.parse(data);
+        tasks = tasks.filter(t => t.id !== id);
+        await writeFile(resolve('./data/scheduler.json'), JSON.stringify(tasks, null, 2));
+        
+        pushHistory({ type: 'scheduler-remove', id });
+        return json(res, 200, { ok: true });
+      } catch (e) {
+        return json(res, 500, { ok: false, error: e.message });
+      }
+    });
+    return;
+  }
+
   if (req.url === '/api/hvac/status') {
     const out = await run(`bash ${process.env.HOME}/.openclaw/workspace/scripts/rvc-hvac-status.sh`, 10000);
     if (out.ok) {

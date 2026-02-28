@@ -116,6 +116,7 @@
         <a href="#discord-relations" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Discord</a>
         <a href="#diagnostics" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Diag</a>
         <a href="#model-switcher" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">⚙️ Models</a>
+        <a href="#scheduler" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📅 Schedule</a>
       </nav>
     </aside>
     <main>
@@ -536,7 +537,93 @@
       </div>
     </div>
 
-    <div class="card" style="margin-top:12px;" id="cost-tracking">
+    <!-- SCHEDULER TAB -->
+    <div style="display:none;max-width:900px;margin:12px auto;padding:20px;background:linear-gradient(135deg,#121a31,#1a2847);border-radius:12px;border:1px solid #375086" id="scheduler">
+      <h2 style="margin:0 0 16px;font-size:18px;font-weight:700">📅 Task Scheduler</h2>
+      
+      <!-- Next 5 Scheduled Runs -->
+      <div style="margin-bottom:16px;background:#0f1833;padding:12px;border-radius:8px">
+        <div style="font-size:11px;color:#9fb0d6;font-weight:600;margin-bottom:8px">NEXT SCHEDULED (Coming Up)</div>
+        <div id="sch-upcoming" style="max-height:150px;overflow-y:auto">
+          <div style="padding:8px;color:#9fb0d6;font-size:10px">No scheduled tasks</div>
+        </div>
+      </div>
+
+      <!-- Add New Schedule -->
+      <div style="margin-bottom:16px;background:#0f1833;padding:12px;border-radius:8px">
+        <div style="font-size:11px;color:#9fb0d6;font-weight:600;margin-bottom:8px">CREATE NEW SCHEDULE</div>
+        
+        <!-- Task Selection -->
+        <div style="margin-bottom:10px">
+          <label style="font-size:10px;color:#9fb0d6;display:block;margin-bottom:6px">TASK</label>
+          <select id="sch-task" style="width:100%;padding:8px;border-radius:6px;border:1px solid #375086;background:#0e1630;color:#d9e3ff;font-size:12px">
+            <option value="">— Select Task —</option>
+            <option value="rentals-daily">📊 Rentals Daily Check</option>
+            <option value="stock-scout">📈 Stock Scout Analysis</option>
+            <option value="hvac-check">🌡️ RV HVAC Check</option>
+            <option value="ha-newark">🏠 Newark HA Status</option>
+            <option value="custom">✏️ Custom Command</option>
+          </select>
+        </div>
+
+        <!-- Time Selection (Time of Day) -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div>
+            <label style="font-size:10px;color:#9fb0d6;display:block;margin-bottom:6px">TIME (24h)</label>
+            <input id="sch-time" type="time" value="09:00" style="width:100%;padding:8px;border-radius:6px;border:1px solid #375086;background:#0e1630;color:#d9e3ff;font-size:12px" />
+          </div>
+          <div>
+            <label style="font-size:10px;color:#9fb0d6;display:block;margin-bottom:6px">FREQUENCY</label>
+            <select id="sch-freq" style="width:100%;padding:8px;border-radius:6px;border:1px solid #375086;background:#0e1630;color:#d9e3ff;font-size:12px">
+              <option value="daily">Daily</option>
+              <option value="weekdays">Weekdays (Mon-Fri)</option>
+              <option value="weekly">Weekly</option>
+              <option value="hourly">Hourly</option>
+              <option value="once">Once</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Day Selection (if weekly) -->
+        <div id="sch-day-select" style="display:none;margin-bottom:10px">
+          <label style="font-size:10px;color:#9fb0d6;display:block;margin-bottom:6px">DAY OF WEEK</label>
+          <select id="sch-day" style="width:100%;padding:8px;border-radius:6px;border:1px solid #375086;background:#0e1630;color:#d9e3ff;font-size:12px">
+            <option value="0">Sunday</option>
+            <option value="1" selected>Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+          </select>
+        </div>
+
+        <!-- Action Buttons -->
+        <button onclick="scheduleTask()" style="width:100%;padding:10px;background:#22c55e;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px;margin-bottom:8px">+ ADD TO SCHEDULE</button>
+      </div>
+
+      <!-- All Scheduled Tasks -->
+      <div style="margin-bottom:16px;background:#0f1833;padding:12px;border-radius:8px">
+        <div style="font-size:11px;color:#9fb0d6;font-weight:600;margin-bottom:8px">ALL SCHEDULED TASKS</div>
+        <div id="sch-list" style="max-height:300px;overflow-y:auto">
+          <div style="padding:8px;color:#9fb0d6;font-size:10px">Loading tasks...</div>
+        </div>
+      </div>
+
+      <!-- Quick Templates -->
+      <div style="margin-bottom:16px;background:#0f1833;padding:12px;border-radius:8px">
+        <div style="font-size:11px;color:#9fb0d6;font-weight:600;margin-bottom:8px">QUICK TEMPLATES</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+          <button onclick="applyTemplate('rentals-9am')" style="padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">Rentals @ 9am Daily</button>
+          <button onclick="applyTemplate('scout-4pm')" style="padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">Scout @ 4pm Daily</button>
+          <button onclick="applyTemplate('hvac-8am')" style="padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">HVAC @ 8am Daily</button>
+          <button onclick="applyTemplate('ha-10am')" style="padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">HA Check @ 10am</button>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div style="background:#3b2f12;border:1px solid #7c5e10;padding:8px;border-radius:6px;font-size:10px;color:#fde68a">
+        ℹ️ All times in EST • Tasks run automatically
       <h3>Cost Tracking & Analytics</h3>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">
         <div class="card" style="background:#0f1833">
@@ -614,7 +701,7 @@ document.addEventListener('click', (e) => {
 
 function showTab(tab) {
   // Hide ALL divs with IDs (all tab panels)
-  const allPanels = ['overview', 'run-controls', 'tasks', 'workflows', 'thresholds', 'spawner', 'discord-relations', 'digest', 'diagnostics', 'hvac-control', 'cost-tracking', 'discord-integration', 'model-switcher'];
+  const allPanels = ['overview', 'run-controls', 'tasks', 'workflows', 'thresholds', 'spawner', 'discord-relations', 'digest', 'diagnostics', 'hvac-control', 'cost-tracking', 'discord-integration', 'model-switcher', 'scheduler'];
   allPanels.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
@@ -1627,6 +1714,99 @@ async function saveFallbackChain() {
     loadModelStatus();
   } else {
     alert(`✗ Failed to save: ${res.error}`);
+  }
+}
+
+// SCHEDULER FUNCTIONS
+let scheduledTasks = [
+  { id: 1, task: 'rentals-daily', time: '09:00', freq: 'daily', enabled: true, nextRun: '2026-02-28 09:00' },
+  { id: 2, task: 'stock-scout', time: '16:00', freq: 'daily', enabled: true, nextRun: '2026-02-28 16:00' },
+];
+
+async function loadScheduledTasks() {
+  const res = await get('/api/scheduler/list');
+  if (res.ok) {
+    scheduledTasks = res.tasks || [];
+    renderUpcoming();
+    renderScheduleList();
+  }
+}
+
+function renderUpcoming() {
+  const upcoming = scheduledTasks.filter(t => t.enabled).slice(0, 5);
+  const html = upcoming.map(t => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid #375086">
+      <div>
+        <div style="color:#d9e3ff;font-weight:600;font-size:11px">${t.task.toUpperCase()}</div>
+        <div style="color:#fde68a;font-size:10px">${t.nextRun}</div>
+      </div>
+      <div style="color:#86efac;font-size:10px">${t.freq}</div>
+    </div>
+  `).join('');
+  document.getElementById('sch-upcoming').innerHTML = html || '<div style="padding:8px;color:#9fb0d6;font-size:10px">No upcoming tasks</div>';
+}
+
+function renderScheduleList() {
+  const html = scheduledTasks.map(t => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:#0e1630;margin-bottom:6px;border-radius:6px;border:1px solid #375086">
+      <div style="flex:1">
+        <div style="color:#d9e3ff;font-weight:600;font-size:11px">${t.task}</div>
+        <div style="color:#9fb0d6;font-size:10px">${t.time} • ${t.freq}</div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button onclick="toggleSchedule(${t.id})" style="padding:6px 10px;background:${t.enabled ? '#22c55e' : '#6b7280'};color:#08122d;border:none;border-radius:4px;font-size:10px;cursor:pointer">${t.enabled ? '✓ ON' : '○ OFF'}</button>
+        <button onclick="removeSchedule(${t.id})" style="padding:6px 10px;background:#ef4444;color:#fff;border:none;border-radius:4px;font-size:10px;cursor:pointer">✕</button>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('sch-list').innerHTML = html || '<div style="padding:8px;color:#9fb0d6;font-size:10px">No scheduled tasks yet</div>';
+}
+
+async function scheduleTask() {
+  const task = document.getElementById('sch-task').value;
+  const time = document.getElementById('sch-time').value;
+  const freq = document.getElementById('sch-freq').value;
+  
+  if (!task) return alert('Please select a task');
+  
+  const res = await post('/api/scheduler/add', { task, time, freq });
+  if (res.ok) {
+    alert(`✓ Scheduled ${task} at ${time} (${freq})`);
+    loadScheduledTasks();
+    document.getElementById('sch-task').value = '';
+  } else {
+    alert(`✗ Failed: ${res.error}`);
+  }
+}
+
+async function toggleSchedule(id) {
+  const task = scheduledTasks.find(t => t.id === id);
+  const res = await post('/api/scheduler/toggle', { id, enabled: !task.enabled });
+  if (res.ok) {
+    loadScheduledTasks();
+  }
+}
+
+async function removeSchedule(id) {
+  if (!confirm('Remove this schedule?')) return;
+  const res = await post('/api/scheduler/remove', { id });
+  if (res.ok) {
+    loadScheduledTasks();
+  }
+}
+
+function applyTemplate(template) {
+  const templates = {
+    'rentals-9am': { task: 'rentals-daily', time: '09:00', freq: 'daily' },
+    'scout-4pm': { task: 'stock-scout', time: '16:00', freq: 'daily' },
+    'hvac-8am': { task: 'hvac-check', time: '08:00', freq: 'daily' },
+    'ha-10am': { task: 'ha-newark', time: '10:00', freq: 'daily' },
+  };
+  const t = templates[template];
+  if (t) {
+    document.getElementById('sch-task').value = t.task;
+    document.getElementById('sch-time').value = t.time;
+    document.getElementById('sch-freq').value = t.freq;
   }
 }
 

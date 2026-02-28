@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "task": "rentals-daily",
+    "time": "09:00",
+    "freq": "daily",
+    "enabled": true,
+    "nextRun": "2026-02-28 09:00"
+  },
+  {
+    "id": 2,
+    "task": "stock-scout",
+    "time": "16:00",
+    "freq": "daily",
+    "enabled": true,
+    "nextRun": "2026-02-28 16:00"
+  }
+]
