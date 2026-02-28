@@ -1,0 +1,27 @@
+{
+  "seenTweetIds": {
+    "x_001_matter_llm": {
+      "timestamp": "2026-02-23T13:53:59.431649",
+      "score": 82
+    },
+    "x_002_esp32_inference": {
+      "timestamp": "2026-02-23T13:53:59.431649",
+      "score": 78
+    },
+    "x_003_zwave_mesh_ml": {
+      "timestamp": "2026-02-23T13:53:59.431649",
+      "score": 76
+    }
+  },
+  "seenStoryHashes": {},
+  "lastRun": {
+    "scout": "2026-02-23T13:53:59.431649",
+    "research": null,
+    "writer": null
+  },
+  "settings": {
+    "signalThreshold": 75,
+    "maxItemsPerRun": 3,
+    "dedupeDays": 7
+  }
+}

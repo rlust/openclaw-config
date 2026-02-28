@@ -1,0 +1,10 @@
+{
+  "id": "rvc-hvac-monitor",
+  "name": "RV-C HVAC Monitor",
+  "description": "Monitors and controls RV-C HVAC systems via Home Assistant MQTT",
+  "version": "1.0.0",
+  "type": "main",
+  "tools": ["message", "exec"],
+  "model": "anthropic/claude-haiku-4-5",
+  "timeout": 300
+}

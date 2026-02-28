@@ -169,7 +169,7 @@
   "agents": {
     "defaults": {
       "model": {
-        "primary": "anthropic/claude-haiku-4-5",
+        "primary": "openai-codex/gpt-5.3-codex",
         "fallbacks": [
           "ollama/llama3.2:latest",
           "ollama/deepseek-coder:6.7b",

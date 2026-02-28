@@ -1,0 +1,53 @@
+📊 **Market Close Report** — 05:09 PM ET
+
+**⚠️ CRITICAL ALERTS**
+🟢 VRT: BUY SIGNAL +3.57%
+🟢 ANET: BUY SIGNAL +3.2%
+🟢 PLTR: BUY SIGNAL +4.15%
+🟢 MRVL: BUY SIGNAL +3.23%
+🟢 NET: BUY SIGNAL +4.88%
+
+**🔔 EARNINGS THIS WEEK**
+• NVDA: 2026-02-26 (1d away)
+• MRVL: 2026-02-28 (3d away)
+
+**💼 Portfolio Impact**
+Today: 📈 UP +2.512%
+Total Value: $95258.60
+Total Gain: $5258.60
+
+**📰 News Sentiment**
+🟡 NVDA: NEUTRAL (9 articles)
+🟢 VRT: BULLISH (19 articles)
+🟢 ANET: BULLISH (11 articles)
+
+**AI Sector Stocks**
+```
+Ticker | Price   | Change  | 52w Pos
+-------|---------|---------|--------
+NVDA  | $195.56 | 📈 +1.41%  | 87%
+VRT   | $262.19 | 📈 +3.57%  | 99%
+ANET  | $132.89 | 📈 +3.2%  | 70%
+PLTR  | $134.19 | 📈 +4.15%  | 48%
+MRVL  | $80.92  | 📈 +3.23%  | 61%
+NET   | $171.8  | 📈 +4.88%  | 48%
+```
+
+**Summary**
+🟢 Bullish: 6 | 🔴 Bearish: 0 | ⚫ Neutral: 0
+
+**Top Bullish Picks:**
+• NVDA: Mild uptrend +1.41% [NEUTRAL]
+• VRT: 3.57% up [BULLISH] (71% confidence)
+• ANET: 3.2% up [BULLISH] (64% confidence)
+
+**⚡ Sentiment Divergences** (Price vs News)
+• VRT: Price BUY_SIGNAL | News BULLISH
+• ANET: Price BUY_SIGNAL | News BULLISH
+• PLTR: Price BUY_SIGNAL | News BULLISH
+• MRVL: Price BUY_SIGNAL | News BULLISH
+• NET: Price BUY_SIGNAL | News BULLISH
+
+---
+*Technical analysis for informational purposes. Not financial advice.*
+*Last Updated: 05:09 PM ET*

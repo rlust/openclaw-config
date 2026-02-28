@@ -1,0 +1,50 @@
+# Enhanced Investment Market Close Report - Daily Cron Job
+# Runs at 4:00 PM ET (market close) - Monday-Friday only
+# Includes: Technical Analysis + Sentiment + Earnings + Portfolio Impact
+
+schedule: "0 16 * * 1-5"  # 4 PM ET, Monday-Friday only
+timezone: America/New_York
+name: investment-market-close
+enabled: true
+
+script: |
+  #!/bin/bash
+  
+  WORKSPACE="/Users/randylust/.openclaw/workspace"
+  ANALYZER_DIR="$WORKSPACE/agents/investment-analyzer"
+  CHANNEL_ID="1476004276311560345"
+  TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+  
+  echo "[$(date)] 📊 Enhanced Investment Market Close Pipeline Started"
+  
+  # Step 1: Scout (fetch data)
+  SCOUT_JSON=$(cd "$WORKSPACE" && node agents/investment-scout/scout.js 2>/dev/null | tail -1)
+  
+  # Step 2: Enhanced Researcher (technical + sentiment + earnings + portfolio)
+  ANALYSIS_JSON=$(echo "$SCOUT_JSON" | node "$ANALYZER_DIR/enhanced-researcher.js" 2>/dev/null | tail -1)
+  
+  # Step 3: Enhanced Writer (rich formatting)
+  DISCORD_MSG=$(echo "$ANALYSIS_JSON" | node "$ANALYZER_DIR/enhanced-writer.js" 2>/dev/null)
+  
+  if [ -z "$DISCORD_MSG" ]; then
+    echo "[$(date)] ❌ ERROR: Enhanced pipeline failed"
+    exit 1
+  fi
+  
+  # Save outputs
+  mkdir -p "$WORKSPACE/logs/investment"
+  echo "$ANALYSIS_JSON" > "$WORKSPACE/logs/investment/analysis_$TIMESTAMP.json"
+  echo "$DISCORD_MSG" > "$WORKSPACE/logs/investment/discord_msg_enhanced_$TIMESTAMP.txt"
+  
+  echo "[$(date)] ✅ Enhanced pipeline complete"
+  echo "[$(date)] Features: Technical Analysis + Sentiment + Earnings + Portfolio Impact"
+
+notification:
+  on_complete:
+    send_to_user: true
+    message: "✅ 📊 Enhanced Market Report posted (Technical + Sentiment + Earnings + Portfolio)"
+  on_error:
+    send_to_telegram: true
+    priority: high
+    channel: "-1003858096289"
+    message: "⚠️ Enhanced investment pipeline failed"

@@ -13,14 +13,14 @@
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(180deg,#0a1020,#0b1226);color:var(--text)}
     .shell{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
-    .sidebar{border-right:1px solid var(--line);background:#0a1328;padding:8px;position:sticky;top:0;height:100vh;overflow-y:auto;width:140px}
-    .shell{grid-template-columns:140px 1fr!important;padding:0}
+    .sidebar{display:none}
+    .shell{grid-template-columns:1fr!important;padding:0}
     .brand{font-weight:700;font-size:18px;margin-bottom:2px}
     .brandSub{color:var(--muted);font-size:12px;margin-bottom:14px}
     .snav a{display:block;color:#d9e3ff;text-decoration:none;padding:9px 10px;border-radius:10px;margin-bottom:6px;border:1px solid transparent}
     .snav a:hover{background:#1b2a50;border-color:#2e467d}
-    .wrap{max-width:100%;margin:0;padding:0;background:#0b1020;min-height:100vh;display:flex;flex-direction:column}
-    .top{display:block;padding:12px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#0a1328,#1a2847)}
+    .wrap{max-width:900px;margin:0 auto;padding:14px;background:#0b1020;min-height:100vh}
+    .top{display:none}
     .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
     .title{font-size:26px;font-weight:700}
     .subtitle{color:var(--muted);font-size:13px}
@@ -106,18 +106,7 @@
 </head>
 <body>
   <div class="shell">
-    <aside class="sidebar">
-      <div class="brand" style="font-size:12px;font-weight:700;margin-bottom:12px;padding:4px">MC</div>
-      <nav class="snav" style="display:flex;flex-direction:column;gap:4px">
-        <a href="#overview" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Overview</a>
-        <a href="#run-controls" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Run</a>
-        <a href="#tasks" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Tasks</a>
-        <a href="#hvac-control" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">🌡️ HVAC</a>
-        <a href="#discord-relations" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Discord</a>
-        <a href="#diagnostics" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Diag</a>
-        <a href="#model-switcher" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">⚙️ Models</a>
-      </nav>
-    </aside>
+    <!-- Sidebar Hidden for Clean Layout -->
     <main>
   <div class="wrap">
     <div class="top">
@@ -132,15 +121,17 @@
 
     <div id="degraded" class="banner">⚠️ Degraded mode: repeated fallback/rate-limit signals detected.</div>
 
-    <!-- Hide top header for non-dashboard tabs -->
-    <style>
-      #overview .top, #run-controls .top, #tasks .top, #hvac-control .top, #discord-relations .top, #diagnostics .top {
-        display: none;
-      }
-      #overview { display: none; padding: 12px; }
-    </style>
+    <!-- Minimal Top Bar Navigation -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;background:rgba(11,16,32,.6);padding:8px;border-radius:8px;border:1px solid #375086">
+      <a href="#overview" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">Overview</a>
+      <a href="#run-controls" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">Run Controls</a>
+      <a href="#tasks" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">Tasks</a>
+      <a href="#hvac-control" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">🌡️ HVAC</a>
+      <a href="#discord-relations" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">Discord</a>
+      <a href="#diagnostics" style="color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer">Diagnostics</a>
+    </div>
 
-    <div class="grid" id="overview" style="display:none;padding:12px;max-width:100%">
+    <div class="grid" id="overview" style="display:none">
       <div class="card"><div class="kpi">Gateway Uptime</div><strong id="k_gateway" class="good">--</strong></div>
       <div class="card"><div class="kpi">Success Rate</div><strong id="k_success_rate" class="good">--</strong></div>
       <div class="card"><div class="kpi">Active Runs</div><strong id="k_active_runs">0</strong></div>
@@ -361,35 +352,33 @@
       </div>
     </div>
 
-    <div style="display:none;max-width:800px;margin:12px auto;padding:20px;background:linear-gradient(135deg,#121a31,#1a2847);border-radius:12px;border:1px solid #375086" id="hvac-control">
-      <h2 style="margin:0 0 16px;font-size:18px;font-weight:700">🌡️ Aspire RV Climate Control</h2>
+    <div class="card" style="display:none;max-width:680px;margin:0 auto;padding:16px;background:linear-gradient(135deg,#121a31,#1a2847)" id="hvac-control">
+      <h3>🌡️ Aspire RV Climate Control</h3>
       
       <!-- Status Row -->
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;background:#0f1833;padding:12px;border-radius:8px">
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;background:#0f1833;padding:10px;border-radius:8px">
         <div>
-          <div style="font-size:10px;color:#9fb0d6;margin-bottom:4px">CURRENT TEMP</div>
-          <div style="font-size:22px;font-weight:700;color:#86efac" id="hvac-current-temp">—</div>
+          <div style="font-size:11px;color:#9fb0d6">Current</div>
+          <div style="font-size:18px;font-weight:700;color:#86efac" id="hvac-current-temp">—</div>
         </div>
         <div>
-          <div style="font-size:10px;color:#9fb0d6;margin-bottom:4px">OUTSIDE TEMP</div>
-          <div style="font-size:22px;font-weight:700;color:#fde68a" id="hvac-outside-temp">—</div>
+          <div style="font-size:11px;color:#9fb0d6">Outside</div>
+          <div style="font-size:18px;font-weight:700;color:#fde68a" id="hvac-outside-temp">—</div>
         </div>
       </div>
       
-      <!-- Control Grid -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
-        <!-- Target Temp -->
+      <!-- Quick Controls -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
         <div>
-          <label style="font-size:10px;color:#9fb0d6;display:block;margin-bottom:6px;font-weight:600">TARGET TEMP</label>
+          <label style="font-size:10px;color:#9fb0d6;display:block;margin-bottom:6px">TARGET TEMP</label>
           <div style="display:flex;gap:6px">
             <input id="hvac-target-temp" type="number" min="60" max="95" value="75" style="flex:1;padding:8px;border-radius:6px;border:1px solid #375086;background:#0e1630;color:#d9e3ff;font-size:14px;font-weight:600" />
-            <button onclick="hvacSetTemp()" style="padding:8px 12px;background:#22c55e;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">SET</button>
+            <button onclick="hvacSetTemp()" style="padding:8px 12px;background:#22c55e;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px">SET</button>
           </div>
         </div>
         
-        <!-- Mode -->
         <div>
-          <label style="font-size:10px;color:#9fb0d6;display:block;margin-bottom:6px;font-weight:600">MODE</label>
+          <label style="font-size:10px;color:#9fb0d6;display:block;margin-bottom:6px">MODE</label>
           <div style="display:flex;gap:6px">
             <select id="hvac-mode" style="flex:1;padding:8px;border-radius:6px;border:1px solid #375086;background:#0e1630;color:#d9e3ff;font-size:12px">
               <option>off</option>
@@ -397,47 +386,31 @@
               <option>cool</option>
               <option selected>auto</option>
             </select>
-            <button onclick="hvacSetMode()" style="padding:8px 12px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">SET</button>
-          </div>
-        </div>
-        
-        <!-- Fan -->
-        <div>
-          <label style="font-size:10px;color:#9fb0d6;display:block;margin-bottom:6px;font-weight:600">FAN SPEED</label>
-          <div style="display:flex;gap:6px">
-            <select id="hvac-fan" style="flex:1;padding:8px;border-radius:6px;border:1px solid #375086;background:#0e1630;color:#d9e3ff;font-size:12px">
-              <option>off</option>
-              <option>low</option>
-              <option>medium</option>
-              <option>high</option>
-              <option selected>auto</option>
-            </select>
-            <button onclick="hvacSetFan()" style="padding:8px 12px;background:#f59e0b;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">SET</button>
+            <button onclick="hvacSetMode()" style="padding:8px 12px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px">SET</button>
           </div>
         </div>
       </div>
       
-      <!-- Quick Actions -->
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
-        <button onclick="loadHvacStatus()" style="padding:10px;background:#6ea8fe;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">⟳ Refresh</button>
-        <button onclick="alert('Winter mode: auto-heat if temp drops below 40°F')" style="padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">❄️ Winter</button>
-        <button onclick="alert('Travel mode: low power, maintain 62°F')" style="padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">✈️ Travel</button>
-        <button onclick="alert('Eco mode: energy efficient, setpoint +2°F')" style="padding:10px;background:#10b981;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">♻️ Eco</button>
-      </div>
-      
-      <!-- Extended Controls -->
-      <div style="background:#0f1833;padding:12px;border-radius:8px;margin-bottom:16px">
-        <div style="font-size:11px;color:#9fb0d6;font-weight:600;margin-bottom:8px">SYSTEM INFO</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:11px">
-          <div><span style="color:#9fb0d6">Status:</span> <span id="hvac-status" style="color:#86efac">✓ Online</span></div>
-          <div><span style="color:#9fb0d6">Runtime:</span> <span style="color:#fde68a">12h 34m</span></div>
-          <div><span style="color:#9fb0d6">Power Draw:</span> <span style="color:#fecaca">850W</span></div>
+      <!-- Fan Control -->
+      <div style="margin-bottom:14px">
+        <label style="font-size:10px;color:#9fb0d6;display:block;margin-bottom:6px">FAN SPEED</label>
+        <div style="display:flex;gap:6px">
+          <select id="hvac-fan" style="flex:1;padding:8px;border-radius:6px;border:1px solid #375086;background:#0e1630;color:#d9e3ff;font-size:12px">
+            <option>off</option>
+            <option>low</option>
+            <option>medium</option>
+            <option>high</option>
+            <option selected>auto</option>
+          </select>
+          <button onclick="hvacSetFan()" style="padding:8px 12px;background:#f59e0b;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px">SET</button>
         </div>
       </div>
       
-      <!-- Safety Notice -->
-      <div style="background:#3b2f12;border:1px solid #7c5e10;padding:8px;border-radius:6px;font-size:10px;color:#fde68a">
-        ⚠️ Auto-refresh every 20s • Safe-by-default (cancel requires CONFIRM)
+      <!-- Action Buttons -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        <button onclick="loadHvacStatus()" style="padding:8px;background:#6ea8fe;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">⟳ Refresh</button>
+        <button onclick="alert('Winter mode: auto-heat if temp drops below 40°F')" style="padding:8px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">❄️ Winter</button>
+        <button onclick="alert('Travel mode: low power, maintain 62°F')" style="padding:8px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">✈️ Travel</button>
       </div>
     </div>
 
@@ -445,82 +418,6 @@
       <h3>Diagnostics</h3>
       <div class="mono" id="sessions">...</div>
       <div class="mono" id="routing" style="margin-top:8px"></div>
-    </div>
-
-    <!-- Model Switcher Panel -->
-    <div style="display:none;max-width:900px;margin:12px auto;padding:20px;background:linear-gradient(135deg,#121a31,#1a2847);border-radius:12px;border:1px solid #375086" id="model-switcher">
-      <h2 style="margin:0 0 16px;font-size:18px;font-weight:700">⚙️ Model Configuration</h2>
-      
-      <!-- Current Status -->
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;background:#0f1833;padding:12px;border-radius:8px">
-        <div>
-          <div style="font-size:10px;color:#9fb0d6;margin-bottom:4px">PRIMARY MODEL</div>
-          <div style="font-size:14px;font-weight:700;color:#6ea8fe" id="ms-primary">Loading...</div>
-        </div>
-        <div>
-          <div style="font-size:10px;color:#9fb0d6;margin-bottom:4px">FALLBACK CHAIN</div>
-          <div style="font-size:12px;color:#fde68a" id="ms-fallback">—</div>
-        </div>
-      </div>
-
-      <!-- Primary Model Selection -->
-      <div style="margin-bottom:16px;background:#0f1833;padding:12px;border-radius:8px">
-        <label style="font-size:11px;color:#9fb0d6;display:block;margin-bottom:8px;font-weight:600">SELECT PRIMARY MODEL</label>
-        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px">
-          <div>
-            <label style="font-size:10px;color:#9fb0d6">Provider</label>
-            <select id="ms-provider" style="width:100%;padding:8px;border-radius:6px;border:1px solid #375086;background:#0e1630;color:#d9e3ff;font-size:12px">
-              <option value="openai">OpenAI (GPT)</option>
-              <option value="anthropic">Anthropic (Claude)</option>
-              <option value="google">Google (Gemini)</option>
-              <option value="deepseek">DeepSeek (Local)</option>
-              <option value="ollama">Ollama (Local)</option>
-            </select>
-          </div>
-          <div>
-            <label style="font-size:10px;color:#9fb0d6">Model</label>
-            <select id="ms-model" style="width:100%;padding:8px;border-radius:6px;border:1px solid #375086;background:#0e1630;color:#d9e3ff;font-size:12px">
-              <option value="gpt-5.2">gpt-5.2 (Fast)</option>
-              <option value="gpt-5.1-codex">gpt-5.1-codex (Code)</option>
-              <option value="gpt-5-mini">gpt-5-mini (Quick)</option>
-            </select>
-          </div>
-        </div>
-        <button onclick="switchPrimaryModel()" style="width:100%;padding:10px;background:#22c55e;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px">✓ SET PRIMARY MODEL</button>
-      </div>
-
-      <!-- Fallback Chain Management -->
-      <div style="margin-bottom:16px;background:#0f1833;padding:12px;border-radius:8px">
-        <label style="font-size:11px;color:#9fb0d6;display:block;margin-bottom:8px;font-weight:600">FALLBACK CHAIN (Priority Order)</label>
-        <div id="ms-fallback-list" style="margin-bottom:10px;max-height:200px;overflow-y:auto">
-          <!-- Fallback options will be generated by JS -->
-        </div>
-        <button onclick="addFallback()" style="width:100%;padding:8px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px;margin-bottom:8px">+ ADD FALLBACK</button>
-        <button onclick="saveFallbackChain()" style="width:100%;padding:8px;background:#10b981;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">✓ SAVE CHAIN</button>
-      </div>
-
-      <!-- Health Check -->
-      <div style="margin-bottom:16px;background:#0f1833;padding:12px;border-radius:8px">
-        <label style="font-size:11px;color:#9fb0d6;display:block;margin-bottom:8px;font-weight:600">MODEL HEALTH</label>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-          <button onclick="testModel('primary')" style="padding:10px;background:#6ea8fe;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">🧪 Test Primary</button>
-          <button onclick="testModel('all')" style="padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">🧪 Test Chain</button>
-          <button onclick="loadModelStatus()" style="padding:10px;background:#6ea8fe;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">⟳ Refresh</button>
-        </div>
-      </div>
-
-      <!-- Model Status Table -->
-      <div style="background:#0f1833;padding:12px;border-radius:8px">
-        <label style="font-size:11px;color:#9fb0d6;display:block;margin-bottom:8px;font-weight:600">AVAILABLE MODELS</label>
-        <div id="ms-status-table" style="font-size:10px;max-height:300px;overflow-y:auto;border:1px solid #375086;border-radius:6px;padding:8px;background:#0e1630">
-          Loading model status...
-        </div>
-      </div>
-
-      <!-- Info -->
-      <div style="margin-top:12px;background:#3b2f12;border:1px solid #7c5e10;padding:8px;border-radius:6px;font-size:10px;color:#fde68a">
-        ℹ️ Changes take effect immediately • Fallback chain auto-activates on error • Health checks every 5 minutes
-      </div>
     </div>
 
     <div class="card" style="margin-top:12px;" id="cost-tracking">
@@ -601,7 +498,7 @@ document.addEventListener('click', (e) => {
 
 function showTab(tab) {
   // Hide ALL divs with IDs (all tab panels)
-  const allPanels = ['overview', 'run-controls', 'tasks', 'workflows', 'thresholds', 'spawner', 'discord-relations', 'digest', 'diagnostics', 'hvac-control', 'cost-tracking', 'discord-integration', 'model-switcher'];
+  const allPanels = ['overview', 'run-controls', 'tasks', 'workflows', 'thresholds', 'spawner', 'discord-relations', 'digest', 'diagnostics', 'hvac-control', 'cost-tracking', 'discord-integration'];
   allPanels.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
@@ -613,8 +510,8 @@ function showTab(tab) {
     activeEl.style.display = 'block';
   }
   
-  // Update sidebar nav links active state
-  document.querySelectorAll('.snav a').forEach(link => {
+  // Update nav links active state
+  document.querySelectorAll('.navtabs a, nav a').forEach(link => {
     if (link.href.includes('#' + tab)) {
       link.style.backgroundColor = '#6ea8fe';
       link.style.color = '#08122d';
@@ -1520,88 +1417,6 @@ async function hvacSetFan() {
     loadHvacStatus();
   } else {
     alert(`✗ Failed`);
-  }
-}
-
-// MODEL SWITCHER FUNCTIONS
-let fallbackChain = ['anthropic/claude-haiku-4-5', 'google/gemini-2.5-flash-lite', 'openai/gpt-5-mini'];
-
-async function loadModelStatus() {
-  const res = await get('/api/model/status');
-  if (res.ok) {
-    document.getElementById('ms-primary').textContent = res.primary || 'haiku';
-    document.getElementById('ms-fallback').textContent = (res.fallback || fallbackChain).join(' → ');
-    renderModelStatusTable(res.models || []);
-  }
-}
-
-function renderModelStatusTable(models) {
-  const html = models.map(m => `
-    <div style="display:flex;justify-content:space-between;padding:6px;border-bottom:1px solid #375086">
-      <span style="color:#d9e3ff">${m.name}</span>
-      <span style="color:${m.status === 'online' ? '#86efac' : '#fecaca'}">${m.status}</span>
-    </div>
-  `).join('') || '<div style="color:#9fb0d6">No models available</div>';
-  document.getElementById('ms-status-table').innerHTML = html;
-}
-
-async function switchPrimaryModel() {
-  const provider = document.getElementById('ms-provider').value;
-  const model = document.getElementById('ms-model').value;
-  const primary = `${provider}/${model}`;
-  
-  const res = await post('/api/model/switch', { primary, fallback: fallbackChain });
-  if (res.ok) {
-    alert(`✓ Switched to ${primary}`);
-    loadModelStatus();
-  } else {
-    alert(`✗ Failed: ${res.error || 'Unknown error'}`);
-  }
-}
-
-async function testModel(target) {
-  const res = await post('/api/model/test', { target });
-  if (res.ok) {
-    const msg = target === 'primary' 
-      ? `✓ Primary model responding: ${res.latency}ms`
-      : `✓ Chain test complete:\n${res.results.map(r => `${r.model}: ${r.ok ? '✓' : '✗'}`).join('\n')}`;
-    alert(msg);
-    loadModelStatus();
-  } else {
-    alert(`✗ Test failed: ${res.error}`);
-  }
-}
-
-function addFallback() {
-  const newModel = prompt('Enter model (e.g., anthropic/claude-opus-4-6)');
-  if (newModel && !fallbackChain.includes(newModel)) {
-    fallbackChain.push(newModel);
-    renderFallbackChain();
-  }
-}
-
-function renderFallbackChain() {
-  const html = fallbackChain.map((m, i) => `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:#0e1630;margin-bottom:6px;border-radius:6px;border:1px solid #375086">
-      <span style="color:#d9e3ff;font-size:11px"><strong>${i+1}.</strong> ${m}</span>
-      <button onclick="removeFallback('${m}')" style="padding:4px 8px;background:#ef4444;color:#fff;border:none;border-radius:4px;font-size:10px;cursor:pointer">✕</button>
-    </div>
-  `).join('');
-  document.getElementById('ms-fallback-list').innerHTML = html || '<div style="color:#9fb0d6;font-size:10px">No fallbacks configured</div>';
-}
-
-function removeFallback(model) {
-  fallbackChain = fallbackChain.filter(m => m !== model);
-  renderFallbackChain();
-}
-
-async function saveFallbackChain() {
-  const res = await post('/api/model/fallback', { chain: fallbackChain });
-  if (res.ok) {
-    alert(`✓ Fallback chain saved (${fallbackChain.length} models)`);
-    loadModelStatus();
-  } else {
-    alert(`✗ Failed to save: ${res.error}`);
   }
 }
 

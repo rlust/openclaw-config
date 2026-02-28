@@ -1,0 +1,29 @@
+{
+  "run_id": "7d48ad04",
+  "timestamp_et": "2026-02-23T13:53:59.431649",
+  "status": "completed",
+  "queued_count": 3,
+  "skipped_duplicates": 0,
+  "errors": 0,
+  "note": "Discord channel delivery unavailable (channel=telegram). See tweet_queue.jsonl for queued items.",
+  "items_queued": [
+    {
+      "id": "x_001_matter_llm",
+      "score": 82,
+      "title": "Using LLMs for adaptive smart home scheduling - reducing energy by 22% with natural language context",
+      "url": "https://x.com/homeautomation_dev/status/1755234890"
+    },
+    {
+      "id": "x_002_esp32_inference",
+      "score": 78,
+      "title": "Running TinyLLaMA on ESP32 for local voice commands - sub-100ms latency, zero cloud dependency",
+      "url": "https://x.com/embedded_ai_lab/status/1755156234"
+    },
+    {
+      "id": "x_003_zwave_mesh_ml",
+      "score": 76,
+      "title": "ML-optimized Z-Wave mesh routing reduces packet loss by 35% - tested across 200+ devices in dense urban deployment",
+      "url": "https://x.com/iot_reliability/status/1754987456"
+    }
+  ]
+}

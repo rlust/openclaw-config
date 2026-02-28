@@ -1,0 +1,31 @@
+📊 **Market Close Report** — 04:55 PM ET
+
+**⚠️ ALERTS**
+🟢 VRT: BUY SIGNAL +3.57%
+🟢 ANET: BUY SIGNAL +3.2%
+🟢 PLTR: BUY SIGNAL +4.15%
+🟢 MRVL: BUY SIGNAL +3.23%
+🟢 NET: BUY SIGNAL +4.88%
+
+**AI Sector Stocks**
+```
+Ticker   | Price   | Change  | 52w Pos
+---------|---------|---------|--------
+NVDA    | $195.56 | 📈 +1.41%  | 87%
+VRT     | $262.19 | 📈 +3.57%  | 99%
+ANET    | $132.89 | 📈 +3.2%  | 70%
+PLTR    | $134.19 | 📈 +4.15%  | 48%
+MRVL    | $80.92  | 📈 +3.23%  | 61%
+NET     | $171.8  | 📈 +4.88%  | 48%
+```
+
+**Summary**
+🟢 Bullish: 6 | 🔴 Bearish: 0 | ⚫ Neutral: 0
+
+**Bullish Picks:**
+• NVDA: Mild uptrend +1.41%
+• VRT: 3.57% up
+• ANET: 3.2% up
+
+---
+*Not financial advice. For informational purposes only.*

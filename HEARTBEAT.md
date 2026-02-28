@@ -6,6 +6,11 @@
 **Watch for:** Any 429 errors or slow responses
 **Status:** ACTIVE - Credit confirmed, models responding
 
+## Model Failover Policy (2-minute rule)
+- If primary model (OpenAI Codex) has sustained errors/timeouts for **2 minutes**, switch to fallback path.
+- Fallback path: **Claude (Haiku) → Gemini**.
+- If both fallbacks fail, notify Randy immediately and continue retries every 5 minutes.
+
 ## Checks to run on heartbeat:
 1. **Rate limit check** - Look for 429 errors in logs
 2. **Aspire RV Home Assistant** - Check for updates & alerts

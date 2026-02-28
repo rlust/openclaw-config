@@ -1,0 +1,14 @@
+{
+  "createdAt": "2026-02-24T00:00:00Z",
+  "configPath": "/Users/randylust/.openclaw/openclaw.json",
+  "expected": {
+    "discordConfigSha256": "a9f8b31ff3135cf8458764c61ace4551d20e6f3557e46c4089198a3c89557e0f",
+    "discordConfigSanitized": {
+      "enabled": true,
+      "groupPolicy": "allowlist",
+      "streaming": "off"
+    },
+    "tokenPresent": true,
+    "tokenSha256": "a4e95632a73492e81928112fcbfd17a85b6d70f4be0dc3dc9deb75a6062a32c1"
+  }
+}

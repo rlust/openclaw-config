@@ -1,0 +1,55 @@
+📊 **MARKET CLOSE REPORT** — Thursday, Feb 26, 2026
+
+**Portfolio Status:** 🟢 **STRONG BULLISH** (+2.04% avg)
+Signals: 5 BUY | 1 HOLD | 0 SELL
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**TOP MOVERS**
+
+🚀 **MRVL** — $48.72 (+3.00% | +$1.42)
+  → Signal: **BUY** (75% confidence)
+  → Support: $46.00 | Resistance: $52.00
+  → Custom AI ASIC wins; 800G optical DSP ramping
+  
+🚀 **PLTR** — $82.15 (+3.14% | +$2.50)
+  → Signal: **BUY** (70% confidence)
+  → Support: $78.00 | Resistance: $85.00
+  → AIP platform adoption expanding; gov contracts growing
+
+💎 **NVDA** — $143.50 (+1.63% | +$2.30)
+  → Signal: **BUY** (75% confidence)
+  → Support: $140.00 | Resistance: $145.50
+  → Blackwell demand strong; GTC 2026 (Mar 17-21) catalyst
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**FULL PORTFOLIO BREAKDOWN**
+
+**VRT** — $87.45 (+1.57% | +$1.35) | **BUY** (80% confidence) 🟢
+  Support: $85.00 | Resistance: $90.00
+  Liquid cooling + DC thermal solutions in demand
+
+**ANET** — $276.85 (+1.26% | +$3.45) | **HOLD** (65% confidence) 🟡
+  Support: $270.00 | Resistance: $285.00
+  White-box switching growing; Cisco competition watching
+
+**NET** — $95.30 (+1.60% | +$1.50) | **BUY** (70% confidence) 🟢
+  Support: $92.00 | Resistance: $99.00
+  Workers AI platform traction; edge inference play
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**NEAR-TERM CATALYSTS** 📅
+
+• **NVIDIA GTC 2026** (March 17-21) — Blackwell Ultra + Rubin roadmap
+• **Microsoft Azure AI Capex Guidance** — Track quarterly guidance trends
+• **AI Infrastructure Earnings** — Watch for beat/miss on data center demand
+
+⚠️ **Risk Watch:** Multiple compression risk if capex guidance softens | China export restrictions | Treasury yield moves
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**Market Theme:** AI Infrastructure buildout continues to drive semiconductor, networking, and software upsides. Thermal management (VRT) and custom silicon (MRVL) showing strength.
+
+*Report Generated: 4:46 PM EST | Market Close Data | Not financial advice*
