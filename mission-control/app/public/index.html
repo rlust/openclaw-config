@@ -804,6 +804,16 @@ function showTab(tab) {
   if (tab === 'hvac-control') {
     setTimeout(() => loadHvacStatus(), 100);
   }
+
+  // Load quick spawn cards if overview tab
+  if (tab === 'overview') {
+    setTimeout(() => updateQuickSpawnCards(), 100);
+  }
+
+  // Load scheduler if scheduler tab
+  if (tab === 'scheduler') {
+    setTimeout(() => loadScheduledTasks(), 100);
+  }
 }
 
 // Initialize: show overview by default
@@ -1881,6 +1891,73 @@ function applyTemplate(template) {
     document.getElementById('sch-task').value = t.task;
     document.getElementById('sch-time').value = t.time;
     document.getElementById('sch-freq').value = t.freq;
+  }
+}
+
+// QUICK SPAWN CARDS - Run tasks immediately from Overview
+async function quickSpawn(taskName) {
+  const taskMap = {
+    'rentals-daily': {
+      agentId: 'rentals-daily',
+      label: 'Rentals Daily',
+      emoji: '📊'
+    },
+    'stock-scout': {
+      agentId: 'stock-scout',
+      label: 'Stock Scout',
+      emoji: '📈'
+    },
+    'hvac-check': {
+      agentId: 'hvac-check',
+      label: 'HVAC Check',
+      emoji: '🌡️'
+    },
+    'ha-newark': {
+      agentId: 'ha-newark',
+      label: 'Newark HA',
+      emoji: '🏠'
+    }
+  };
+
+  const task = taskMap[taskName];
+  if (!task) return alert('Unknown task');
+
+  try {
+    const res = await post('/api/spawn', {
+      agentId: task.agentId,
+      mode: 'run',
+      runtime: 'subagent'
+    });
+
+    if (res.ok) {
+      alert(`${task.emoji} ${task.label} started!\n\nRun ID: ${res.runId}\n\nCheck #agent-output for results.`);
+      updateQuickSpawnCards(); // Refresh timestamps
+    } else {
+      alert(`✗ Failed to spawn ${task.label}: ${res.error}`);
+    }
+  } catch (e) {
+    alert(`✗ Error: ${e.message}`);
+  }
+}
+
+// Update quick spawn card timestamps
+async function updateQuickSpawnCards() {
+  // Load scheduler to get next run times
+  const res = await get('/api/scheduler/list');
+  if (res.ok && res.tasks) {
+    const tasks = {
+      'rentals-daily': 'rentals',
+      'stock-scout': 'scout',
+      'hvac-check': 'hvac',
+      'ha-newark': 'ha'
+    };
+
+    res.tasks.forEach(t => {
+      const prefix = tasks[t.task];
+      if (prefix) {
+        document.getElementById(`qs-${prefix}-next`).textContent = t.nextRun || 'TBD';
+      }
+    });
   }
 }
 

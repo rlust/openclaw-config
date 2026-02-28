@@ -265,6 +265,54 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, out);
   }
 
+  if (req.url === '/api/spawn' && req.method === 'POST') {
+    let body = '';
+    req.on('data', c => body += c);
+    req.on('end', async () => {
+      try {
+        const { agentId, mode, runtime } = JSON.parse(body || '{}');
+        
+        // Validate inputs
+        if (!agentId || !mode || !runtime) {
+          return json(res, 400, { ok: false, error: 'Missing required fields' });
+        }
+
+        // Build spawn command
+        let cmd = `openclaw sessions spawn`;
+        if (runtime === 'subagent') cmd += ` --runtime subagent`;
+        if (runtime === 'acp') cmd += ` --runtime acp`;
+        if (mode === 'run') cmd += ` --mode run`;
+        if (mode === 'session') cmd += ` --mode session`;
+        
+        // Add agent-specific task
+        const taskMap = {
+          'rentals-daily': 'Run rentals daily check',
+          'stock-scout': 'Run stock scout analysis',
+          'hvac-check': 'Check RV HVAC status',
+          'ha-newark': 'Check Newark Home Assistant status'
+        };
+        
+        const task = taskMap[agentId] || `Run task: ${agentId}`;
+        cmd += ` --task "${task}"`;
+        cmd += ` --label "${agentId}"`;
+
+        // Execute spawn
+        const spawnRes = await run(cmd, 5000);
+        
+        if (spawnRes.ok) {
+          const runId = `${agentId}-${Date.now()}`;
+          pushHistory({ type: 'spawn', agentId, mode, runtime, timestamp: new Date().toISOString() });
+          return json(res, 200, { ok: true, runId, agentId });
+        } else {
+          return json(res, 500, { ok: false, error: spawnRes.stderr || 'Spawn failed' });
+        }
+      } catch (e) {
+        return json(res, 500, { ok: false, error: e.message });
+      }
+    });
+    return;
+  }
+
   if (req.url === '/api/run-history') {
     return json(res, 200, { ok: true, items: runHistory });
   }
