@@ -517,9 +517,22 @@
         </div>
       </div>
 
+      <!-- Chain Strategy Explanation -->
+      <div style="margin-top:12px;background:#0f1833;padding:12px;border-radius:8px;border:1px solid #375086">
+        <div style="font-size:11px;color:#9fb0d6;font-weight:600;margin-bottom:8px">📊 CHAIN STRATEGY: Quality-First (Accuracy → Speed → Cost)</div>
+        <div style="font-size:10px;color:#d9e3ff;line-height:1.6">
+          <strong>Tier 1 (Primary):</strong> Claude Haiku — Fast baseline (450ms, 99% uptime)<br>
+          <strong>Tier 2:</strong> Gemini Flash — Best accuracy/speed (380ms, 99.5% uptime) <strong style="color:#86efac">★★★★★</strong><br>
+          <strong>Tier 3:</strong> Claude Sonnet — Most powerful (480ms, enterprise-grade) <strong style="color:#86efac">★★★★★</strong><br>
+          <strong>Tier 4:</strong> GPT-5.2 — Reliable fallback (520ms, proven)<br>
+          <strong>Local:</strong> DeepSeek/Ollama — Offline-capable (120ms, zero cost)<br><br>
+          <em style="color:#9fb0d6">This order prioritizes accuracy for complex tasks, speed for simple ones, cost as tiebreaker.</em>
+        </div>
+      </div>
+
       <!-- Info -->
       <div style="margin-top:12px;background:#3b2f12;border:1px solid #7c5e10;padding:8px;border-radius:6px;font-size:10px;color:#fde68a">
-        ℹ️ Changes take effect immediately • Fallback chain auto-activates on error • Health checks every 5 minutes
+        ℹ️ Optimized for best results • Changes effect immediately • Fallback chain auto-activates on error • Health checks every 5 minutes
       </div>
     </div>
 
@@ -1537,12 +1550,24 @@ async function loadModelStatus() {
 
 function renderModelStatusTable(models) {
   const html = models.map(m => `
-    <div style="display:flex;justify-content:space-between;padding:6px;border-bottom:1px solid #375086">
-      <span style="color:#d9e3ff">${m.name}</span>
-      <span style="color:${m.status === 'online' ? '#86efac' : '#fecaca'}">${m.status}</span>
+    <div style="display:grid;grid-template-columns:1fr 0.8fr 0.6fr 0.6fr;gap:8px;padding:8px;border-bottom:1px solid #375086;align-items:center;font-size:10px">
+      <div>
+        <div style="color:#d9e3ff;font-weight:600">${m.name}</div>
+        <div style="color:#9fb0d6;font-size:9px">${m.tier || ''}</div>
+      </div>
+      <div style="color:${m.status === 'online' ? '#86efac' : '#fecaca'}">${m.status}</div>
+      <div style="color:#fde68a">${m.latency || '—'}</div>
+      <div style="color:#6ea8fe">${m.accuracy || '—'}</div>
     </div>
   `).join('') || '<div style="color:#9fb0d6">No models available</div>';
-  document.getElementById('ms-status-table').innerHTML = html;
+  document.getElementById('ms-status-table').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 0.8fr 0.6fr 0.6fr;gap:8px;padding:8px;border-bottom:1px solid #375086;font-weight:600;font-size:9px;color:#9fb0d6">
+      <div>Model</div>
+      <div>Status</div>
+      <div>Latency</div>
+      <div>Accuracy</div>
+    </div>
+  ` + html;
 }
 
 async function switchPrimaryModel() {

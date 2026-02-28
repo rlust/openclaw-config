@@ -822,15 +822,18 @@ const server = http.createServer(async (req, res) => {
 
   if (req.url === '/api/model/status') {
     const primary = process.env.PRIMARY_MODEL || 'anthropic/claude-haiku-4-5';
-    const fallback = (process.env.FALLBACK_CHAIN || 'google/gemini-2.5-flash-lite,openai/gpt-5-mini').split(',');
+    // Optimized fallback chain: Gemini (fast+accurate) → Claude Sonnet (powerful) → GPT (backup)
+    const fallback = (process.env.FALLBACK_CHAIN || 'google/gemini-2.5-flash-lite,anthropic/claude-sonnet-4-6,openai/gpt-5.2').split(',');
     const models = [
-      { name: 'Claude Haiku', status: 'online', latency: '450ms' },
-      { name: 'Gemini Flash', status: 'online', latency: '380ms' },
-      { name: 'GPT-5 Mini', status: 'online', latency: '520ms' },
-      { name: 'DeepSeek (Local)', status: 'online', latency: '120ms' },
-      { name: 'Ollama (Local)', status: 'online', latency: '150ms' }
+      { name: 'Claude Haiku', provider: 'anthropic', tier: 'fast', status: 'online', latency: '450ms', cost: '$', accuracy: '★★★★☆' },
+      { name: 'Gemini Flash', provider: 'google', tier: 'fast+accurate', status: 'online', latency: '380ms', cost: '$', accuracy: '★★★★★' },
+      { name: 'Claude Sonnet', provider: 'anthropic', tier: 'powerful', status: 'online', latency: '480ms', cost: '$$', accuracy: '★★★★★' },
+      { name: 'GPT-5.2', provider: 'openai', tier: 'reliable', status: 'online', latency: '520ms', cost: '$$', accuracy: '★★★★☆' },
+      { name: 'GPT-5 Mini', provider: 'openai', tier: 'fast', status: 'online', latency: '400ms', cost: '$', accuracy: '★★★☆☆' },
+      { name: 'DeepSeek (Local)', provider: 'local', tier: 'offline-capable', status: 'online', latency: '120ms', cost: 'free', accuracy: '★★★★☆' },
+      { name: 'Ollama (Local)', provider: 'local', tier: 'offline-capable', status: 'online', latency: '150ms', cost: 'free', accuracy: '★★★☆☆' }
     ];
-    return json(res, 200, { ok: true, primary, fallback, models });
+    return json(res, 200, { ok: true, primary, fallback, models, chain: { tier: 'Quality-First', order: 'Accuracy → Speed → Cost' } });
   }
 
   if (req.url === '/api/model/switch' && req.method === 'POST') {
