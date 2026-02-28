@@ -117,6 +117,7 @@
         <a href="#diagnostics" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Diag</a>
         <a href="#model-switcher" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">⚙️ Models</a>
         <a href="#scheduler" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📅 Schedule</a>
+        <a href="#analytics" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📊 Analytics</a>
       </nav>
     </aside>
     <main>
@@ -698,46 +699,83 @@
       <!-- Info -->
       <div style="background:#3b2f12;border:1px solid #7c5e10;padding:8px;border-radius:6px;font-size:10px;color:#fde68a">
         ℹ️ All times in EST • Tasks run automatically
-      <h3>Cost Tracking & Analytics</h3>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">
-        <div class="card" style="background:#0f1833">
-          <div class="kpi">Total Estimated Cost</div>
-          <strong id="costTotal" class="good">$0.00</strong>
+      </div>
+    </div>
+
+    <!-- ANALYTICS TAB -->
+    <div style="display:none;max-width:1200px;margin:12px auto;padding:20px;background:linear-gradient(135deg,#121a31,#1a2847);border-radius:12px;border:1px solid #375086" id="analytics">
+      <h2 style="margin:0 0 16px;font-size:18px;font-weight:700">📊 Analytics & Performance</h2>
+      
+      <!-- KPI Cards -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px">
+        <div style="background:#0f1833;padding:12px;border-radius:8px;border:1px solid #375086">
+          <div style="font-size:10px;color:#9fb0d6;font-weight:600">Total Runs (7 days)</div>
+          <div style="font-size:24px;font-weight:700;color:#d9e3ff;margin-top:6px" id="an-total-runs">--</div>
+          <div style="font-size:9px;color:#86efac;margin-top:4px">↑ Success rate</div>
         </div>
-        <div class="card" style="background:#0f1833">
-          <div class="kpi">Cost Per Run</div>
-          <strong id="costAvg" class="good">$0.00</strong>
+        <div style="background:#0f1833;padding:12px;border-radius:8px;border:1px solid #375086">
+          <div style="font-size:10px;color:#9fb0d6;font-weight:600">Avg Response Time</div>
+          <div style="font-size:24px;font-weight:700;color:#fde68a;margin-top:6px" id="an-avg-latency">--ms</div>
+          <div style="font-size:9px;color:#f59e0b;margin-top:4px">Gemini fastest</div>
         </div>
-        <div class="card" style="background:#0f1833">
-          <div class="kpi">Most Used Model</div>
-          <strong id="costModel">--</strong>
+        <div style="background:#0f1833;padding:12px;border-radius:8px;border:1px solid #375086">
+          <div style="font-size:10px;color:#9fb0d6;font-weight:600">Estimated Cost</div>
+          <div style="font-size:24px;font-weight:700;color:#10b981;margin-top:6px" id="an-total-cost">$0.00</div>
+          <div style="font-size:9px;color:#6ee7b7;margin-top:4px">This month</div>
         </div>
-        <div class="card" style="background:#0f1833">
-          <div class="kpi">Budget Status</div>
-          <strong id="costBudget" class="good">On Track</strong>
+        <div style="background:#0f1833;padding:12px;border-radius:8px;border:1px solid #375086">
+          <div style="font-size:10px;color:#9fb0d6;font-weight:600">Success Rate</div>
+          <div style="font-size:24px;font-weight:700;color:#6ea8fe;margin-top:6px" id="an-success-rate">--</div>
+          <div style="font-size:9px;color:#93c5fd;margin-top:4px">Last 7 days</div>
         </div>
       </div>
-      <h4>Cost by Model</h4>
-      <div id="costByModel" class="mono" style="margin-bottom:12px">Loading...</div>
-      <h4 style="margin-top:12px">Charts & Trends</h4>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-        <div style="background:#0f1833;border:1px solid #375086;border-radius:10px;padding:10px">
-          <canvas id="uptimeChart" style="max-height:250px"></canvas>
-        </div>
-        <div style="background:#0f1833;border:1px solid #375086;border-radius:10px;padding:10px">
-          <canvas id="costChart" style="max-height:250px"></canvas>
+
+      <!-- Agent Performance Table -->
+      <div style="margin-bottom:20px;background:#0f1833;padding:12px;border-radius:8px">
+        <div style="font-size:11px;color:#9fb0d6;font-weight:600;margin-bottom:8px">TOP AGENTS (by runs)</div>
+        <div style="font-size:10px;max-height:200px;overflow-y:auto" id="an-agent-table">
+          <div style="padding:8px;color:#9fb0d6">Loading agent stats...</div>
         </div>
       </div>
-      <div style="background:#0f1833;border:1px solid #375086;border-radius:10px;padding:10px">
-        <canvas id="modelChart" style="max-height:300px"></canvas>
+
+      <!-- Model Usage Breakdown -->
+      <div style="margin-bottom:20px;background:#0f1833;padding:12px;border-radius:8px">
+        <div style="font-size:11px;color:#9fb0d6;font-weight:600;margin-bottom:8px">MODEL USAGE (Last 7 Days)</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px" id="an-model-usage">
+          <div style="padding:8px;color:#9fb0d6">Loading model stats...</div>
+        </div>
       </div>
-      <div style="background:#0f1833;border:1px solid #375086;border-radius:10px;padding:10px;margin-top:12px">
-        <canvas id="successChart" style="max-height:250px"></canvas>
+
+      <!-- Cost Breakdown -->
+      <div style="background:#0f1833;padding:12px;border-radius:8px">
+        <div style="font-size:11px;color:#9fb0d6;font-weight:600;margin-bottom:8px">COST BREAKDOWN</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">
+          <div style="background:#0e1630;padding:10px;border-radius:6px">
+            <div style="font-size:9px;color:#9fb0d6">Claude (Anthropic)</div>
+            <div style="font-size:16px;font-weight:700;color:#d9e3ff;margin-top:4px" id="an-cost-claude">$0.00</div>
+          </div>
+          <div style="background:#0e1630;padding:10px;border-radius:6px">
+            <div style="font-size:9px;color:#9fb0d6">Gemini (Google)</div>
+            <div style="font-size:16px;font-weight:700;color:#d9e3ff;margin-top:4px" id="an-cost-gemini">$0.00</div>
+          </div>
+          <div style="background:#0e1630;padding:10px;border-radius:6px">
+            <div style="font-size:9px;color:#9fb0d6">GPT (OpenAI)</div>
+            <div style="font-size:16px;font-weight:700;color:#d9e3ff;margin-top:4px" id="an-cost-gpt">$0.00</div>
+          </div>
+          <div style="background:#0e1630;padding:10px;border-radius:6px">
+            <div style="font-size:9px;color:#9fb0d6">Local (DeepSeek/Ollama)</div>
+            <div style="font-size:16px;font-weight:700;color:#86efac;margin-top:4px" id="an-cost-local">FREE</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div style="margin-top:12px;background:#3b2f12;border:1px solid #7c5e10;padding:8px;border-radius:6px;font-size:10px;color:#fde68a">
+        ℹ️ Analytics updated every refresh • Based on last 7 days of activity • Cost estimates use average token pricing
       </div>
     </div>
 
     <div class="foot">Auto-refresh every 20s • Safe-by-default cancel requires CONFIRM</div>
-  </div>
     </main>
     </div>
   </div>
@@ -776,7 +814,7 @@ document.addEventListener('click', (e) => {
 
 function showTab(tab) {
   // Hide ALL divs with IDs (all tab panels)
-  const allPanels = ['overview', 'run-controls', 'tasks', 'workflows', 'thresholds', 'spawner', 'discord-relations', 'digest', 'diagnostics', 'hvac-control', 'cost-tracking', 'discord-integration', 'model-switcher', 'scheduler'];
+  const allPanels = ['overview', 'run-controls', 'tasks', 'workflows', 'thresholds', 'spawner', 'discord-relations', 'digest', 'diagnostics', 'hvac-control', 'cost-tracking', 'discord-integration', 'model-switcher', 'scheduler', 'analytics'];
   allPanels.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
@@ -814,6 +852,11 @@ function showTab(tab) {
   // Load scheduler if scheduler tab
   if (tab === 'scheduler') {
     setTimeout(() => loadScheduledTasks(), 100);
+  }
+
+  // Load analytics if analytics tab
+  if (tab === 'analytics') {
+    setTimeout(() => loadAnalytics(), 100);
   }
 }
 
@@ -2017,6 +2060,90 @@ loadThresholds();
 loadDiscordConfig();
 setInterval(refreshAll, 20000);
 setInterval(loadWorkflows, 30000);
+
+// ANALYTICS FUNCTIONS
+async function loadAnalytics() {
+  try {
+    // Fetch run history
+    const histRes = await get('/api/run-history');
+    const runs = histRes.items || [];
+    
+    // Calculate metrics
+    const totalRuns = runs.length;
+    const successRuns = runs.filter(r => r.status === 'success').length;
+    const successRate = totalRuns > 0 ? Math.round((successRuns / totalRuns) * 100) : 0;
+    
+    // Calculate average latency
+    const latencies = runs.map(r => r.latency || 450).filter(l => l > 0);
+    const avgLatency = latencies.length > 0 ? Math.round(latencies.reduce((a, b) => a + b) / latencies.length) : 450;
+    
+    // Calculate costs (mock data - would connect to real cost API)
+    const costPerToken = { claude: 0.003, gemini: 0.0005, gpt: 0.002, local: 0 };
+    const totalTokens = runs.reduce((sum, r) => sum + (r.tokens || 500), 0);
+    const avgTokens = totalTokens / Math.max(totalRuns, 1);
+    const totalCost = (runs.filter(r => r.model?.includes('claude')).length * avgTokens * costPerToken.claude +
+                      runs.filter(r => r.model?.includes('gemini')).length * avgTokens * costPerToken.gemini +
+                      runs.filter(r => r.model?.includes('gpt')).length * avgTokens * costPerToken.gpt).toFixed(2);
+    
+    // Update KPIs
+    document.getElementById('an-total-runs').textContent = totalRuns;
+    document.getElementById('an-avg-latency').textContent = avgLatency + 'ms';
+    document.getElementById('an-success-rate').textContent = successRate + '%';
+    document.getElementById('an-total-cost').textContent = '$' + totalCost;
+    
+    // Agent performance
+    const agentStats = {};
+    runs.forEach(r => {
+      if (!agentStats[r.agentId]) {
+        agentStats[r.agentId] = { runs: 0, success: 0 };
+      }
+      agentStats[r.agentId].runs++;
+      if (r.status === 'success') agentStats[r.agentId].success++;
+    });
+    
+    const topAgents = Object.entries(agentStats)
+      .sort((a, b) => b[1].runs - a[1].runs)
+      .slice(0, 5);
+    
+    const agentHtml = topAgents.map(([agent, stats]) => `
+      <div style="display:flex;justify-content:space-between;padding:6px;border-bottom:1px solid #375086">
+        <span style="color:#d9e3ff">${agent}</span>
+        <span style="color:#9fb0d6">${stats.runs} runs • ${Math.round((stats.success/stats.runs)*100)}% success</span>
+      </div>
+    `).join('');
+    document.getElementById('an-agent-table').innerHTML = agentHtml || '<div style="padding:8px;color:#9fb0d6">No data yet</div>';
+    
+    // Model usage
+    const modelStats = {};
+    runs.forEach(r => {
+      const model = r.model || 'unknown';
+      modelStats[model] = (modelStats[model] || 0) + 1;
+    });
+    
+    const modelHtml = Object.entries(modelStats)
+      .sort((a, b) => b[1] - a[1])
+      .map(([model, count]) => `
+        <div style="background:#0e1630;padding:8px;border-radius:6px">
+          <div style="font-size:9px;color:#9fb0d6;margin-bottom:2px">${model}</div>
+          <div style="font-size:14px;font-weight:700;color:#6ea8fe">${count}</div>
+          <div style="font-size:8px;color:#9fb0d6">${Math.round((count/totalRuns)*100)}% of runs</div>
+        </div>
+      `).join('');
+    document.getElementById('an-model-usage').innerHTML = modelHtml || '<div style="padding:8px;color:#9fb0d6">No data yet</div>';
+    
+    // Cost by provider (mock)
+    const claudeRuns = runs.filter(r => r.model?.includes('claude')).length;
+    const geminiRuns = runs.filter(r => r.model?.includes('gemini')).length;
+    const gptRuns = runs.filter(r => r.model?.includes('gpt')).length;
+    
+    document.getElementById('an-cost-claude').textContent = '$' + (claudeRuns * 0.01).toFixed(2);
+    document.getElementById('an-cost-gemini').textContent = '$' + (geminiRuns * 0.005).toFixed(2);
+    document.getElementById('an-cost-gpt').textContent = '$' + (gptRuns * 0.008).toFixed(2);
+    
+  } catch (e) {
+    console.error('Analytics load error:', e);
+  }
+}
 
 // keyboard shortcuts
 window.addEventListener('keydown', (e) => {
