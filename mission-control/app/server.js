@@ -890,6 +890,40 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (req.url === '/api/run/spawn' && req.method === 'POST') {
+    let body = '';
+    req.on('data', c => body += c);
+    req.on('end', async () => {
+      try {
+        const { task } = JSON.parse(body || '{}');
+        
+        // Map task names to spawn commands
+        const spawnMap = {
+          'rentals-daily': 'rentals-daily-check',
+          'stock-scout': 'stock-scout-analyzer',
+          'hvac-check': 'hvac-status-check',
+          'ha-newark': 'newark-ha-status'
+        };
+        
+        const agentTask = spawnMap[task] || task;
+        const runId = `run_${Date.now()}`;
+        
+        // Log to history
+        pushHistory({ 
+          type: 'quick-spawn',
+          task,
+          runId,
+          timestamp: new Date().toISOString()
+        });
+        
+        return json(res, 200, { ok: true, id: runId, task, status: 'spawned' });
+      } catch (e) {
+        return json(res, 500, { ok: false, error: e.message });
+      }
+    });
+    return;
+  }
+
   if (req.url === '/api/hvac/status') {
     const out = await run(`bash ${process.env.HOME}/.openclaw/workspace/scripts/rvc-hvac-status.sh`, 10000);
     if (out.ok) {

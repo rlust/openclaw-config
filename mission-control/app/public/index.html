@@ -146,7 +146,81 @@
       <div class="card"><div class="kpi">Success Rate</div><strong id="k_success_rate" class="good">--</strong></div>
       <div class="card"><div class="kpi">Active Runs</div><strong id="k_active_runs">0</strong></div>
       <div class="card"><div class="kpi">System Alerts</div><strong id="k_alerts" class="warn">0</strong></div>
+
+      <!-- QUICK SPAWN CARDS -->
+      <div style="grid-column:1/-1;margin-top:16px">
+        <div style="font-size:14px;color:#d9e3ff;font-weight:700;margin-bottom:12px">⚡ Quick Actions</div>
+        <div style="font-size:11px;color:#9fb0d6;margin-bottom:12px">One-click task execution • Shows last run + next scheduled</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+          
+          <!-- Rentals Daily -->
+          <div style="background:linear-gradient(135deg,#1a3a52,#0f2a42);border:1px solid #375086;border-radius:8px;padding:16px">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#d9e3ff">📊 Rentals Daily</div>
+                <div style="font-size:10px;color:#9fb0d6;margin-top:4px">Property status check</div>
+              </div>
+              <div style="font-size:18px">⏱️</div>
+            </div>
+            <div style="background:#0e1630;padding:8px;border-radius:6px;margin-bottom:12px;font-size:10px;color:#9fb0d6">
+              Last: <span id="qs-rentals-last">Never</span><br>
+              Next: <span id="qs-rentals-next">09:00 Today</span>
+            </div>
+            <button onclick="quickSpawn('rentals-daily')" style="width:100%;padding:10px;background:#22c55e;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px">▶ RUN NOW</button>
+          </div>
+
+          <!-- Stock Scout -->
+          <div style="background:linear-gradient(135deg,#3a2a1a,#2a1a0a);border:1px solid #7c5e10;border-radius:8px;padding:16px">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#fde68a">📈 Stock Scout</div>
+                <div style="font-size:10px;color:#9fb0d6;margin-top:4px">AI market analysis</div>
+              </div>
+              <div style="font-size:18px">📊</div>
+            </div>
+            <div style="background:#0e1630;padding:8px;border-radius:6px;margin-bottom:12px;font-size:10px;color:#9fb0d6">
+              Last: <span id="qs-scout-last">Never</span><br>
+              Next: <span id="qs-scout-next">16:00 Today</span>
+            </div>
+            <button onclick="quickSpawn('stock-scout')" style="width:100%;padding:10px;background:#f59e0b;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px">▶ RUN NOW</button>
+          </div>
+
+          <!-- HVAC Check -->
+          <div style="background:linear-gradient(135deg,#2a3a1a,#1a2a0a);border:1px solid #5a7e10;border-radius:8px;padding:16px">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#86efac">🌡️ HVAC Check</div>
+                <div style="font-size:10px;color:#9fb0d6;margin-top:4px">RV climate control</div>
+              </div>
+              <div style="font-size:18px">❄️</div>
+            </div>
+            <div style="background:#0e1630;padding:8px;border-radius:6px;margin-bottom:12px;font-size:10px;color:#9fb0d6">
+              Last: <span id="qs-hvac-last">Never</span><br>
+              Next: <span id="qs-hvac-next">08:00 Today</span>
+            </div>
+            <button onclick="quickSpawn('hvac-check')" style="width:100%;padding:10px;background:#10b981;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px">▶ RUN NOW</button>
+          </div>
+
+          <!-- Newark HA -->
+          <div style="background:linear-gradient(135deg,#1a2a3a,#0a1a2a);border:1px solid #375086;border-radius:8px;padding:16px">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#6ea8fe">🏠 Newark Home</div>
+                <div style="font-size:10px;color:#9fb0d6;margin-top:4px">Home Assistant status</div>
+              </div>
+              <div style="font-size:18px">🔐</div>
+            </div>
+            <div style="background:#0e1630;padding:8px;border-radius:6px;margin-bottom:12px;font-size:10px;color:#9fb0d6">
+              Last: <span id="qs-ha-last">Never</span><br>
+              Next: <span id="qs-ha-next">10:00 Today</span>
+            </div>
+            <button onclick="quickSpawn('ha-newark')" style="width:100%;padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px">▶ RUN NOW</button>
+          </div>
+
+        </div>
+      </div>
     </div>
+
     <div class="grid" id="secondary-overview" style="margin-top:10px">
       <div class="card"><div class="kpi">Last Model</div><strong id="k_model">--</strong></div>
       <div class="card"><div class="kpi">Last Provider</div><strong id="k_provider">--</strong></div>
@@ -1807,6 +1881,39 @@ function applyTemplate(template) {
     document.getElementById('sch-task').value = t.task;
     document.getElementById('sch-time').value = t.time;
     document.getElementById('sch-freq').value = t.freq;
+  }
+}
+
+// QUICK SPAWN FUNCTIONS
+const quickSpawnHistory = {
+  'rentals-daily': { last: null, next: '09:00' },
+  'stock-scout': { last: null, next: '16:00' },
+  'hvac-check': { last: null, next: '08:00' },
+  'ha-newark': { last: null, next: '10:00' }
+};
+
+async function quickSpawn(taskName) {
+  const confirm_spawn = confirm(`Run ${taskName} now?`);
+  if (!confirm_spawn) return;
+  
+  // Update last run time
+  quickSpawnHistory[taskName].last = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+  updateQuickSpawnDisplay(taskName);
+  
+  // Call spawn endpoint
+  const res = await post('/api/run/spawn', { task: taskName });
+  if (res.ok) {
+    alert(`✓ ${taskName} started (Run ID: ${res.id})`);
+  } else {
+    alert(`✗ Failed to spawn: ${res.error}`);
+  }
+}
+
+function updateQuickSpawnDisplay(taskName) {
+  const data = quickSpawnHistory[taskName];
+  const lastEl = document.getElementById(`qs-${taskName.replace('-', '-')}-last`);
+  if (lastEl && data.last) {
+    lastEl.textContent = data.last;
   }
 }
 
