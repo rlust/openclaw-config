@@ -20,26 +20,25 @@
     .snav a{display:block;color:#d9e3ff;text-decoration:none;padding:9px 10px;border-radius:10px;margin-bottom:6px;border:1px solid transparent}
     .snav a:hover{background:#1b2a50;border-color:#2e467d}
     .wrap{max-width:100%;margin:0;padding:0;background:#0b1020;min-height:100vh;display:flex;flex-direction:column}
-    .top{display:block;padding:12px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#0a1328,#1a2847)}
-    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-    .title{font-size:26px;font-weight:700}
-    .subtitle{color:var(--muted);font-size:13px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:4px;flex-wrap:wrap;padding:6px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#0a1328,#1a2847)}
+    .title{font-size:18px;font-weight:700}
+    .subtitle{color:var(--muted);font-size:10px}
     button{background:var(--accent);color:#08122d;border:none;border-radius:10px;padding:8px 12px;font-weight:600;cursor:pointer}
     button.ghost{background:#25365f;color:#d9e3ff}
-    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
-    .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px}
+    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin-top:4px}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px}
     .kpi{font-size:12px;color:var(--muted)}
     .kpi strong{display:block;font-size:20px;color:var(--text);margin-top:4px}
     .good{color:var(--ok)} .warn{color:var(--warn)} .bad{color:var(--bad)}
-    .two{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;margin-top:12px}
-    .controls input,.controls textarea{width:100%;margin:6px 0;background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:8px;border-radius:10px}
-    .controls .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .quick{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:#0e1630;border:1px solid var(--line);padding:10px;border-radius:10px;white-space:pre-wrap;max-height:200px;overflow:auto}
-    .kanban{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
-    .col{background:#0f1833;border:1px solid var(--line);border-radius:12px;padding:10px;min-height:260px}
-    .col h4{margin:0 0 8px 0;font-size:13px;color:var(--muted)}
-    .ticket{background:#17244a;border:1px solid #314781;border-radius:10px;padding:8px;margin-bottom:8px;font-size:12px}
+    .two{display:grid;grid-template-columns:1.3fr 1fr;gap:4px;margin-top:4px}
+    .controls input,.controls textarea{width:100%;margin:2px 0;background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:4px;border-radius:6px}
+    .controls .row{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+    .quick{display:flex;gap:4px;flex-wrap:wrap;margin:2px 0}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;background:#0e1630;border:1px solid var(--line);padding:6px;border-radius:6px;white-space:pre-wrap;max-height:150px;overflow:auto}
+    .kanban{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin-top:4px}
+    .col{background:#0f1833;border:1px solid var(--line);border-radius:8px;padding:6px;min-height:200px}
+    .col h4{margin:0 0 4px 0;font-size:11px;color:var(--muted)}
+    .ticket{background:#17244a;border:1px solid #314781;border-radius:6px;padding:4px;margin-bottom:2px;font-size:11px}
     .p-low{border-color:#3b82f6}.p-medium{border-color:#f59e0b}.p-high{border-color:#ef4444}
     .overdue{box-shadow:0 0 0 1px #ef4444 inset;background:#2a1620}
     .badge{display:inline-block;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:700;margin-right:4px}
@@ -50,22 +49,22 @@
     .s-red{background:#3b1620;color:#fecaca;border:1px solid #7f1d1d}
     .dep-link{color:#9ec2ff;text-decoration:underline;cursor:pointer}
     .ticket .meta{color:var(--muted);font-size:11px;margin-top:4px}
-    .foot{margin-top:12px;color:var(--muted);font-size:12px}
-    .banner{display:none;margin-top:12px;padding:10px 12px;border-radius:10px;border:1px solid #7f1d1d;background:#3b0d0d;color:#fecaca;font-weight:600}
+    .foot{margin-top:2px;color:var(--muted);font-size:10px}
+    .banner{display:none;margin-top:2px;padding:4px 6px;border-radius:6px;border:1px solid #7f1d1d;background:#3b0d0d;color:#fecaca;font-weight:600;font-size:10px}
     .drawer{position:fixed;right:0;top:0;height:100%;width:420px;max-width:92vw;background:#0f1833;border-left:1px solid #375086;transform:translateX(100%);transition:transform .2s ease;z-index:50;padding:14px;overflow:auto}
     .drawer.open{transform:translateX(0)}
     .overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:40}
     .overlay.show{display:block}
-    .flow{display:grid;grid-template-columns:1fr 60px 1fr;gap:10px;align-items:start}
-    .flowCol{background:#0e1630;border:1px solid var(--line);border-radius:10px;padding:10px;min-height:180px}
-    .flowItem{padding:8px;border:1px solid #375086;background:#17244a;border-radius:8px;margin-bottom:8px;font-size:12px}
+    .flow{display:grid;grid-template-columns:1fr 40px 1fr;gap:4px;align-items:start}
+    .flowCol{background:#0e1630;border:1px solid var(--line);border-radius:6px;padding:6px;min-height:140px}
+    .flowItem{padding:4px;border:1px solid #375086;background:#17244a;border-radius:6px;margin-bottom:2px;font-size:10px}
     .flowArrow{display:flex;align-items:center;justify-content:center;color:#9ec2ff;font-size:22px}
-    .navtabs{position:sticky;top:0;z-index:30;display:flex;gap:8px;flex-wrap:wrap;background:rgba(11,16,32,.88);backdrop-filter:blur(6px);padding:8px;border:1px solid var(--line);border-radius:12px;margin-top:10px}
-    .navtabs a{color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:6px 10px;border-radius:999px;font-size:12px}
+    .navtabs{position:sticky;top:0;z-index:30;display:flex;gap:4px;flex-wrap:wrap;background:rgba(11,16,32,.88);backdrop-filter:blur(6px);padding:4px;border:1px solid var(--line);border-radius:8px;margin-top:2px}
+    .navtabs a{color:#d9e3ff;text-decoration:none;background:#22335c;border:1px solid #375086;padding:4px 6px;border-radius:999px;font-size:10px}
     .maptable{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
     .maptable th,.maptable td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
-    .filters{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 0}
-    .chip{background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:5px 10px;border-radius:999px;font-size:12px;cursor:pointer}
+    .filters{display:flex;gap:4px;flex-wrap:wrap;margin:2px 0 0}
+    .chip{background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:3px 6px;border-radius:999px;font-size:10px;cursor:pointer}
     .chip.active{background:#6ea8fe;color:#08122d;border-color:#6ea8fe}
     .ticket{cursor:grab}
     .ticket.dragging{opacity:.5}
@@ -259,80 +258,63 @@
       <div class="card"><div class="kpi">System Alerts</div><strong id="k_alerts" class="warn">0</strong></div>
 
       <!-- QUICK SPAWN CARDS -->
-      <div style="grid-column:1/-1;margin-top:16px">
-        <div style="font-size:14px;color:#d9e3ff;font-weight:700;margin-bottom:12px">⚡ Quick Actions</div>
-        <div style="font-size:11px;color:#9fb0d6;margin-bottom:12px">One-click task execution • Shows last run + next scheduled</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+      <div style="grid-column:1/-1;margin-top:4px">
+        <div style="font-size:12px;color:#d9e3ff;font-weight:700;margin-bottom:4px">⚡ Quick Actions</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:4px">
           
           <!-- Rentals Daily -->
-          <div style="background:linear-gradient(135deg,#1a3a52,#0f2a42);border:1px solid #375086;border-radius:8px;padding:16px">
-            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
-              <div>
-                <div style="font-size:13px;font-weight:700;color:#d9e3ff">📊 Rentals Daily</div>
-                <div style="font-size:10px;color:#9fb0d6;margin-top:4px">Property status check</div>
-              </div>
-              <div style="font-size:18px">⏱️</div>
+          <div style="background:linear-gradient(135deg,#1a3a52,#0f2a42);border:1px solid #375086;border-radius:6px;padding:6px">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px">
+              <div style="font-size:10px;font-weight:700;color:#d9e3ff">📊 Rentals</div>
+              <div style="font-size:12px">⏱️</div>
             </div>
-            <div style="background:#0e1630;padding:8px;border-radius:6px;margin-bottom:12px;font-size:10px;color:#9fb0d6">
-              Last: <span id="qs-rentals-last">Never</span><br>
-              Next: <span id="qs-rentals-next">09:00 Today</span>
+            <div style="background:#0e1630;padding:3px;border-radius:4px;margin-bottom:4px;font-size:8px;color:#9fb0d6">
+              Next: <span id="qs-rentals-next">09:00</span>
             </div>
-            <button onclick="quickSpawn('rentals-daily')" style="width:100%;padding:10px;background:#22c55e;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px">▶ RUN NOW</button>
+            <button onclick="quickSpawn('rentals-daily')" style="width:100%;padding:4px;background:#22c55e;color:#08122d;border:none;border-radius:4px;font-weight:600;cursor:pointer;font-size:10px">▶ RUN</button>
           </div>
 
           <!-- Stock Scout -->
-          <div style="background:linear-gradient(135deg,#3a2a1a,#2a1a0a);border:1px solid #7c5e10;border-radius:8px;padding:16px">
-            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
-              <div>
-                <div style="font-size:13px;font-weight:700;color:#fde68a">📈 Stock Scout</div>
-                <div style="font-size:10px;color:#9fb0d6;margin-top:4px">AI market analysis</div>
-              </div>
-              <div style="font-size:18px">📊</div>
+          <div style="background:linear-gradient(135deg,#3a2a1a,#2a1a0a);border:1px solid #7c5e10;border-radius:6px;padding:6px">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px">
+              <div style="font-size:10px;font-weight:700;color:#fde68a">📈 Scout</div>
+              <div style="font-size:12px">📊</div>
             </div>
-            <div style="background:#0e1630;padding:8px;border-radius:6px;margin-bottom:12px;font-size:10px;color:#9fb0d6">
-              Last: <span id="qs-scout-last">Never</span><br>
-              Next: <span id="qs-scout-next">16:00 Today</span>
+            <div style="background:#0e1630;padding:3px;border-radius:4px;margin-bottom:4px;font-size:8px;color:#9fb0d6">
+              Next: <span id="qs-scout-next">16:00</span>
             </div>
-            <button onclick="quickSpawn('stock-scout')" style="width:100%;padding:10px;background:#f59e0b;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px">▶ RUN NOW</button>
+            <button onclick="quickSpawn('stock-scout')" style="width:100%;padding:4px;background:#f59e0b;color:#08122d;border:none;border-radius:4px;font-weight:600;cursor:pointer;font-size:10px">▶ RUN</button>
           </div>
 
           <!-- HVAC Check -->
-          <div style="background:linear-gradient(135deg,#2a3a1a,#1a2a0a);border:1px solid #5a7e10;border-radius:8px;padding:16px">
-            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
-              <div>
-                <div style="font-size:13px;font-weight:700;color:#86efac">🌡️ HVAC Check</div>
-                <div style="font-size:10px;color:#9fb0d6;margin-top:4px">RV climate control</div>
-              </div>
-              <div style="font-size:18px">❄️</div>
+          <div style="background:linear-gradient(135deg,#2a3a1a,#1a2a0a);border:1px solid #5a7e10;border-radius:6px;padding:6px">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px">
+              <div style="font-size:10px;font-weight:700;color:#86efac">🌡️ HVAC</div>
+              <div style="font-size:12px">❄️</div>
             </div>
-            <div style="background:#0e1630;padding:8px;border-radius:6px;margin-bottom:12px;font-size:10px;color:#9fb0d6">
-              Last: <span id="qs-hvac-last">Never</span><br>
-              Next: <span id="qs-hvac-next">08:00 Today</span>
+            <div style="background:#0e1630;padding:3px;border-radius:4px;margin-bottom:4px;font-size:8px;color:#9fb0d6">
+              Next: <span id="qs-hvac-next">08:00</span>
             </div>
-            <button onclick="quickSpawn('hvac-check')" style="width:100%;padding:10px;background:#10b981;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px">▶ RUN NOW</button>
+            <button onclick="quickSpawn('hvac-check')" style="width:100%;padding:4px;background:#10b981;color:#08122d;border:none;border-radius:4px;font-weight:600;cursor:pointer;font-size:10px">▶ RUN</button>
           </div>
 
           <!-- Newark HA -->
-          <div style="background:linear-gradient(135deg,#1a2a3a,#0a1a2a);border:1px solid #375086;border-radius:8px;padding:16px">
-            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
-              <div>
-                <div style="font-size:13px;font-weight:700;color:#6ea8fe">🏠 Newark Home</div>
-                <div style="font-size:10px;color:#9fb0d6;margin-top:4px">Home Assistant status</div>
-              </div>
-              <div style="font-size:18px">🔐</div>
+          <div style="background:linear-gradient(135deg,#1a2a3a,#0a1a2a);border:1px solid #375086;border-radius:6px;padding:6px">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px">
+              <div style="font-size:10px;font-weight:700;color:#6ea8fe">🏠 HA</div>
+              <div style="font-size:12px">🔐</div>
             </div>
-            <div style="background:#0e1630;padding:8px;border-radius:6px;margin-bottom:12px;font-size:10px;color:#9fb0d6">
-              Last: <span id="qs-ha-last">Never</span><br>
-              Next: <span id="qs-ha-next">10:00 Today</span>
+            <div style="background:#0e1630;padding:3px;border-radius:4px;margin-bottom:4px;font-size:8px;color:#9fb0d6">
+              Next: <span id="qs-ha-next">10:00</span>
             </div>
-            <button onclick="quickSpawn('ha-newark')" style="width:100%;padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px">▶ RUN NOW</button>
+            <button onclick="quickSpawn('ha-newark')" style="width:100%;padding:4px;background:#3b82f6;color:#fff;border:none;border-radius:4px;font-weight:600;cursor:pointer;font-size:10px">▶ RUN</button>
           </div>
 
         </div>
       </div>
     </div>
 
-    <div class="grid" id="secondary-overview" style="margin-top:10px">
+    <div class="grid" id="secondary-overview" style="margin-top:2px;display:none">
       <div class="card"><div class="kpi">Last Model</div><strong id="k_model">--</strong></div>
       <div class="card"><div class="kpi">Last Provider</div><strong id="k_provider">--</strong></div>
       <div class="card"><div class="kpi">Last Success</div><strong id="k_success">--</strong></div>
@@ -341,34 +323,34 @@
 
 <!-- SMART DASHBOARD WIDGETS -->
 <style>
-    .mini-chart{height:40px;display:flex;align-items:flex-end;gap:2px;padding:4px 0}
+    .mini-chart{height:30px;display:flex;align-items:flex-end;gap:1px;padding:2px 0}
     .mini-bar{flex:1;background:#374983;border-radius:1px;transition:height .3s ease}
     .mini-bar.high{background:#22c55e}
     .mini-bar.medium{background:#f59e0b}
     .mini-bar.low{background:#ef4444}
-    .gauge-container{width:100px;height:50px;position:relative}
-    .gauge-bg{width:100px;height:50px;border-radius:100px 100px 0 0;background:#0e1630;position:relative;overflow:hidden}
+    .gauge-container{width:80px;height:40px;position:relative}
+    .gauge-bg{width:80px;height:40px;border-radius:80px 80px 0 0;background:#0e1630;position:relative;overflow:hidden}
     .gauge-fill{position:absolute;bottom:0;left:0;width:100%;background:linear-gradient(90deg,#22c55e,#f59e0b,#ef4444);transition:all .5s ease}
-    .gauge-needle{position:absolute;bottom:0;left:50%;width:2px;height:50%;background:#fff;transform-origin:bottom center;transition:transform .5s ease}
-    .gauge-label{position:absolute;bottom:-18px;left:0;right:0;text-align:center;font-size:11px;font-weight:600}
-    .activity-timeline{max-height:200px;overflow:auto;padding:8px;background:#0e1630;border-radius:8px}
-    .activity-item{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid #1a2847}
+    .gauge-needle{position:absolute;bottom:0;left:50%;width:2px;height:40%;background:#fff;transform-origin:bottom center;transition:transform .5s ease}
+    .gauge-label{position:absolute;bottom:-14px;left:0;right:0;text-align:center;font-size:9px;font-weight:600}
+    .activity-timeline{max-height:120px;overflow:auto;padding:4px;background:#0e1630;border-radius:6px}
+    .activity-item{display:flex;gap:4px;padding:2px 0;border-bottom:1px solid #1a2847;font-size:9px}
     .activity-item:last-child{border-bottom:none}
-    .activity-icon{width:8px;height:8px;border-radius:50%;margin-top:4px}
+    .activity-icon{width:6px;height:6px;border-radius:50%;margin-top:2px}
     .activity-icon.success{background:#22c55e}
     .activity-icon.error{background:#ef4444}
     .activity-icon.info{background:#6ea8fe}
-    .activity-time{font-size:10px;color:#9fb0d6;min-width:60px}
-    .activity-text{font-size:11px;color:#d9e3ff}
-    .model-indicator{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#0e1630;border-radius:8px;margin-bottom:6px}
-    .model-status{width:10px;height:10px;border-radius:50%;animation:pulse 2s infinite}
-    .model-status.online{background:#22c55e;box-shadow:0 0 8px #22c55e}
-    .model-status.degraded{background:#f59e0b;box-shadow:0 0 8px #f59e0b}
-    .model-status.offline{background:#ef4444;box-shadow:0 0 8px #ef4444}
+    .activity-time{font-size:8px;color:#9fb0d6;min-width:50px}
+    .activity-text{font-size:9px;color:#d9e3ff}
+    .model-indicator{display:flex;align-items:center;gap:4px;padding:4px 6px;background:#0e1630;border-radius:6px;margin-bottom:2px;font-size:9px}
+    .model-status{width:8px;height:8px;border-radius:50%;animation:pulse 2s infinite}
+    .model-status.online{background:#22c55e;box-shadow:0 0 6px #22c55e}
+    .model-status.degraded{background:#f59e0b;box-shadow:0 0 6px #f59e0b}
+    .model-status.offline{background:#ef4444;box-shadow:0 0 6px #ef4444}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
-    .smart-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
-    .smart-card{background:#182445;border:1px solid #2a3a67;border-radius:12px;padding:12px}
-    .smart-card h4{margin:0 0 8px 0;font-size:11px;color:#9fb0d6;text-transform:uppercase;letter-spacing:.5px}
+    .smart-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:4px}
+    .smart-card{background:#182445;border:1px solid #2a3a67;border-radius:8px;padding:6px}
+    .smart-card h4{margin:0 0 2px 0;font-size:9px;color:#9fb0d6;text-transform:uppercase;letter-spacing:.5px}
 </style>
 
 <div class="smart-grid">
@@ -462,9 +444,9 @@
 </div>
 <!-- END SMART WIDGETS -->
 
-    <div class="two" id="run-controls">
+    <div class="two" id="run-controls" style="margin-top:4px">
       <div class="card controls">
-        <h3>Run Controls</h3>
+        <h3 style="margin:0 0 4px 0;font-size:12px">Run Controls</h3>
         <div class="row">
           <input id="agentId" value="discord-main" placeholder="agent id" />
           <input id="label" value="mc-run" placeholder="label" />
@@ -487,16 +469,16 @@
       </div>
 
       <div class="card">
-        <h3>System Signals</h3>
-        <h4>Recent Errors</h4>
+        <h3 style="margin:0 0 4px 0;font-size:12px">System Signals</h3>
+        <h4 style="margin:0 0 2px 0;font-size:10px">Recent Errors</h4>
         <div id="errors" class="mono">...</div>
-        <h4>Ops Status</h4>
+        <h4 style="margin:2px 0 2px 0;font-size:10px">Ops Status</h4>
         <div id="ops" class="mono">...</div>
       </div>
     </div>
 
-    <div class="card" style="margin-top:12px;">
-      <h3>KANBAN: Workflows & Runs</h3>
+    <div class="card" style="margin-top:4px">
+      <h3 style="margin:0 0 4px 0;font-size:12px">KANBAN: Workflows & Runs</h3>
       <div class="filters" id="filters"></div>
       <div class="filters" style="margin-top:8px">
         <select id="timeRange" onchange="refreshAll()" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:6px 10px;border-radius:8px">
@@ -523,8 +505,8 @@
       </div>
     </div>
 
-    <div class="card" style="margin-top:12px;" id="tasks">
-      <h3>Task Board (Persistent)</h3>
+    <div class="card" style="margin-top:4px" id="tasks">
+      <h3 style="margin:0 0 4px 0;font-size:12px">Task Board</h3>
       <div class="row" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:8px">
         <input id="taskTitle" placeholder="Task title" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px" />
         <input id="taskOwner" value="HAL" placeholder="Owner" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:8px;border-radius:8px" />
@@ -560,89 +542,53 @@
       </div>
     </div>
 
-    <div class="card" style="margin-top:12px;" id="discord-relations">
-      <h3>📱 Discord Activity Feed</h3>
+    <div class="card" style="margin-top:4px;" id="discord-relations">
+      <h3>📱 Discord Activity</h3>
       
       <!-- Real-time Activity Feed -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:4px">
         <!-- Agent DM Activity -->
-        <div style="background:#0f1833;border:1px solid #375086;border-radius:8px;padding:12px">
-          <div style="font-size:12px;font-weight:600;color:#d9e3ff;margin-bottom:10px">🤖 Agent DM Activity</div>
-          <div id="discord-dm-feed" style="max-height:250px;overflow-y:auto;font-size:11px">
-            <div style="color:#9fb0d6;padding:8px;text-align:center">Loading activity...</div>
+        <div style="background:#0f1833;border:1px solid #375086;border-radius:6px;padding:6px">
+          <div style="font-size:10px;font-weight:600;color:#d9e3ff;margin-bottom:4px">🤖 DM Activity</div>
+          <div id="discord-dm-feed" style="max-height:120px;overflow-y:auto;font-size:9px">
+            <div style="color:#9fb0d6;padding:4px;text-align:center">Loading...</div>
           </div>
         </div>
         
         <!-- Transfer Activity -->
-        <div style="background:#0f1833;border:1px solid #375086;border-radius:8px;padding:12px">
-          <div style="font-size:12px;font-weight:600;color:#d9e3ff;margin-bottom:10px">↔️ Transfer Activity</div>
-          <div id="discord-transfer-feed" style="max-height:250px;overflow-y:auto;font-size:11px">
-            <div style="color:#9fb0d6;padding:8px;text-align:center">Loading transfers...</div>
+        <div style="background:#0f1833;border:1px solid #375086;border-radius:6px;padding:6px">
+          <div style="font-size:10px;font-weight:600;color:#d9e3ff;margin-bottom:4px">↔️ Transfers</div>
+          <div id="discord-transfer-feed" style="max-height:120px;overflow-y:auto;font-size:9px">
+            <div style="color:#9fb0d6;padding:4px;text-align:center">Loading...</div>
           </div>
         </div>
       </div>
       
       <!-- Statistics -->
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
-        <div style="background:#0e1630;padding:10px;border-radius:6px;text-align:center">
-          <div style="font-size:18px;font-weight:700;color:#6ea8fe" id="discord-dm-count">0</div>
-          <div style="font-size:10px;color:#9fb0d6;margin-top:4px">DMs Today</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:4px;margin-bottom:2px">
+        <div style="background:#0e1630;padding:4px;border-radius:4px;text-align:center;font-size:8px">
+          <div style="font-size:12px;font-weight:700;color:#6ea8fe" id="discord-dm-count">0</div>
+          <div style="color:#9fb0d6">DMs</div>
         </div>
-        <div style="background:#0e1630;padding:10px;border-radius:6px;text-align:center">
-          <div style="font-size:18px;font-weight:700;color:#22c55e" id="discord-agent-count">0</div>
-          <div style="font-size:10px;color:#9fb0d6;margin-top:4px">Active Agents</div>
-        </div>
-        <div style="background:#0e1630;padding:10px;border-radius:6px;text-align:center">
-          <div style="font-size:18px;font-weight:700;color:#f59e0b" id="discord-transfer-count">0</div>
-          <div style="font-size:10px;color:#9fb0d6;margin-top:4px">Transfers</div>
-        </div>
-        <div style="background:#0e1630;padding:10px;border-radius:6px;text-align:center">
-          <div style="font-size:18px;font-weight:700;color:#ec4899" id="discord-response-time">--</div>
-          <div style="font-size:10px;color:#9fb0d6;margin-top:4px">Avg Response</div>
+        <div style="background:#0e1630;padding:4px;border-radius:4px;text-align:center;font-size:8px">
+          <div style="font-size:12px;font-weight:700;color:#22c55e" id="discord-agent-count">0</div>
+          <div style="color:#9fb0d6">Agents</div>
         </div>
       </div>
       
-      <hr style="border:none;border-top:1px solid #2a3a67;margin:16px 0">
-      
-      <h3 style="margin-top:16px">Discord Component Mapping</h3>
-      <div class="mono" id="discordGuide">Flow: Task/Run action → Bound Agent → Model/Fallback chain → Discord channel output</div>
-      <div id="discordMap" class="mono">...</div>
-      <table class="maptable" id="discordTable">
-        <thead><tr><th>Discord Component</th><th>Purpose</th><th>Agent</th><th>Primary</th><th>Fallbacks</th></tr></thead>
+      <h4 style="margin:6px 0 4px 0">Component Mapping</h4>
+      <table class="maptable" id="discordTable" style="font-size:8px">
+        <thead><tr><th>Component</th><th>Agent</th><th>Primary</th><th>Fallback</th></tr></thead>
         <tbody></tbody>
       </table>
-      <div class="flow" style="margin-top:10px">
-        <div class="flowCol">
-          <h4>Discord Components</h4>
-          <div id="flowChannels"></div>
-        </div>
-        <div class="flowArrow">→</div>
-        <div class="flowCol">
-          <h4>Bound Agents / Models</h4>
-          <div id="flowAgents"></div>
-        </div>
-      </div>
     </div>
 
-    <div class="card" style="margin-top:12px;">
+    <div class="card" style="margin-top:4px;display:none">
       <h3>Dependency Radar</h3>
       <div id="depRadar" class="mono">...</div>
     </div>
 
-    <div class="card" style="margin-top:12px;" id="digest">
-      <h3>Daily Digest</h3>
-      <button class="ghost" onclick="buildDigest()">Generate Digest</button>
-      <button class="ghost" onclick="sendDigestToDiscord()">Send Digest to #agent-dashboard</button>
-      <div class="filters" style="margin-top:8px">
-        <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="schEnabled" onchange="saveSchedule()" /> Auto-send</label>
-        <label style="display:flex;align-items:center;gap:6px">Interval (min): <input id="schInterval" type="number" min="5" value="240" style="width:90px;background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:5px;border-radius:8px" onchange="saveSchedule()" /></label>
-      </div>
-      <div id="schStatus" class="mono" style="margin-top:8px"></div>
-      <div id="digestOut" class="mono" style="margin-top:8px">...</div>
-    </div>
-    </div>
-
-    <div class="card" style="margin-top:12px;" id="digest">
+    <div class="card" style="margin-top:4px;" id="digest">
       <h3>Daily Digest</h3>
       <button class="ghost" onclick="buildDigest()">Generate Digest</button>
       <button class="ghost" onclick="sendDigestToDiscord()">Send Digest to #agent-dashboard</button>
@@ -726,11 +672,11 @@
       </div>
     </div>
 
-    <div style="display:none;max-width:800px;margin:12px auto;padding:20px;background:linear-gradient(135deg,#121a31,#1a2847);border-radius:12px;border:1px solid #375086" id="hvac-control">
-      <h2 style="margin:0 0 16px;font-size:18px;font-weight:700">🌡️ Aspire RV Climate Control</h2>
+    <div style="display:none;max-width:800px;margin:4px auto;padding:8px;background:linear-gradient(135deg,#121a31,#1a2847);border-radius:8px;border:1px solid #375086" id="hvac-control">
+      <h2 style="margin:0 0 6px;font-size:14px;font-weight:700">🌡️ RV Climate</h2>
       
       <!-- Status Row -->
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;background:#0f1833;padding:12px;border-radius:8px">
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:4px;margin-bottom:6px;background:#0f1833;padding:6px;border-radius:6px">
         <div>
           <div style="font-size:10px;color:#9fb0d6;margin-bottom:4px">CURRENT TEMP</div>
           <div style="font-size:22px;font-weight:700;color:#86efac" id="hvac-current-temp">—</div>
@@ -742,7 +688,7 @@
       </div>
       
       <!-- Control Grid -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:6px">
         <!-- Target Temp -->
         <div>
           <label style="font-size:10px;color:#9fb0d6;display:block;margin-bottom:6px;font-weight:600">TARGET TEMP</label>
@@ -783,7 +729,7 @@
       </div>
       
       <!-- Quick Actions -->
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:4px">
         <button onclick="loadHvacStatus()" style="padding:10px;background:#6ea8fe;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">⟳ Refresh</button>
         <button onclick="toast.info('❄️ Winter Mode', 'Auto-heat if temp drops below 40°F')" style="padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">❄️ Winter</button>
         <button onclick="toast.info('✈️ Travel Mode', 'Low power, maintain 62°F')" style="padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">✈️ Travel</button>
@@ -791,7 +737,7 @@
       </div>
       
       <!-- Extended Controls -->
-      <div style="background:#0f1833;padding:12px;border-radius:8px;margin-bottom:16px">
+      <div style="background:#0f1833;padding:6px;border-radius:6px;margin-bottom:4px;display:none">
         <div style="font-size:11px;color:#9fb0d6;font-weight:600;margin-bottom:8px">SYSTEM INFO</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:11px">
           <div><span style="color:#9fb0d6">Status:</span> <span id="hvac-status" style="color:#86efac">✓ Online</span></div>
@@ -800,10 +746,7 @@
         </div>
       </div>
       
-      <!-- Safety Notice -->
-      <div style="background:#3b2f12;border:1px solid #7c5e10;padding:8px;border-radius:6px;font-size:10px;color:#fde68a">
-        ⚠️ Auto-refresh every 20s • Safe-by-default (cancel requires CONFIRM)
-      </div>
+
     </div>
 
     <!-- Data Flow Dashboard -->
@@ -821,63 +764,43 @@
       </div>
       
       <!-- Sankey Flow Diagram -->
-      <div style="background:#0f1833;border:1px solid #375086;border-radius:8px;padding:16px;margin-bottom:16px;min-height:500px;position:relative;overflow:hidden">
-        <svg id="flow-diagram" width="100%" height="500" style="border-radius:6px;background:#0e1630"></svg>
+      <div style="background:#0f1833;border:1px solid #375086;border-radius:6px;padding:6px;margin-bottom:4px;min-height:300px;position:relative;overflow:hidden">
+        <svg id="flow-diagram" width="100%" height="300" style="border-radius:4px;background:#0e1630"></svg>
       </div>
       
       <!-- Flow Statistics Grid -->
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
-        <div style="background:#0f1833;padding:12px;border-radius:8px;border:1px solid #375086">
-          <div style="font-size:10px;color:#9fb0d6;margin-bottom:6px;font-weight:600">TOTAL IN</div>
-          <div style="font-size:18px;font-weight:700;color:#6ea8fe" id="flow-total-in">0</div>
-          <div style="font-size:9px;color:#9fb0d6;margin-top:4px">msgs/min</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:4px;margin-bottom:4px">
+        <div style="background:#0f1833;padding:6px;border-radius:6px;border:1px solid #375086">
+          <div style="font-size:8px;color:#9fb0d6;margin-bottom:2px;font-weight:600">TOTAL IN</div>
+          <div style="font-size:12px;font-weight:700;color:#6ea8fe" id="flow-total-in">0</div>
         </div>
-        <div style="background:#0f1833;padding:12px;border-radius:8px;border:1px solid #375086">
-          <div style="font-size:10px;color:#9fb0d6;margin-bottom:6px;font-weight:600">TOTAL OUT</div>
-          <div style="font-size:18px;font-weight:700;color:#22c55e" id="flow-total-out">0</div>
-          <div style="font-size:9px;color:#9fb0d6;margin-top:4px">msgs/min</div>
-        </div>
-        <div style="background:#0f1833;padding:12px;border-radius:8px;border:1px solid #375086">
-          <div style="font-size:10px;color:#9fb0d6;margin-bottom:6px;font-weight:600">ERRORS</div>
-          <div style="font-size:18px;font-weight:700;color:#fecaca" id="flow-errors">0</div>
-          <div style="font-size:9px;color:#9fb0d6;margin-top:4px">in flight</div>
-        </div>
-        <div style="background:#0f1833;padding:12px;border-radius:8px;border:1px solid #375086">
-          <div style="font-size:10px;color:#9fb0d6;margin-bottom:6px;font-weight:600">AVG LATENCY</div>
-          <div style="font-size:18px;font-weight:700;color:#fde68a" id="flow-latency">--</div>
-          <div style="font-size:9px;color:#9fb0d6;margin-top:4px">ms</div>
+        <div style="background:#0f1833;padding:6px;border-radius:6px;border:1px solid #375086">
+          <div style="font-size:8px;color:#9fb0d6;margin-bottom:2px;font-weight:600">TOTAL OUT</div>
+          <div style="font-size:12px;font-weight:700;color:#22c55e" id="flow-total-out">0</div>
         </div>
       </div>
       
       <!-- Model Usage Breakdown -->
-      <div style="background:#0f1833;border:1px solid #375086;border-radius:8px;padding:12px;margin-bottom:16px">
-        <div style="font-size:12px;font-weight:600;color:#d9e3ff;margin-bottom:10px">Model Usage Distribution</div>
-        <div id="flow-model-breakdown" style="display:grid;gap:8px;font-size:11px">
+      <div style="background:#0f1833;border:1px solid #375086;border-radius:6px;padding:6px;margin-bottom:4px">
+        <div style="font-size:10px;font-weight:600;color:#d9e3ff;margin-bottom:4px">Model Usage</div>
+        <div id="flow-model-breakdown" style="display:grid;gap:2px;font-size:9px">
           <!-- Model bars injected by JS -->
         </div>
       </div>
       
       <!-- Data Source/Destination Details -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div style="background:#0f1833;border:1px solid #375086;border-radius:8px;padding:12px">
-          <div style="font-size:12px;font-weight:600;color:#d9e3ff;margin-bottom:8px">📥 Data Sources (Inputs)</div>
-          <div id="flow-sources" style="font-size:10px;color:#9fb0d6;line-height:1.6">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:4px">
+        <div style="background:#0f1833;border:1px solid #375086;border-radius:6px;padding:6px">
+          <div style="font-size:9px;font-weight:600;color:#d9e3ff;margin-bottom:3px">📥 Sources</div>
+          <div id="flow-sources" style="font-size:8px;color:#9fb0d6;line-height:1.4;max-height:80px;overflow-y:auto">
             <!-- Source list injected by JS -->
           </div>
         </div>
-        <div style="background:#0f1833;border:1px solid #375086;border-radius:8px;padding:12px">
-          <div style="font-size:12px;font-weight:600;color:#d9e3ff;margin-bottom:8px">📤 Data Destinations (Outputs)</div>
-          <div id="flow-destinations" style="font-size:10px;color:#9fb0d6;line-height:1.6">
+        <div style="background:#0f1833;border:1px solid #375086;border-radius:6px;padding:6px">
+          <div style="font-size:9px;font-weight:600;color:#d9e3ff;margin-bottom:3px">📤 Destinations</div>
+          <div id="flow-destinations" style="font-size:8px;color:#9fb0d6;line-height:1.4;max-height:80px;overflow-y:auto">
             <!-- Destination list injected by JS -->
           </div>
-        </div>
-      </div>
-      
-      <!-- Error Paths & Retries -->
-      <div style="background:#0f1833;border:1px solid #375086;border-radius:8px;padding:12px;margin-top:12px">
-        <div style="font-size:12px;font-weight:600;color:#fecaca;margin-bottom:8px">⚠️ Error Paths & Retries</div>
-        <div id="flow-errors-detail" style="font-size:10px;color:#9fb0d6;line-height:1.8;max-height:150px;overflow-y:auto">
-          <!-- Error details injected by JS -->
         </div>
       </div>
     </div>
