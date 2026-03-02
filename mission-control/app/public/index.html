@@ -3783,6 +3783,27 @@ window.addEventListener('keydown', (e) => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openCommandPalette(); }
   if (e.key === 'Escape') { closeDrawer(); if (commandPalette.isOpen) closeCommandPalette(); }
 });
+
+// FIX: Attach event listeners to all nav buttons (replaces inline onclick)
+// This ensures switchTab() is defined before events are attached
+window.addEventListener('DOMContentLoaded', () => {
+  console.log('⚡ Initializing event listeners...');
+  
+  // Find all nav buttons with onclick attributes
+  document.querySelectorAll('.snav a[onclick*="switchTab"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Extract tab ID from onclick attribute or href
+      const match = btn.getAttribute('onclick').match(/switchTab\('([^']+)'\)/);
+      if (match && match[1]) {
+        console.log(`📍 Button clicked: ${match[1]}`);
+        switchTab(match[1]);
+      }
+    });
+  });
+  
+  console.log('✅ Event listeners attached successfully');
+});
 </script>
 </body>
 </html>
