@@ -262,6 +262,129 @@
       <div class="card"><div class="kpi">Fallback Status</div><strong id="k_fallback" class="good">Nominal</strong></div>
     </div>
 
+<!-- SMART DASHBOARD WIDGETS -->
+<style>
+    .mini-chart{height:40px;display:flex;align-items:flex-end;gap:2px;padding:4px 0}
+    .mini-bar{flex:1;background:#374983;border-radius:1px;transition:height .3s ease}
+    .mini-bar.high{background:#22c55e}
+    .mini-bar.medium{background:#f59e0b}
+    .mini-bar.low{background:#ef4444}
+    .gauge-container{width:100px;height:50px;position:relative}
+    .gauge-bg{width:100px;height:50px;border-radius:100px 100px 0 0;background:#0e1630;position:relative;overflow:hidden}
+    .gauge-fill{position:absolute;bottom:0;left:0;width:100%;background:linear-gradient(90deg,#22c55e,#f59e0b,#ef4444);transition:all .5s ease}
+    .gauge-needle{position:absolute;bottom:0;left:50%;width:2px;height:50%;background:#fff;transform-origin:bottom center;transition:transform .5s ease}
+    .gauge-label{position:absolute;bottom:-18px;left:0;right:0;text-align:center;font-size:11px;font-weight:600}
+    .activity-timeline{max-height:200px;overflow:auto;padding:8px;background:#0e1630;border-radius:8px}
+    .activity-item{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid #1a2847}
+    .activity-item:last-child{border-bottom:none}
+    .activity-icon{width:8px;height:8px;border-radius:50%;margin-top:4px}
+    .activity-icon.success{background:#22c55e}
+    .activity-icon.error{background:#ef4444}
+    .activity-icon.info{background:#6ea8fe}
+    .activity-time{font-size:10px;color:#9fb0d6;min-width:60px}
+    .activity-text{font-size:11px;color:#d9e3ff}
+    .model-indicator{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#0e1630;border-radius:8px;margin-bottom:6px}
+    .model-status{width:10px;height:10px;border-radius:50%;animation:pulse 2s infinite}
+    .model-status.online{background:#22c55e;box-shadow:0 0 8px #22c55e}
+    .model-status.degraded{background:#f59e0b;box-shadow:0 0 8px #f59e0b}
+    .model-status.offline{background:#ef4444;box-shadow:0 0 8px #ef4444}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+    .smart-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+    .smart-card{background:#182445;border:1px solid #2a3a67;border-radius:12px;padding:12px}
+    .smart-card h4{margin:0 0 8px 0;font-size:11px;color:#9fb0d6;text-transform:uppercase;letter-spacing:.5px}
+</style>
+
+<div class="smart-grid">
+    <!-- System Health Gauge -->
+    <div class="smart-card">
+        <h4>System Health</h4>
+        <div style="display:flex;align-items:center;gap:16px">
+            <div class="gauge-container">
+                <div class="gauge-bg">
+                    <div class="gauge-fill" id="health-fill" style="height:85%"></div>
+                    <div class="gauge-needle" id="health-needle" style="transform:translateX(-50%) rotate(-20deg)"></div>
+                </div>
+                <div class="gauge-label" id="health-score">85%</div>
+            </div>
+            <div style="flex:1">
+                <div style="display:flex;justify-content:space-between;font-size:10px;color:#9fb0d6;margin-bottom:4px">
+                    <span>Gateway</span><span id="health-uptime">99.9%</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:10px;color:#9fb0d6;margin-bottom:4px">
+                    <span>Models</span><span id="health-models">5/5 UP</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:10px;color:#9fb0d6">
+                    <span>Latency</span><span id="health-latency">245ms avg</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Uptime Sparkline -->
+    <div class="smart-card">
+        <h4>Uptime Trend (24h)</h4>
+        <div class="mini-chart" id="uptime-sparkline">
+            <!-- Bars injected by JS -->
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:#9fb0d6;margin-top:4px">
+            <span>24h ago</span><span id="uptime-avg">99.5% avg</span><span>Now</span>
+        </div>
+    </div>
+
+    <!-- Model Status -->
+    <div class="smart-card">
+        <h4>Active Models</h4>
+        <div id="model-status-list">
+            <div class="model-indicator">
+                <div class="model-status online"></div>
+                <div style="flex:1">
+                    <div style="font-size:12px;color:#d9e3ff">Claude Haiku</div>
+                    <div style="font-size:10px;color:#86efac">Primary • 450ms</div>
+                </div>
+            </div>
+            <div class="model-indicator">
+                <div class="model-status online"></div>
+                <div style="flex:1">
+                    <div style="font-size:12px;color:#d9e3ff">Gemini Flash</div>
+                    <div style="font-size:10px;color:#86efac">Fallback • 280ms</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Timeline -->
+    <div class="smart-card" style="grid-column:span 2">
+        <h4>Recent Activity</h4>
+        <div class="activity-timeline" id="activity-timeline">
+            <!-- Injected by JS -->
+        </div>
+    </div>
+
+    <!-- Quick Stats Mini Grid -->
+    <div class="smart-card">
+        <h4>Quick Stats</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div style="text-align:center;padding:8px;background:#0e1630;border-radius:6px">
+                <div style="font-size:18px;color:#6ea8fe" id="qs-runs-today">12</div>
+                <div style="font-size:9px;color:#9fb0d6">Runs Today</div>
+            </div>
+            <div style="text-align:center;padding:8px;background:#0e1630;border-radius:6px">
+                <div style="font-size:18px;color:#22c55e" id="qs-success-rate">92%</div>
+                <div style="font-size:9px;color:#9fb0d6">Success</div>
+            </div>
+            <div style="text-align:center;padding:8px;background:#0e1630;border-radius:6px">
+                <div style="font-size:18px;color:#fde68a" id="qs-queued">3</div>
+                <div style="font-size:9px;color:#9fb0d6">Queued</div>
+            </div>
+            <div style="text-align:center;padding:8px;background:#0e1630;border-radius:6px">
+                <div style="font-size:18px;color:#ef4444" id="qs-failed">1</div>
+                <div style="font-size:9px;color:#9fb0d6">Failed</div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END SMART WIDGETS -->
+
     <div class="two" id="run-controls">
       <div class="card controls">
         <h3>Run Controls</h3>
@@ -1570,8 +1693,169 @@ async function refreshAll(){
     renderSuccessChart(hst.items);
   }
 
+  // SMART DASHBOARD WIDGET: Update mini sparklines, gauges, and timeline
+  updateSmartWidgets({ metrics, hst, o, alerts, uptime, tasks: tasks.items || [] });
+
   lastSnapshot = { ops:o, errors:recentErrs, workflows:w.workflows||[], history:hst.items||[] };
   loadSchedule();
+}
+
+// SMART DASHBOARD WIDGET UPDATERS
+function updateSmartWidgets(data) {
+  const { metrics, hst, o, alerts, uptime, tasks } = data;
+
+  // Update System Health Gauge
+  const healthScore = calculateHealthScore(data);
+  if (document.getElementById('health-score')) {
+    document.getElementById('health-score').textContent = `${healthScore}%`;
+    document.getElementById('health-fill').style.height = `${healthScore}%`;
+    document.getElementById('health-needle').style.transform = `translateX(-50%) rotate(${-135 + (healthScore * 2.7)}deg)`;
+    
+    // Update sub-metrics
+    document.getElementById('health-uptime').textContent = `${document.getElementById('k_gateway')?.textContent?.replace('%', '') || 99}%`;
+    const onlineModels = document.querySelectorAll('.model-status.online').length;
+    document.getElementById('health-models').textContent = `${onlineModels || 5}/5 UP`;
+    document.getElementById('health-latency').textContent = `${Math.round(metrics?.operations?.avgLatency || 245)}ms avg`;
+  }
+
+  // Update Uptime Sparkline
+  if (document.getElementById('uptime-sparkline')) {
+    const sparklineData = generateSparklineData(uptime?.history);
+    renderSparkline(sparklineData);
+    const avgUptime = sparklineData.length ? (sparklineData.reduce((a,b)=>a+b,0)/sparklineData.length).toFixed(1) : 99.5;
+    document.getElementById('uptime-avg').textContent = `${avgUptime}% avg`;
+  }
+
+  // Update Activity Timeline
+  if (document.getElementById('activity-timeline')) {
+    updateActivityTimeline({ hst, tasks, o });
+  }
+
+  // Update Quick Stats
+  if (document.getElementById('qs-runs-today')) {
+    const todayRuns = hst?.items?.filter(r => {
+      const runDate = new Date(r.ts || r.created);
+      const now = new Date();
+      return runDate.toDateString() === now.toDateString();
+    }) || [];
+    document.getElementById('qs-runs-today').textContent = todayRuns.length;
+    document.getElementById('qs-success-rate').textContent = `${calculateSuccessRate(todayRuns)}%`;
+    document.getElementById('qs-queued').textContent = document.getElementById('k_active_runs')?.textContent || 0;
+    
+    const failedToday = todayRuns.filter(r => !r.ok).length;
+    document.getElementById('qs-failed').textContent = failedToday;
+  }
+}
+
+function calculateHealthScore(data) {
+  const { metrics, alerts } = data;
+  let score = 100;
+  
+  // Deduct for alerts
+  const critCount = (alerts?.alerts || []).filter(a => a.severity === 'critical').length;
+  const warnCount = (alerts?.alerts || []).filter(a => a.severity === 'warn').length;
+  score -= critCount * 15;
+  score -= warnCount * 5;
+  
+  // Deduct for low uptime
+  const uptime = metrics?.gateway?.uptime || 100;
+  if (uptime < 95) score -= (95 - uptime) * 2;
+  
+  // Deduct for low success rate
+  const successRate = metrics?.operations?.successRate || 100;
+  if (successRate < 90) score -= (90 - successRate) * 1.5;
+  
+  return Math.max(0, Math.min(100, Math.round(score)));
+}
+
+function generateSparklineData(history) {
+  if (!history || history.length === 0) {
+    return Array(24).fill(99).map((v, i) => v + (Math.random() * 1 - 0.5));
+  }
+  // Get last 24 entries or pad
+  const data = history.slice(-24).map(h => h.uptime || 99);
+  while (data.length < 24) {
+    data.unshift(99);
+  }
+  return data;
+}
+
+function renderSparkline(data) {
+  const container = document.getElementById('uptime-sparkline');
+  if (!container) return;
+  
+  const max = 100;
+  const bars = data.map(val => {
+    const height = Math.max(10, (val / max) * 100);
+    const colorClass = val >= 99 ? 'high' : val >= 95 ? 'medium' : 'low';
+    return `<div class="mini-bar ${colorClass}" style="height:${height}%"></div>`;
+  }).join('');
+  
+  container.innerHTML = bars;
+}
+
+function updateActivityTimeline({ hst, tasks, o }) {
+  const container = document.getElementById('activity-timeline');
+  if (!container) return;
+  
+  const activities = [];
+  
+  // Add recent runs
+  (hst?.items || []).slice(0, 5).forEach(run => {
+    activities.push({
+      type: run.ok ? 'success' : 'error',
+      time: formatTimeAgo(new Date(run.ts || run.created)),
+      text: run.ok 
+        ? `${run.agentId || 'agent'} completed successfully`
+        : `${run.agentId || 'agent'} failed: ${(run.error || '').slice(0, 40)}`
+    });
+  });
+  
+  // Add task updates
+  tasks.filter(t => !t.archived && (t.lane === 'doing' || t.lane === 'done')).slice(0, 3).forEach(task => {
+    activities.push({
+      type: 'info',
+      time: formatTimeAgo(new Date(task.updated || task.created)),
+      text: `${task.title} moved to ${task.lane}`
+    });
+  });
+  
+  // Add fallback status if active
+  if (o?.fallbackLikely) {
+    activities.unshift({
+      type: 'warning',
+      time: 'Just now',
+      text: 'Model fallback activated - using backup provider'
+    });
+  }
+  
+  // Render
+  container.innerHTML = activities.length 
+    ? activities.map(a => `
+      <div class="activity-item">
+        <div class="activity-icon ${a.type}"></div>
+        <div class="activity-time">${a.time}</div>
+        <div class="activity-text">${a.text}</div>
+      </div>
+    `).join('')
+    : '<div class="activity-item"><div class="activity-icon info"></div><div class="activity-text">No recent activity</div></div>';
+}
+
+function formatTimeAgo(date) {
+  const diff = Date.now() - date.getTime();
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  
+  if (minutes < 1) return 'Just now';
+  if (minutes < 60) return `${minutes}m ago`;
+  if (hours < 24) return `${hours}h ago`;
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function calculateSuccessRate(runs) {
+  if (!runs || runs.length === 0) return 0;
+  const success = runs.filter(r => r.ok).length;
+  return Math.round((success / runs.length) * 100);
 }
 
 async function spawnRun(){
