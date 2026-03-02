@@ -27,6 +27,9 @@
     button.ghost{background:#25365f;color:#d9e3ff}
     .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin-top:4px}
     .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px}
+    /* TAB VISIBILITY: Hide all tabs by default except overview */
+    #overview{display:block!important}
+    #run-controls,#tasks,#hvac-control,#discord-relations,#data-flow,#piwigo,#system-health,#cost-tracker,#agent-status,#model-switcher,#scheduler,#analytics,#diagnostics,#digest{display:none!important}
     .kpi{font-size:12px;color:var(--muted)}
     .kpi strong{display:block;font-size:20px;color:var(--text);margin-top:4px}
     .good{color:var(--ok)} .warn{color:var(--warn)} .bad{color:var(--bad)}
@@ -1284,17 +1287,22 @@ document.addEventListener('click', (e) => {
 });
 
 function showTab(tab) {
-  // Hide ALL divs with IDs (all tab panels)
-  const allPanels = ['overview', 'run-controls', 'tasks', 'workflows', 'thresholds', 'spawner', 'discord-relations', 'digest', 'diagnostics', 'hvac-control', 'cost-tracking', 'discord-integration', 'model-switcher', 'scheduler', 'analytics'];
+  // Hide ALL divs with IDs (all tab panels) - COMPLETE LIST
+  const allPanels = [
+    'overview', 'run-controls', 'tasks', 'workflows', 'thresholds', 'spawner', 
+    'discord-relations', 'digest', 'diagnostics', 'hvac-control', 'cost-tracking', 
+    'discord-integration', 'model-switcher', 'scheduler', 'analytics',
+    'data-flow', 'piwigo', 'system-health', 'cost-tracker', 'agent-status'
+  ];
   allPanels.forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
+    if (el) el.style.display = 'none !important';
   });
   
   // Show the selected tab
   const activeEl = document.getElementById(tab);
   if (activeEl) {
-    activeEl.style.display = 'block';
+    activeEl.style.display = 'block !important';
   }
   
   // Update sidebar nav links active state
@@ -3666,13 +3674,31 @@ function openCommandPalette() { commandPalette.open(); }
 function closeCommandPalette() { commandPalette.close(); }
 
 function switchTab(tabId) {
-  document.querySelectorAll('.tab-panel, #run-controls, #tasks, #hvac-control, #discord-relations, #model-switcher, #scheduler, #analytics, #diagnostics').forEach(el => {
-    if (el.classList.contains('tab-panel')) el.classList.remove('active'); else el.style.display = 'none';
+  // Hide ALL tabs completely
+  const allTabs = [
+    'overview', 'run-controls', 'tasks', 'hvac-control', 'discord-relations', 
+    'data-flow', 'piwigo', 'system-health', 'cost-tracker', 'agent-status',
+    'model-switcher', 'scheduler', 'analytics', 'diagnostics', 'digest'
+  ];
+  
+  allTabs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
   });
-  const tab = document.getElementById(tabId);
-  if (tab) { if (tab.classList.contains('tab-panel')) tab.classList.add('active'); else tab.style.display = 'block'; }
-  document.querySelectorAll('.snav a').forEach(a => { a.style.background = a.getAttribute('href') === `#${tabId}` ? '#6ea8fe' : '#22335c'; a.style.color = a.getAttribute('href') === `#${tabId}` ? '#08122d' : '#d9e3ff'; });
-  location.hash = tabId; toast.success('Navigation', `Switched to ${tabId.replace(/-/g, ' ')}`);
+  
+  // Show only selected tab
+  const selectedTab = document.getElementById(tabId);
+  if (selectedTab) selectedTab.style.display = 'block';
+  
+  // Update nav buttons
+  document.querySelectorAll('.snav a').forEach(a => { 
+    const isActive = a.getAttribute('href') === `#${tabId}`;
+    a.style.background = isActive ? '#6ea8fe' : '#22335c'; 
+    a.style.color = isActive ? '#08122d' : '#d9e3ff'; 
+  });
+  
+  location.hash = tabId;
+  toast.success('Navigation', `Switched to ${tabId.replace(/-/g, ' ')}`);
 }
 
 function switchModel(modelId) {
