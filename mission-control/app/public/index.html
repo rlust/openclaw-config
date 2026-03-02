@@ -102,9 +102,41 @@
       .two{grid-template-columns:1fr}
       .maptable{font-size:10px}
     }
+    
+    /* Toast Notifications */
+    .toast-container{position:fixed;top:16px;right:16px;z-index:100;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+    .toast{pointer-events:auto;background:#1a2847;border:1px solid #375086;border-radius:10px;padding:14px 16px;box-shadow:0 8px 32px rgba(0,0,0,.4);min-width:320px;max-width:420px;animation:slideIn .3s ease;transition:all .3s ease;position:relative;overflow:hidden}
+    .toast::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
+    .toast.success::before{background:#22c55e}
+    .toast.warning::before{background:#f59e0b}
+    .toast.error::before{background:#ef4444}
+    .toast.info::before{background:#6ea8fe}
+    .toast.success{border-left-color:#22c55e}
+    .toast.warning{border-left-color:#f59e0b}
+    .toast.error{border-left-color:#ef4444}
+    .toast.info{border-left-color:#6ea8fe}
+    .toast-title{font-size:13px;font-weight:600;color:#d9e3ff;margin-bottom:4px}
+    .toast-message{font-size:12px;color:#9fb0d6;line-height:1.4}
+    .toast-actions{display:flex;gap:8px;margin-top:10px}
+    .toast-actions button{font-size:11px;padding:6px 12px;background:#375086;color:#d9e3ff;border-radius:6px}
+    .toast-actions button:hover{background:#4a6fc7}
+    .toast-close{position:absolute;top:8px;right:8px;background:none;border:none;color:#9fb0d6;font-size:16px;cursor:pointer;padding:4px;line-height:1}
+    .toast-close:hover{color:#d9e3ff}
+    .toast-progress{position:absolute;bottom:0;left:0;height:2px;background:rgba(255,255,255,.2);animation:progress linear forwards}
+    .toast.success .toast-progress{background:#22c55e}
+    .toast.warning .toast-progress{background:#f59e0b}
+    .toast.error .toast-progress{background:#ef4444}
+    .toast.info .toast-progress{background:#6ea8fe}
+    @keyframes slideIn{from{opacity:0;transform:translateX(100%)}to{opacity:1;transform:translateX(0)}}
+    @keyframes slideOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(100%)}}
+    @keyframes progress{from{width:100%}to{width:0%}}
+    .toast.removing{animation:slideOut .3s ease forwards}
   </style>
 </head>
 <body>
+  <!-- Toast Notifications Container -->
+  <div id="toast-container" class="toast-container"></div>
+  
   <div class="shell">
     <aside class="sidebar">
       <div class="brand" style="font-size:12px;font-weight:700;margin-bottom:12px;padding:4px">MC</div>
@@ -496,9 +528,9 @@
       <!-- Quick Actions -->
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
         <button onclick="loadHvacStatus()" style="padding:10px;background:#6ea8fe;color:#08122d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">⟳ Refresh</button>
-        <button onclick="alert('Winter mode: auto-heat if temp drops below 40°F')" style="padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">❄️ Winter</button>
-        <button onclick="alert('Travel mode: low power, maintain 62°F')" style="padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">✈️ Travel</button>
-        <button onclick="alert('Eco mode: energy efficient, setpoint +2°F')" style="padding:10px;background:#10b981;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">♻️ Eco</button>
+        <button onclick="toast.info('❄️ Winter Mode', 'Auto-heat if temp drops below 40°F')" style="padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">❄️ Winter</button>
+        <button onclick="toast.info('✈️ Travel Mode', 'Low power, maintain 62°F')" style="padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">✈️ Travel</button>
+        <button onclick="toast.info('♻️ Eco Mode', 'Energy efficient, setpoint +2°F')" style="padding:10px;background:#10b981;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:11px">♻️ Eco</button>
       </div>
       
       <!-- Extended Controls -->
@@ -1590,7 +1622,7 @@ async function loadWorkflows() {
 async function addWorkflow() {
   const name = (wfName?.value || '').trim();
   const desc = (wfDescription?.value || '').trim();
-  if (!name) return alert('Workflow name required');
+  if (!name) return toast.error('Validation Error', 'Workflow name required');
   const res = await post('/api/workflows', { name, description: desc, steps: [], enabled: true });
   if (res.ok) {
     wfName.value = ''; wfDescription.value = '';
@@ -1602,14 +1634,14 @@ async function createTemplateWorkflow(id, name, desc) {
   const res = await post('/api/workflows', { name, description: desc, steps: [], enabled: true });
   if (res.ok) {
     loadWorkflows();
-    alert(`Template created: ${name}`);
+    toast.success('Workflow Created', `Template created: ${name}`);
   }
 }
 
 async function executeWorkflow(workflowId) {
   const res = await post('/api/workflows/execute', { workflowId });
   if (res.ok) {
-    alert(`Workflow "${res.name}" completed with ${res.results.length} steps`);
+    toast.success('Workflow Completed', `"${res.name}" completed with ${res.results.length} steps`);
     // Notify Discord if enabled
     if (notifyWorkflow?.checked) {
       await notifyDiscordWorkflow(res.name, res.results);
@@ -1617,14 +1649,14 @@ async function executeWorkflow(workflowId) {
     loadWorkflows();
     refreshAll();
   } else {
-    alert(`Workflow failed: ${res.error}`);
+    toast.error('Workflow Failed', res.error);
   }
 }
 
 async function deleteWorkflow(workflowId) {
   if (!confirm('Delete this workflow?')) return;
   // Note: need to add DELETE endpoint
-  alert('Delete endpoint not yet implemented');
+  toast.warning('Not Implemented', 'Delete endpoint not yet implemented');
 }
 
 async function loadThresholds() {
@@ -1651,7 +1683,7 @@ async function loadDiscordConfig() {
 async function saveDiscordConfig() {
   const webhook = (discordWebhook?.value || '').trim();
   const channel = (discordChannel?.value || '').trim();
-  if (!webhook) return alert('Webhook URL required');
+  if (!webhook) return toast.error('Discord Config', 'Webhook URL required');
   const res = await post('/api/discord/config', {
     webhookUrl: webhook,
     slashCommandChannel: channel || '1476004285547417797'
@@ -1719,13 +1751,13 @@ async function loadHvacStatus() {
 
 async function hvacSetTemp() {
   const temp = Number(document.getElementById('hvac-target-temp').value);
-  if (!temp || temp < 60 || temp > 95) return alert('Invalid temp (60-95°F)');
+  if (!temp || temp < 60 || temp > 95) return toast.error('Invalid Input', 'Temperature must be between 60-95°F');
   const res = await post('/api/hvac/control', { action: 'set-temp', temp });
   if (res.ok) {
-    alert(`✓ Thermostat set to ${temp}°F`);
+    toast.success('HVAC Updated', `Thermostat set to ${temp}°F`);
     loadHvacStatus();
   } else {
-    alert(`✗ Failed: ${res.error || 'Unknown error'}`);
+    toast.error('HVAC Error', res.error || 'Unknown error');
   }
 }
 
@@ -1733,10 +1765,10 @@ async function hvacSetMode() {
   const mode = document.getElementById('hvac-mode').value;
   const res = await post('/api/hvac/control', { action: 'set-mode', mode });
   if (res.ok) {
-    alert(`✓ Mode set to ${mode}`);
+    toast.success('HVAC Mode', `Mode set to ${mode}`);
     loadHvacStatus();
   } else {
-    alert(`✗ Failed`);
+    toast.error('HVAC Error', 'Failed to set mode');
   }
 }
 
@@ -1744,10 +1776,10 @@ async function hvacSetFan() {
   const fan = document.getElementById('hvac-fan').value;
   const res = await post('/api/hvac/control', { action: 'set-fan', fan });
   if (res.ok) {
-    alert(`✓ Fan set to ${fan}`);
+    toast.success('HVAC Fan', `Fan set to ${fan}`);
     loadHvacStatus();
   } else {
-    alert(`✗ Failed`);
+    toast.error('HVAC Error', 'Failed to set fan');
   }
 }
 
@@ -1792,10 +1824,10 @@ async function switchPrimaryModel() {
   
   const res = await post('/api/model/switch', { primary, fallback: fallbackChain });
   if (res.ok) {
-    alert(`✓ Switched to ${primary}`);
+    toast.success('Model Switched', `Now using ${primary}`);
     loadModelStatus();
   } else {
-    alert(`✗ Failed: ${res.error || 'Unknown error'}`);
+    toast.error('Switch Failed', res.error || 'Unknown error');
   }
 }
 
@@ -1805,10 +1837,10 @@ async function testModel(target) {
     const msg = target === 'primary' 
       ? `✓ Primary model responding: ${res.latency}ms`
       : `✓ Chain test complete:\n${res.results.map(r => `${r.model}: ${r.ok ? '✓' : '✗'}`).join('\n')}`;
-    alert(msg);
+    toast.info('Model Test', msg);
     loadModelStatus();
   } else {
-    alert(`✗ Test failed: ${res.error}`);
+    toast.error('Test Failed', res.error);
   }
 }
 
@@ -1838,10 +1870,10 @@ function removeFallback(model) {
 async function saveFallbackChain() {
   const res = await post('/api/model/fallback', { chain: fallbackChain });
   if (res.ok) {
-    alert(`✓ Fallback chain saved (${fallbackChain.length} models)`);
+    toast.success('Chain Saved', `Fallback chain saved (${fallbackChain.length} models)`);
     loadModelStatus();
   } else {
-    alert(`✗ Failed to save: ${res.error}`);
+    toast.error('Save Failed', res.error);
   }
 }
 
@@ -1895,15 +1927,15 @@ async function scheduleTask() {
   const time = document.getElementById('sch-time').value;
   const freq = document.getElementById('sch-freq').value;
   
-  if (!task) return alert('Please select a task');
+  if (!task) return toast.error('Validation', 'Please select a task');
   
   const res = await post('/api/scheduler/add', { task, time, freq });
   if (res.ok) {
-    alert(`✓ Scheduled ${task} at ${time} (${freq})`);
+    toast.success('Scheduled', `${task} scheduled for ${time} (${freq})`);
     loadScheduledTasks();
     document.getElementById('sch-task').value = '';
   } else {
-    alert(`✗ Failed: ${res.error}`);
+    toast.error('Schedule Failed', res.error);
   }
 }
 
@@ -1964,7 +1996,7 @@ async function quickSpawn(taskName) {
   };
 
   const task = taskMap[taskName];
-  if (!task) return alert('Unknown task');
+  if (!task) return toast.error('Invalid Task', 'Unknown task');
 
   try {
     const res = await post('/api/spawn', {
@@ -1974,13 +2006,13 @@ async function quickSpawn(taskName) {
     });
 
     if (res.ok) {
-      alert(`${task.emoji} ${task.label} started!\n\nRun ID: ${res.runId}\n\nCheck #agent-output for results.`);
+      toast.success(`${task.emoji} ${task.label}`, `Started! Run ID: ${res.runId}`);
       updateQuickSpawnCards(); // Refresh timestamps
     } else {
-      alert(`✗ Failed to spawn ${task.label}: ${res.error}`);
+      toast.error(`${task.label} Failed`, res.error);
     }
   } catch (e) {
-    alert(`✗ Error: ${e.message}`);
+    toast.error('Spawn Error', e.message);
   }
 }
 
@@ -2024,9 +2056,9 @@ async function quickSpawn(taskName) {
   // Call spawn endpoint
   const res = await post('/api/run/spawn', { task: taskName });
   if (res.ok) {
-    alert(`✓ ${taskName} started (Run ID: ${res.id})`);
+    toast.success('Task Started', `${taskName} started (Run ID: ${res.id})`);
   } else {
-    alert(`✗ Failed to spawn: ${res.error}`);
+    toast.error('Spawn Failed', res.error);
   }
 }
 
@@ -2144,6 +2176,99 @@ async function loadAnalytics() {
     console.error('Analytics load error:', e);
   }
 }
+
+// TOAST NOTIFICATION SYSTEM
+const toast = {
+  container: null,
+  
+  init() {
+    this.container = document.getElementById('toast-container');
+    if (!this.container) {
+      this.container = document.createElement('div');
+      this.container.id = 'toast-container';
+      this.container.className = 'toast-container';
+      document.body.appendChild(this.container);
+    }
+  },
+  
+  create({ type = 'info', title = '', message = '', duration = 5000, actions = [] }) {
+    this.init();
+    
+    const toastEl = document.createElement('div');
+    toastEl.className = `toast ${type}`;
+    
+    const progress = document.createElement('div');
+    progress.className = 'toast-progress';
+    progress.style.animationDuration = `${duration}ms`;
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'toast-close';
+    closeBtn.innerHTML = '×';
+    closeBtn.onclick = () => this.remove(toastEl);
+    
+    const titleEl = document.createElement('div');
+    titleEl.className = 'toast-title';
+    titleEl.textContent = title;
+    
+    const messageEl = document.createElement('div');
+    messageEl.className = 'toast-message';
+    messageEl.textContent = message;
+    
+    let actionsEl = null;
+    if (actions && actions.length > 0) {
+      actionsEl = document.createElement('div');
+      actionsEl.className = 'toast-actions';
+      actions.forEach(action => {
+        const btn = document.createElement('button');
+        btn.textContent = action.label;
+        btn.onclick = () => {
+          if (action.callback) action.callback();
+          this.remove(toastEl);
+        };
+        actionsEl.appendChild(btn);
+      });
+    }
+    
+    toastEl.appendChild(progress);
+    toastEl.appendChild(closeBtn);
+    toastEl.appendChild(titleEl);
+    toastEl.appendChild(messageEl);
+    if (actionsEl) toastEl.appendChild(actionsEl);
+    
+    this.container.appendChild(toastEl);
+    
+    if (duration > 0) {
+      setTimeout(() => this.remove(toastEl), duration);
+    }
+    
+    return toastEl;
+  },
+  
+  remove(toastEl) {
+    toastEl.classList.add('removing');
+    setTimeout(() => {
+      if (toastEl.parentNode) {
+        toastEl.parentNode.removeChild(toastEl);
+      }
+    }, 300);
+  },
+  
+  success(title, message, duration) {
+    return this.create({ type: 'success', title: title || 'Success', message: message || '', duration: duration || 5000 });
+  },
+  
+  error(title, message, duration) {
+    return this.create({ type: 'error', title: title || 'Error', message: message || '', duration: duration || 8000 });
+  },
+  
+  warning(title, message, duration) {
+    return this.create({ type: 'warning', title: title || 'Warning', message: message || '', duration: duration || 6000 });
+  },
+  
+  info(title, message, duration) {
+    return this.create({ type: 'info', title: title || 'Info', message: message || '', duration: duration || 4000 });
+  }
+};
 
 // keyboard shortcuts
 window.addEventListener('keydown', (e) => {
