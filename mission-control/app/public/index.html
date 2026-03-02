@@ -29,7 +29,7 @@
     .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px}
     /* TAB VISIBILITY: Hide all tabs by default except overview */
     #overview{display:block!important}
-    #run-controls,#tasks,#hvac-control,#discord-relations,#data-flow,#piwigo,#system-health,#cost-tracker,#agent-status,#model-switcher,#scheduler,#analytics,#diagnostics,#digest{display:none!important}
+    #run-controls,#tasks,#hvac-control,#discord-relations,#data-flow,#piwigo,#system-health,#cost-tracker,#agent-status,#model-switcher,#scheduler,#analytics,#diagnostics,#digest,#workflows,#thresholds,#discord-integration{display:none!important}
     .kpi{font-size:12px;color:var(--muted)}
     .kpi strong{display:block;font-size:20px;color:var(--text);margin-top:4px}
     .good{color:var(--ok)} .warn{color:var(--warn)} .bad{color:var(--bad)}
@@ -250,13 +250,7 @@
 
     <div id="degraded" class="banner">⚠️ Degraded mode: repeated fallback/rate-limit signals detected.</div>
 
-    <!-- Hide top header for non-dashboard tabs -->
-    <style>
-      #overview .top, #run-controls .top, #tasks .top, #hvac-control .top, #discord-relations .top, #diagnostics .top {
-        display: none;
-      }
-      #overview { display: none; padding: 12px; }
-    </style>
+    <!-- Tab visibility controlled by CSS in head + JS switchTab() -->
 
     <div class="grid" id="overview" style="padding:12px;max-width:100%">
       <div class="card"><div class="kpi">Gateway Uptime</div><strong id="k_gateway" class="good">--</strong></div>
@@ -1287,7 +1281,7 @@ document.addEventListener('click', (e) => {
 });
 
 function showTab(tab) {
-  // Hide ALL divs with IDs (all tab panels) - COMPLETE LIST
+  // Hide ALL divs with IDs (all tab panels) - COMPLETE LIST including legacy + new
   const allPanels = [
     'overview', 'run-controls', 'tasks', 'workflows', 'thresholds', 'spawner', 
     'discord-relations', 'digest', 'diagnostics', 'hvac-control', 'cost-tracking', 
@@ -3674,11 +3668,13 @@ function openCommandPalette() { commandPalette.open(); }
 function closeCommandPalette() { commandPalette.close(); }
 
 function switchTab(tabId) {
-  // Hide ALL tabs completely
+  // Hide ALL tabs completely - COMPLETE LIST including legacy tabs
   const allTabs = [
     'overview', 'run-controls', 'tasks', 'hvac-control', 'discord-relations', 
     'data-flow', 'piwigo', 'system-health', 'cost-tracker', 'agent-status',
-    'model-switcher', 'scheduler', 'analytics', 'diagnostics', 'digest'
+    'model-switcher', 'scheduler', 'analytics', 'diagnostics', 'digest',
+    'workflows', 'thresholds', 'discord-integration',  // OLD TABS - HIDE THESE
+    'run-controls'  // Double-check run tab
   ];
   
   allTabs.forEach(id => {
