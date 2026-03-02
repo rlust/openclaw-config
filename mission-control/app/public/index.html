@@ -1917,13 +1917,13 @@ async function refreshAll(){
     // const budgetStatus = cost.totalEstimated > dailyCap * 0.75 ? 'warn' : cost.totalEstimated > dailyCap ? 'bad' : 'good';
     // if (document.getElementById('costBudget')) costBudget.innerHTML = `<span class="${budgetStatus}">${cost.totalEstimated > dailyCap ? '⚠️ Over' : '✓ On Track'}</span>`;
     
-    // Cost by model breakdown
-    const costByModel = cost.byModel || {};
-    const modelLines = Object.entries(costByModel)
-      .sort((a,b) => b[1] - a[1])
-      .map(([m, c]) => `${m}: $${c.toFixed(4)}`)
-      .slice(0, 10);
-    costByModel.textContent = modelLines.length ? modelLines.join('\n') : 'No cost data yet';
+    // Cost by model breakdown (old dashboard - commented out, use costTracker instead)
+    // const costByModel = cost.byModel || {};
+    // const modelLines = Object.entries(costByModel)
+    //   .sort((a,b) => b[1] - a[1])
+    //   .map(([m, c]) => `${m}: $${c.toFixed(4)}`)
+    //   .slice(0, 10);
+    // if (document.getElementById('costByModel')) costByModel.textContent = modelLines.length ? modelLines.join('\n') : 'No cost data yet';
   }
 
   if (alerts?.ok && alerts.alerts) {
