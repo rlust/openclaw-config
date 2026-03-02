@@ -244,7 +244,7 @@
       </div>
       <div>
         <button onclick="openCommandPalette()" title="⌘K" style="margin-right:8px;background:#25365f">⌘ K</button>
-        <button onclick="if(typeof refreshAll==='function') refreshAll(); else console.warn('refreshAll not ready yet')">Refresh</button>
+        <button onclick="refreshAll()">Refresh</button>
       </div>
     </div>
 
@@ -482,7 +482,7 @@
       <h3 style="margin:0 0 4px 0;font-size:12px">KANBAN: Workflows & Runs</h3>
       <div class="filters" id="filters"></div>
       <div class="filters" style="margin-top:8px">
-        <select id="timeRange" onchange="if(typeof refreshAll==='function') refreshAll()" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:6px 10px;border-radius:8px">
+        <select id="timeRange" onchange="refreshAll()" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:6px 10px;border-radius:8px">
           <option value="15">Last 15m</option>
           <option value="60" selected>Last 1h</option>
           <option value="240">Last 4h</option>
@@ -521,12 +521,12 @@
       <div class="filters" style="margin-top:8px">
         <button class="ghost" id="archToggle" onclick="toggleArchived()">Show Archived: Off</button>
         <label style="display:flex;align-items:center;gap:6px">Assignee
-          <select id="taskAssigneeFilter" onchange="if(typeof refreshAll==='function') refreshAll()" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:6px;border-radius:8px">
+          <select id="taskAssigneeFilter" onchange="refreshAll()" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:6px;border-radius:8px">
             <option value="all">All</option>
           </select>
         </label>
         <label style="display:flex;align-items:center;gap:6px">Priority
-          <select id="taskPriorityFilter" onchange="if(typeof refreshAll==='function') refreshAll()" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:6px;border-radius:8px">
+          <select id="taskPriorityFilter" onchange="refreshAll()" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:6px;border-radius:8px">
             <option value="all">All</option>
             <option value="high">High</option>
             <option value="medium">Medium</option>
@@ -1890,7 +1890,31 @@ function renderSuccessChart(history) {
   });
 }
 
+// Guard: Create missing DOM elements if they don't exist
+function ensureDOM() {
+  if (!document.getElementById('discordMap')) {
+    const div = document.createElement('div');
+    div.id = 'discordMap';
+    div.style.display = 'none';
+    document.body.appendChild(div);
+  }
+  if (!document.getElementById('discordGuide')) {
+    const div = document.createElement('div');
+    div.id = 'discordGuide';
+    div.style.display = 'none';
+    document.body.appendChild(div);
+  }
+  if (!document.getElementById('discordTable')) {
+    const table = document.createElement('table');
+    table.id = 'discordTable';
+    table.innerHTML = '<tbody></tbody>';
+    table.style.display = 'none';
+    document.body.appendChild(table);
+  }
+}
+
 async function refreshAll(){
+  ensureDOM(); // Ensure all DOM elements exist before using them
   const [h,r,s,w,o,e,hst,tasks,dm,metrics,alerts,costs,uptime] = await Promise.all([
     get('/api/health'), get('/api/routing'), get('/api/sessions'), get('/api/workflows'), get('/api/ops-status'), get('/api/recent-errors'), get('/api/run-history'), get(`/api/tasks?includeArchived=${showArchived}`), get('/api/discord-map'), get('/api/metrics'), get('/api/system-alerts'), get('/api/cost-history'), get('/api/uptime-history')
   ]);
@@ -1961,12 +1985,15 @@ async function refreshAll(){
       'Component → Purpose → Agent → Model chain',
       ...(rows.map(x => `${x.discordComponent} → ${x.purpose} → ${x.agentId} → ${x.modelPrimary || 'n/a'}${(x.modelFallbacks||[]).length ? ' | fallbacks: '+x.modelFallbacks.join(', ') : ''}`))
     ];
-    discordMap.textContent = lines.join('\n');
+    const discordMap = document.getElementById('discordMap');
+    if (discordMap) discordMap.textContent = lines.join('\n');
 
-    discordGuide.textContent = `Flow: Discord message enters component → routing binding picks agent → agent model/fallback executes → response posts back to same component.`;
+    const discordGuide = document.getElementById('discordGuide');
+    if (discordGuide) discordGuide.textContent = `Flow: Discord message enters component → routing binding picks agent → agent model/fallback executes → response posts back to same component.`;
 
-    const tbody = document.querySelector('#discordTable tbody');
-    tbody.innerHTML = rows.map(x => `<tr>
+    const discordTable = document.getElementById('discordTable');
+    const tbody = discordTable ? discordTable.querySelector('tbody') : null;
+    if (tbody) tbody.innerHTML = rows.map(x => `<tr>
       <td>${x.discordComponent}</td>
       <td>${x.purpose}</td>
       <td>${x.agentId}</td>
@@ -3784,56 +3811,9 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') { closeDrawer(); if (commandPalette.isOpen) closeCommandPalette(); }
 });
 
-// CRITICAL FIX: Make functions callable immediately from global scope
-// Prevent "is not defined" errors for early event handlers
-
-// Stub functions that exist from the start
-if (typeof window.refreshAll === 'undefined') {
-  window.refreshAll = function() { 
-    console.log('[STUB] refreshAll called before main function loaded');
-  };
-}
-
-if (typeof window.switchTab === 'undefined') {
-  window.switchTab = function(tabId) {
-    console.log('[STUB] switchTab called before main function loaded, will retry in 100ms');
-    setTimeout(() => {
-      if (typeof window.switchTab !== 'undefined' && window.switchTab.toString().includes('tabToShow')) {
-        window.switchTab(tabId);
-      }
-    }, 100);
-  };
-}
-
-// FIX: Attach event listeners to all nav buttons (replaces inline onclick)
-// This ensures switchTab() is defined before events are attached
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    console.log('⚡ Initializing event listeners...');
-    attachNavListeners();
-  });
-} else {
-  // DOM already loaded
-  console.log('⚡ DOM already loaded, attaching listeners immediately...');
-  attachNavListeners();
-}
-
-function attachNavListeners() {
-  // Find all nav buttons with onclick attributes
-  document.querySelectorAll('.snav a[onclick*="switchTab"]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      // Extract tab ID from onclick attribute or href
-      const match = btn.getAttribute('onclick').match(/switchTab\('([^']+)'\)/);
-      if (match && match[1]) {
-        console.log(`📍 Button clicked: ${match[1]}`);
-        window.switchTabGlobal(match[1]);
-      }
-    });
-  });
-  
-  console.log('✅ Event listeners attached successfully');
-}
+// ✅ All functions defined above (switchTab, refreshAll, etc.)
+// ✅ Inline onclick handlers will work via function hoisting
+// ✅ No need for complex event delegation
 </script>
 </body>
 </html>
