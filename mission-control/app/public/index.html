@@ -3672,9 +3672,11 @@ function switchTab(tabId) {
     
     // CRUCIAL: Tab content mapping
     // Overview = KPIs + smart-grid + run-controls + kanban
+    // Run Controls = same as overview (it's part of overview)
     // All others = just that single tab
     const tabToShow = {
       'overview': ['overview', 'secondary-overview', 'run-controls', 'kanban-workflows'],
+      'run-controls': ['overview', 'secondary-overview', 'run-controls', 'kanban-workflows'], // Same as overview
       'tasks': ['tasks'],
       'piwigo': ['piwigo'],
       'cost-tracker': ['cost-tracker'],
