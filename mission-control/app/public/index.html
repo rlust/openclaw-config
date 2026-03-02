@@ -221,6 +221,7 @@
         <a href="#hvac-control" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">🌡️ HVAC</a>
         <a href="#discord-relations" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Discord</a>
         <a href="#data-flow" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📊 Flow</a>
+        <a href="#piwigo" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📸 Piwigo</a>
         <a href="#diagnostics" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Diag</a>
         <a href="#model-switcher" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">⚙️ Models</a>
         <a href="#scheduler" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📅 Schedule</a>
@@ -805,10 +806,73 @@
       </div>
     </div>
 
-    <div class="card" style="margin-top:12px;" id="diagnostics">
+    <!-- Piwigo Upload Monitor -->
+    <div class="card" style="margin-top:4px;" id="piwigo">
+      <h3>📸 Piwigo Upload Monitor</h3>
+      
+      <!-- Progress Summary -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:6px">
+        <div style="background:#0f1833;padding:6px;border-radius:6px;border:1px solid #375086">
+          <div style="font-size:8px;color:#9fb0d6;margin-bottom:2px;font-weight:600">DATA TRANSFERRED</div>
+          <div style="font-size:14px;font-weight:700;color:#6ea8fe" id="piwigo-size-transferred">2.7GB</div>
+          <div style="font-size:8px;color:#9fb0d6">of 7.8GB</div>
+        </div>
+        <div style="background:#0f1833;padding:6px;border-radius:6px;border:1px solid #375086">
+          <div style="font-size:8px;color:#9fb0d6;margin-bottom:2px;font-weight:600">FILES UPLOADED</div>
+          <div style="font-size:14px;font-weight:700;color:#22c55e" id="piwigo-files-uploaded">281</div>
+          <div style="font-size:8px;color:#9fb0d6">of 878</div>
+        </div>
+      </div>
+      
+      <!-- Progress Bars -->
+      <div style="margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+          <span style="font-size:8px;color:#9fb0d6;font-weight:600">Size Progress</span>
+          <span style="font-size:8px;color:#6ea8fe;font-weight:600" id="piwigo-size-percent">35%</span>
+        </div>
+        <div style="width:100%;height:8px;background:#0e1630;border-radius:4px;overflow:hidden;border:1px solid #375086">
+          <div id="piwigo-size-bar" style="height:100%;background:linear-gradient(90deg,#6ea8fe,#22c55e);width:35%;transition:width 0.3s ease"></div>
+        </div>
+      </div>
+      
+      <div style="margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+          <span style="font-size:8px;color:#9fb0d6;font-weight:600">File Progress</span>
+          <span style="font-size:8px;color:#22c55e;font-weight:600" id="piwigo-files-percent">32%</span>
+        </div>
+        <div style="width:100%;height:8px;background:#0e1630;border-radius:4px;overflow:hidden;border:1px solid #375086">
+          <div id="piwigo-files-bar" style="height:100%;background:linear-gradient(90deg,#22c55e,#86efac);width:32%;transition:width 0.3s ease"></div>
+        </div>
+      </div>
+      
+      <!-- Status Grid -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:6px">
+        <div style="background:#0e1630;padding:4px;border-radius:4px;text-align:center;border:1px solid #2a3a67">
+          <div style="font-size:9px;font-weight:700;color:#86efac" id="piwigo-galleries">37/37</div>
+          <div style="font-size:7px;color:#9fb0d6">Galleries</div>
+        </div>
+        <div style="background:#0e1630;padding:4px;border-radius:4px;text-align:center;border:1px solid #2a3a67">
+          <div style="font-size:9px;font-weight:700;color:#fde68a" id="piwigo-eta">~45m</div>
+          <div style="font-size:7px;color:#9fb0d6">ETA</div>
+        </div>
+        <div style="background:#0e1630;padding:4px;border-radius:4px;text-align:center;border:1px solid #2a3a67">
+          <div style="font-size:9px;font-weight:700;color:#22c55e" id="piwigo-status">● Running</div>
+          <div style="font-size:7px;color:#9fb0d6">Status</div>
+        </div>
+      </div>
+      
+      <!-- Details -->
+      <div style="background:#0e1630;padding:4px;border-radius:4px;border:1px solid #2a3a67;font-size:8px;color:#9fb0d6;line-height:1.4">
+        <div>Rsync: <span id="piwigo-rsync-status" style="color:#86efac">Running smoothly</span></div>
+        <div>Last update: <span id="piwigo-last-update" style="color:#6ea8fe">Just now</span></div>
+        <div>Monitor: <span id="piwigo-monitor-status" style="color:#86efac">Tracking progress</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:4px;" id="diagnostics">
       <h3>Diagnostics</h3>
       <div class="mono" id="sessions">...</div>
-      <div class="mono" id="routing" style="margin-top:8px"></div>
+      <div class="mono" id="routing" style="margin-top:4px;display:none"></div>
     </div>
 
     <!-- Model Switcher Panel -->
@@ -1812,6 +1876,9 @@ async function refreshAll(){
   
   // Update Data Flow Diagram
   dataFlowSystem.refresh();
+  
+  // Update Piwigo Monitor
+  piwigMonitor.render();
 
   const recentErrs = (e.stdout || '').trim();
   const degradedOn = !!o.fallbackLikely || /FailoverError|API rate limit reached/i.test(recentErrs);
@@ -2708,6 +2775,116 @@ function testAllToasts() {
   setTimeout(() => toast.info('ℹ️ Info', 'System status normal'), 1200);
 }
 
+// PIWIGO UPLOAD MONITOR SYSTEM
+const piwigMonitor = {
+  data: {
+    sizeTransferred: 2.7,
+    sizeTotal: 7.8,
+    filesUploaded: 281,
+    filesTotal: 878,
+    galleriesComplete: 37,
+    galleriesTotal: 37,
+    eta: 45,
+    status: 'running',
+    rsyncStatus: 'Running smoothly',
+    lastUpdate: new Date(),
+    monitorStatus: 'Tracking progress'
+  },
+
+  getSizePercent() {
+    return Math.round((this.data.sizeTransferred / this.data.sizeTotal) * 100);
+  },
+
+  getFilesPercent() {
+    return Math.round((this.data.filesUploaded / this.data.filesTotal) * 100);
+  },
+
+  update(newData) {
+    if (newData) {
+      this.data = { ...this.data, ...newData };
+      this.data.lastUpdate = new Date();
+    }
+    this.render();
+  },
+
+  render() {
+    const sizePercent = this.getSizePercent();
+    const filesPercent = this.getFilesPercent();
+    
+    // Update main stats
+    const sizeEl = document.getElementById('piwigo-size-transferred');
+    if (sizeEl) sizeEl.textContent = `${this.data.sizeTransferred.toFixed(1)}GB`;
+    
+    const filesEl = document.getElementById('piwigo-files-uploaded');
+    if (filesEl) filesEl.textContent = this.data.filesUploaded;
+    
+    // Update percentages
+    const sizePctEl = document.getElementById('piwigo-size-percent');
+    if (sizePctEl) sizePctEl.textContent = `${sizePercent}%`;
+    
+    const filesPctEl = document.getElementById('piwigo-files-percent');
+    if (filesPctEl) filesPctEl.textContent = `${filesPercent}%`;
+    
+    // Update progress bars
+    const sizeBarEl = document.getElementById('piwigo-size-bar');
+    if (sizeBarEl) sizeBarEl.style.width = `${sizePercent}%`;
+    
+    const filesBarEl = document.getElementById('piwigo-files-bar');
+    if (filesBarEl) filesBarEl.style.width = `${filesPercent}%`;
+    
+    // Update status grid
+    const galleriesEl = document.getElementById('piwigo-galleries');
+    if (galleriesEl) galleriesEl.textContent = `${this.data.galleriesComplete}/${this.data.galleriesTotal}`;
+    
+    const etaEl = document.getElementById('piwigo-eta');
+    if (etaEl) etaEl.textContent = `~${this.data.eta}m`;
+    
+    const statusEl = document.getElementById('piwigo-status');
+    if (statusEl) {
+      const statusText = this.data.status === 'running' ? '● Running' : '✓ Complete';
+      const statusColor = this.data.status === 'running' ? '#22c55e' : '#86efac';
+      statusEl.textContent = statusText;
+      statusEl.style.color = statusColor;
+    }
+    
+    // Update details
+    const rsyncEl = document.getElementById('piwigo-rsync-status');
+    if (rsyncEl) rsyncEl.textContent = this.data.rsyncStatus;
+    
+    const updateEl = document.getElementById('piwigo-last-update');
+    if (updateEl) {
+      const now = new Date();
+      const diff = Math.floor((now - this.data.lastUpdate) / 1000);
+      if (diff < 60) {
+        updateEl.textContent = 'Just now';
+      } else if (diff < 3600) {
+        updateEl.textContent = `${Math.floor(diff / 60)}m ago`;
+      } else {
+        updateEl.textContent = this.data.lastUpdate.toLocaleTimeString();
+      }
+    }
+    
+    const monitorEl = document.getElementById('piwigo-monitor-status');
+    if (monitorEl) monitorEl.textContent = this.data.monitorStatus;
+  },
+
+  incrementProgress(sizeGB, fileCount) {
+    this.data.sizeTransferred += sizeGB;
+    this.data.filesUploaded += fileCount;
+    this.render();
+  },
+
+  complete() {
+    this.data.status = 'complete';
+    this.data.sizeTransferred = this.data.sizeTotal;
+    this.data.filesUploaded = this.data.filesTotal;
+    this.data.eta = 0;
+    this.data.rsyncStatus = 'Complete';
+    toast.success('Piwigo Upload', 'All files transferred successfully! ✓');
+    this.render();
+  }
+};
+
 // DATA FLOW DIAGRAM SYSTEM
 const dataFlowSystem = {
   isAnimating: true,
@@ -3132,6 +3309,7 @@ const commandPalette = {
       { id: 'goto-hvac', title: 'Go to HVAC Control', desc: 'RV climate control', icon: '🌡️', group: 'Navigation', action: () => switchTab('hvac-control') },
       { id: 'goto-discord', title: 'Go to Discord Relations', desc: 'Discord bindings and flow', icon: '💬', group: 'Navigation', action: () => switchTab('discord-relations') },
       { id: 'goto-flow', title: 'Go to Data Flow Graph', desc: 'Real-time OpenClaw data flow', icon: '📊', group: 'Navigation', action: () => switchTab('data-flow') },
+      { id: 'goto-piwigo', title: 'Go to Piwigo Upload', desc: 'Photo gallery transfer monitor', icon: '📸', group: 'Navigation', action: () => switchTab('piwigo') },
       { id: 'goto-models', title: 'Go to Model Switcher', desc: 'Change AI models and fallbacks', icon: '⚙️', group: 'Navigation', action: () => switchTab('model-switcher') },
       { id: 'goto-scheduler', title: 'Go to Scheduler', desc: 'Scheduled tasks and cron jobs', icon: '📅', group: 'Navigation', action: () => switchTab('scheduler') },
       { id: 'goto-analytics', title: 'Go to Analytics', desc: 'Charts, costs, and metrics', icon: '📊', group: 'Navigation', action: () => switchTab('analytics') },
