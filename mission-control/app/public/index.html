@@ -244,7 +244,7 @@
       </div>
       <div>
         <button onclick="openCommandPalette()" title="⌘K" style="margin-right:8px;background:#25365f">⌘ K</button>
-        <button onclick="refreshAll()">Refresh</button>
+        <button onclick="if(typeof refreshAll==='function') refreshAll(); else console.warn('refreshAll not ready yet')">Refresh</button>
       </div>
     </div>
 
@@ -482,7 +482,7 @@
       <h3 style="margin:0 0 4px 0;font-size:12px">KANBAN: Workflows & Runs</h3>
       <div class="filters" id="filters"></div>
       <div class="filters" style="margin-top:8px">
-        <select id="timeRange" onchange="refreshAll()" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:6px 10px;border-radius:8px">
+        <select id="timeRange" onchange="if(typeof refreshAll==='function') refreshAll()" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:6px 10px;border-radius:8px">
           <option value="15">Last 15m</option>
           <option value="60" selected>Last 1h</option>
           <option value="240">Last 4h</option>
@@ -521,12 +521,12 @@
       <div class="filters" style="margin-top:8px">
         <button class="ghost" id="archToggle" onclick="toggleArchived()">Show Archived: Off</button>
         <label style="display:flex;align-items:center;gap:6px">Assignee
-          <select id="taskAssigneeFilter" onchange="refreshAll()" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:6px;border-radius:8px">
+          <select id="taskAssigneeFilter" onchange="if(typeof refreshAll==='function') refreshAll()" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:6px;border-radius:8px">
             <option value="all">All</option>
           </select>
         </label>
         <label style="display:flex;align-items:center;gap:6px">Priority
-          <select id="taskPriorityFilter" onchange="refreshAll()" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:6px;border-radius:8px">
+          <select id="taskPriorityFilter" onchange="if(typeof refreshAll==='function') refreshAll()" style="background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:6px;border-radius:8px">
             <option value="all">All</option>
             <option value="high">High</option>
             <option value="medium">Medium</option>
@@ -3784,11 +3784,41 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') { closeDrawer(); if (commandPalette.isOpen) closeCommandPalette(); }
 });
 
+// CRITICAL FIX: Make functions callable immediately from global scope
+// Prevent "is not defined" errors for early event handlers
+
+// Stub functions that exist from the start
+if (typeof window.refreshAll === 'undefined') {
+  window.refreshAll = function() { 
+    console.log('[STUB] refreshAll called before main function loaded');
+  };
+}
+
+if (typeof window.switchTab === 'undefined') {
+  window.switchTab = function(tabId) {
+    console.log('[STUB] switchTab called before main function loaded, will retry in 100ms');
+    setTimeout(() => {
+      if (typeof window.switchTab !== 'undefined' && window.switchTab.toString().includes('tabToShow')) {
+        window.switchTab(tabId);
+      }
+    }, 100);
+  };
+}
+
 // FIX: Attach event listeners to all nav buttons (replaces inline onclick)
 // This ensures switchTab() is defined before events are attached
-window.addEventListener('DOMContentLoaded', () => {
-  console.log('⚡ Initializing event listeners...');
-  
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('⚡ Initializing event listeners...');
+    attachNavListeners();
+  });
+} else {
+  // DOM already loaded
+  console.log('⚡ DOM already loaded, attaching listeners immediately...');
+  attachNavListeners();
+}
+
+function attachNavListeners() {
   // Find all nav buttons with onclick attributes
   document.querySelectorAll('.snav a[onclick*="switchTab"]').forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -3797,13 +3827,13 @@ window.addEventListener('DOMContentLoaded', () => {
       const match = btn.getAttribute('onclick').match(/switchTab\('([^']+)'\)/);
       if (match && match[1]) {
         console.log(`📍 Button clicked: ${match[1]}`);
-        switchTab(match[1]);
+        window.switchTabGlobal(match[1]);
       }
     });
   });
   
   console.log('✅ Event listeners attached successfully');
-});
+}
 </script>
 </body>
 </html>
