@@ -2,14 +2,18 @@ import http from 'node:http';
 import { exec } from 'node:child_process';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const PORT = 18888;
-const pub = resolve('./public');
-const tasksFile = resolve('./data/tasks.json');
-const scheduleFile = resolve('./data/schedule.json');
-const workflowsFile = resolve('./data/workflows.json');
-const alertThresholdsFile = resolve('./data/alert-thresholds.json');
-const discordConfigFile = resolve('./data/discord-config.json');
+const pub = resolve(__dirname, './public');
+const tasksFile = resolve(__dirname, './data/tasks.json');
+const scheduleFile = resolve(__dirname, './data/schedule.json');
+const workflowsFile = resolve(__dirname, './data/workflows.json');
+const alertThresholdsFile = resolve(__dirname, './data/alert-thresholds.json');
+const discordConfigFile = resolve(__dirname, './data/discord-config.json');
 
 // Discord integration config
 let discordConfig = {
