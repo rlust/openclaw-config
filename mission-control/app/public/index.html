@@ -222,6 +222,9 @@
         <a href="#discord-relations" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Discord</a>
         <a href="#data-flow" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📊 Flow</a>
         <a href="#piwigo" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📸 Piwigo</a>
+        <a href="#system-health" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">💻 Health</a>
+        <a href="#cost-tracker" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">💰 Costs</a>
+        <a href="#agent-status" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">🤖 Agents</a>
         <a href="#diagnostics" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Diag</a>
         <a href="#model-switcher" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">⚙️ Models</a>
         <a href="#scheduler" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📅 Schedule</a>
@@ -866,6 +869,122 @@
         <div>Rsync: <span id="piwigo-rsync-status" style="color:#86efac">Running smoothly</span></div>
         <div>Last update: <span id="piwigo-last-update" style="color:#6ea8fe">Just now</span></div>
         <div>Monitor: <span id="piwigo-monitor-status" style="color:#86efac">Tracking progress</span></div>
+      </div>
+    </div>
+
+    <!-- System Health Dashboard -->
+    <div class="card" style="margin-top:4px;" id="system-health">
+      <h3>💻 System Health</h3>
+      
+      <!-- Mac Mini -->
+      <div style="margin-bottom:6px">
+        <div style="font-size:10px;font-weight:600;color:#d9e3ff;margin-bottom:3px">🍎 Mac Mini (Host)</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:3px">
+          <div style="background:#0e1630;padding:4px;border-radius:4px;border:1px solid #2a3a67">
+            <div style="font-size:7px;color:#9fb0d6">CPU</div>
+            <div style="font-size:11px;font-weight:700;color:#6ea8fe" id="health-mac-cpu">--</div>
+          </div>
+          <div style="background:#0e1630;padding:4px;border-radius:4px;border:1px solid #2a3a67">
+            <div style="font-size:7px;color:#9fb0d6">Memory</div>
+            <div style="font-size:11px;font-weight:700;color:#22c55e" id="health-mac-mem">--</div>
+          </div>
+          <div style="background:#0e1630;padding:4px;border-radius:4px;border:1px solid #2a3a67">
+            <div style="font-size:7px;color:#9fb0d6">Disk</div>
+            <div style="font-size:11px;font-weight:700;color:#fde68a" id="health-mac-disk">--</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;font-size:7px">
+          <div style="width:100%;height:4px;background:#0e1630;border-radius:2px;overflow:hidden;border:1px solid #2a3a67"><div id="health-mac-cpu-bar" style="height:100%;background:#6ea8fe;width:35%"></div></div>
+          <div style="width:100%;height:4px;background:#0e1630;border-radius:2px;overflow:hidden;border:1px solid #2a3a67"><div id="health-mac-mem-bar" style="height:100%;background:#22c55e;width:48%"></div></div>
+          <div style="width:100%;height:4px;background:#0e1630;border-radius:2px;overflow:hidden;border:1px solid #2a3a67"><div id="health-mac-disk-bar" style="height:100%;background:#fde68a;width:62%"></div></div>
+        </div>
+      </div>
+      
+      <!-- Hetzner VPS -->
+      <div>
+        <div style="font-size:10px;font-weight:600;color:#d9e3ff;margin-bottom:3px">🔴 Hetzner VPS (5.161.111.192)</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:3px">
+          <div style="background:#0e1630;padding:4px;border-radius:4px;border:1px solid #2a3a67">
+            <div style="font-size:7px;color:#9fb0d6">CPU</div>
+            <div style="font-size:11px;font-weight:700;color:#6ea8fe" id="health-vps-cpu">--</div>
+          </div>
+          <div style="background:#0e1630;padding:4px;border-radius:4px;border:1px solid #2a3a67">
+            <div style="font-size:7px;color:#9fb0d6">Memory</div>
+            <div style="font-size:11px;font-weight:700;color:#22c55e" id="health-vps-mem">--</div>
+          </div>
+          <div style="background:#0e1630;padding:4px;border-radius:4px;border:1px solid #2a3a67">
+            <div style="font-size:7px;color:#9fb0d6">Disk</div>
+            <div style="font-size:11px;font-weight:700;color:#fde68a" id="health-vps-disk">--</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;font-size:7px">
+          <div style="width:100%;height:4px;background:#0e1630;border-radius:2px;overflow:hidden;border:1px solid #2a3a67"><div id="health-vps-cpu-bar" style="height:100%;background:#6ea8fe;width:28%"></div></div>
+          <div style="width:100%;height:4px;background:#0e1630;border-radius:2px;overflow:hidden;border:1px solid #2a3a67"><div id="health-vps-mem-bar" style="height:100%;background:#22c55e;width:41%"></div></div>
+          <div style="width:100%;height:4px;background:#0e1630;border-radius:2px;overflow:hidden;border:1px solid #2a3a67"><div id="health-vps-disk-bar" style="height:100%;background:#fde68a;width:35%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cost Tracker Dashboard -->
+    <div class="card" style="margin-top:4px;" id="cost-tracker">
+      <h3>💰 Cost Tracker</h3>
+      
+      <!-- Daily/Monthly Totals -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:6px">
+        <div style="background:#0f1833;padding:6px;border-radius:6px;border:1px solid #375086">
+          <div style="font-size:8px;color:#9fb0d6;margin-bottom:2px;font-weight:600">TODAY</div>
+          <div style="font-size:14px;font-weight:700;color:#6ea8fe" id="cost-daily">$0.32</div>
+          <div style="font-size:7px;color:#9fb0d6">of $5.00 cap</div>
+        </div>
+        <div style="background:#0f1833;padding:6px;border-radius:6px;border:1px solid #375086">
+          <div style="font-size:8px;color:#9fb0d6;margin-bottom:2px;font-weight:600">THIS MONTH</div>
+          <div style="font-size:14px;font-weight:700;color:#f59e0b" id="cost-monthly">$18.47</div>
+          <div style="font-size:7px;color:#9fb0d6">of $100.00 cap</div>
+        </div>
+      </div>
+      
+      <!-- Model Breakdown -->
+      <div style="background:#0e1630;padding:4px;border-radius:4px;border:1px solid #2a3a67;font-size:8px;color:#9fb0d6;line-height:1.6;margin-bottom:4px">
+        <div style="font-weight:600;margin-bottom:2px;color:#d9e3ff">Models</div>
+        <div>Claude: <span id="cost-claude" style="color:#6ea8fe">$8.23</span></div>
+        <div>Gemini: <span id="cost-gemini" style="color:#4285F4">$5.12</span></div>
+        <div>GPT: <span id="cost-gpt" style="color:#a855f7">$4.31</span></div>
+        <div>Local: <span id="cost-local" style="color:#10b981">$0.81</span></div>
+      </div>
+      
+      <!-- Top Tasks by Cost -->
+      <div style="background:#0e1630;padding:4px;border-radius:4px;border:1px solid #2a3a67;font-size:8px;color:#9fb0d6;line-height:1.6">
+        <div style="font-weight:600;margin-bottom:2px;color:#d9e3ff">Tasks</div>
+        <div>Rentals Daily: <span id="cost-rentals" style="color:#22c55e">$3.21</span></div>
+        <div>Stock Scout: <span id="cost-scout" style="color:#f59e0b">$7.84</span></div>
+        <div>HA Checks: <span id="cost-ha" style="color:#3b82f6">$2.15</span></div>
+        <div>Other: <span id="cost-other" style="color:#9fb0d6">$5.27</span></div>
+      </div>
+    </div>
+
+    <!-- Agent Status Board -->
+    <div class="card" style="margin-top:4px;" id="agent-status">
+      <h3>🤖 Agent Status</h3>
+      
+      <!-- Summary Stats -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:6px">
+        <div style="background:#0e1630;padding:4px;border-radius:4px;text-align:center;border:1px solid #2a3a67">
+          <div style="font-size:12px;font-weight:700;color:#22c55e" id="agents-running">5</div>
+          <div style="font-size:7px;color:#9fb0d6">Running</div>
+        </div>
+        <div style="background:#0e1630;padding:4px;border-radius:4px;text-align:center;border:1px solid #2a3a67">
+          <div style="font-size:12px;font-weight:700;color:#6ea8fe" id="agents-idle">8</div>
+          <div style="font-size:7px;color:#9fb0d6">Idle</div>
+        </div>
+        <div style="background:#0e1630;padding:4px;border-radius:4px;text-align:center;border:1px solid #2a3a67">
+          <div style="font-size:12px;font-weight:700;color:#fecaca" id="agents-error">2</div>
+          <div style="font-size:7px;color:#9fb0d6">Errors</div>
+        </div>
+      </div>
+      
+      <!-- Agent List -->
+      <div id="agents-list" style="display:grid;gap:3px;font-size:8px">
+        <!-- Agents injected by JS -->
       </div>
     </div>
 
@@ -1879,6 +1998,15 @@ async function refreshAll(){
   
   // Update Piwigo Monitor
   piwigMonitor.render();
+  
+  // Update System Health
+  systemHealth.render();
+  
+  // Update Cost Tracker
+  costTracker.render();
+  
+  // Update Agent Status
+  agentStatus.render();
 
   const recentErrs = (e.stdout || '').trim();
   const degradedOn = !!o.fallbackLikely || /FailoverError|API rate limit reached/i.test(recentErrs);
@@ -2775,7 +2903,147 @@ function testAllToasts() {
   setTimeout(() => toast.info('ℹ️ Info', 'System status normal'), 1200);
 }
 
-// PIWIGO UPLOAD MONITOR SYSTEM
+// SYSTEM HEALTH MONITOR
+const systemHealth = {
+  mac: { cpu: 35, mem: 48, disk: 62 },
+  vps: { cpu: 28, mem: 41, disk: 35 },
+  
+  getHealthColor(percent) {
+    if (percent < 50) return '#22c55e';
+    if (percent < 75) return '#f59e0b';
+    return '#ef4444';
+  },
+  
+  render() {
+    // Mac Mini
+    const macCpuEl = document.getElementById('health-mac-cpu');
+    if (macCpuEl) { macCpuEl.textContent = `${this.mac.cpu}%`; macCpuEl.style.color = this.getHealthColor(this.mac.cpu); }
+    const macMemEl = document.getElementById('health-mac-mem');
+    if (macMemEl) { macMemEl.textContent = `${this.mac.mem}%`; macMemEl.style.color = this.getHealthColor(this.mac.mem); }
+    const macDiskEl = document.getElementById('health-mac-disk');
+    if (macDiskEl) { macDiskEl.textContent = `${this.mac.disk}%`; macDiskEl.style.color = this.getHealthColor(this.mac.disk); }
+    
+    const cpuBar = document.getElementById('health-mac-cpu-bar');
+    if (cpuBar) cpuBar.style.width = `${this.mac.cpu}%`;
+    const memBar = document.getElementById('health-mac-mem-bar');
+    if (memBar) memBar.style.width = `${this.mac.mem}%`;
+    const diskBar = document.getElementById('health-mac-disk-bar');
+    if (diskBar) diskBar.style.width = `${this.mac.disk}%`;
+    
+    // VPS
+    const vpsCpuEl = document.getElementById('health-vps-cpu');
+    if (vpsCpuEl) { vpsCpuEl.textContent = `${this.vps.cpu}%`; vpsCpuEl.style.color = this.getHealthColor(this.vps.cpu); }
+    const vpsMemEl = document.getElementById('health-vps-mem');
+    if (vpsMemEl) { vpsMemEl.textContent = `${this.vps.mem}%`; vpsMemEl.style.color = this.getHealthColor(this.vps.mem); }
+    const vpsDiskEl = document.getElementById('health-vps-disk');
+    if (vpsDiskEl) { vpsDiskEl.textContent = `${this.vps.disk}%`; vpsDiskEl.style.color = this.getHealthColor(this.vps.disk); }
+    
+    const vpsCpuBar = document.getElementById('health-vps-cpu-bar');
+    if (vpsCpuBar) vpsCpuBar.style.width = `${this.vps.cpu}%`;
+    const vpsMemBar = document.getElementById('health-vps-mem-bar');
+    if (vpsMemBar) vpsMemBar.style.width = `${this.vps.mem}%`;
+    const vpsDiskBar = document.getElementById('health-vps-disk-bar');
+    if (vpsDiskBar) vpsDiskBar.style.width = `${this.vps.disk}%`;
+  }
+};
+
+// COST TRACKER
+const costTracker = {
+  daily: 0.32,
+  monthly: 18.47,
+  models: { claude: 8.23, gemini: 5.12, gpt: 4.31, local: 0.81 },
+  tasks: { rentals: 3.21, scout: 7.84, ha: 2.15, other: 5.27 },
+  
+  render() {
+    const dailyEl = document.getElementById('cost-daily');
+    if (dailyEl) dailyEl.textContent = `$${this.daily.toFixed(2)}`;
+    
+    const monthlyEl = document.getElementById('cost-monthly');
+    if (monthlyEl) monthlyEl.textContent = `$${this.monthly.toFixed(2)}`;
+    
+    // Models
+    const claudeEl = document.getElementById('cost-claude');
+    if (claudeEl) claudeEl.textContent = `$${this.models.claude.toFixed(2)}`;
+    const geminiEl = document.getElementById('cost-gemini');
+    if (geminiEl) geminiEl.textContent = `$${this.models.gemini.toFixed(2)}`;
+    const gptEl = document.getElementById('cost-gpt');
+    if (gptEl) gptEl.textContent = `$${this.models.gpt.toFixed(2)}`;
+    const localEl = document.getElementById('cost-local');
+    if (localEl) localEl.textContent = `$${this.models.local.toFixed(2)}`;
+    
+    // Tasks
+    const rentalsEl = document.getElementById('cost-rentals');
+    if (rentalsEl) rentalsEl.textContent = `$${this.tasks.rentals.toFixed(2)}`;
+    const scoutEl = document.getElementById('cost-scout');
+    if (scoutEl) scoutEl.textContent = `$${this.tasks.scout.toFixed(2)}`;
+    const haEl = document.getElementById('cost-ha');
+    if (haEl) haEl.textContent = `$${this.tasks.ha.toFixed(2)}`;
+    const otherEl = document.getElementById('cost-other');
+    if (otherEl) otherEl.textContent = `$${this.tasks.other.toFixed(2)}`;
+  }
+};
+
+// AGENT STATUS BOARD
+const agentStatus = {
+  agents: [
+    { name: 'discord-main', status: 'running', lastRun: '2m ago', model: 'Claude' },
+    { name: 'rentals-daily', status: 'idle', lastRun: '1h ago', model: 'Haiku' },
+    { name: 'stock-scout', status: 'running', lastRun: 'now', model: 'Claude' },
+    { name: 'hvac-check', status: 'idle', lastRun: '3h ago', model: 'Gemini' },
+    { name: 'ha-newark', status: 'running', lastRun: '5m ago', model: 'Haiku' },
+    { name: 'codex-main', status: 'idle', lastRun: '30m ago', model: 'GPT' },
+    { name: 'monitor-discord', status: 'error', lastRun: '15m ago', model: 'Claude' },
+    { name: 'scheduler', status: 'idle', lastRun: '10m ago', model: 'Local' },
+    { name: 'piwigo-sync', status: 'running', lastRun: 'now', model: 'None' },
+    { name: 'analytics', status: 'idle', lastRun: '2h ago', model: 'Haiku' },
+    { name: 'webhook-listener', status: 'running', lastRun: '1m ago', model: 'None' },
+    { name: 'backup-job', status: 'error', lastRun: '4h ago', model: 'None' },
+    { name: 'gateway', status: 'idle', lastRun: 'always', model: 'None' },
+    { name: 'cache', status: 'idle', lastRun: 'always', model: 'None' },
+    { name: 'logger', status: 'idle', lastRun: 'always', model: 'None' }
+  ],
+  
+  getStatusColor(status) {
+    if (status === 'running') return '#22c55e';
+    if (status === 'idle') return '#6ea8fe';
+    return '#fecaca';
+  },
+  
+  getStatusIcon(status) {
+    if (status === 'running') return '▶';
+    if (status === 'idle') return '⏸';
+    return '✕';
+  },
+  
+  render() {
+    const counts = { running: 0, idle: 0, error: 0 };
+    this.agents.forEach(a => {
+      if (a.status === 'running') counts.running++;
+      else if (a.status === 'idle') counts.idle++;
+      else counts.error++;
+    });
+    
+    const runningEl = document.getElementById('agents-running');
+    if (runningEl) runningEl.textContent = counts.running;
+    const idleEl = document.getElementById('agents-idle');
+    if (idleEl) idleEl.textContent = counts.idle;
+    const errorEl = document.getElementById('agents-error');
+    if (errorEl) errorEl.textContent = counts.error;
+    
+    const listEl = document.getElementById('agents-list');
+    if (listEl) {
+      listEl.innerHTML = this.agents.map(a => `
+        <div style="background:#0e1630;padding:3px;border-radius:3px;border-left:2px solid ${this.getStatusColor(a.status)}">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="color:#d9e3ff;font-weight:600">${this.getStatusIcon(a.status)} ${a.name}</span>
+            <span style="color:${this.getStatusColor(a.status)};font-size:7px">${a.status.toUpperCase()}</span>
+          </div>
+          <div style="color:#9fb0d6;font-size:7px">Last: ${a.lastRun} | Model: ${a.model}</div>
+        </div>
+      `).join('');
+    }
+  }
+};
 const piwigMonitor = {
   data: {
     sizeTransferred: 2.7,
@@ -3310,6 +3578,9 @@ const commandPalette = {
       { id: 'goto-discord', title: 'Go to Discord Relations', desc: 'Discord bindings and flow', icon: '💬', group: 'Navigation', action: () => switchTab('discord-relations') },
       { id: 'goto-flow', title: 'Go to Data Flow Graph', desc: 'Real-time OpenClaw data flow', icon: '📊', group: 'Navigation', action: () => switchTab('data-flow') },
       { id: 'goto-piwigo', title: 'Go to Piwigo Upload', desc: 'Photo gallery transfer monitor', icon: '📸', group: 'Navigation', action: () => switchTab('piwigo') },
+      { id: 'goto-health', title: 'Go to System Health', desc: 'CPU/Memory/Disk for Mac & VPS', icon: '💻', group: 'Navigation', action: () => switchTab('system-health') },
+      { id: 'goto-costs', title: 'Go to Cost Tracker', desc: 'Daily/monthly spending by model', icon: '💰', group: 'Navigation', action: () => switchTab('cost-tracker') },
+      { id: 'goto-agents', title: 'Go to Agent Status', desc: 'Running, idle, and error agents', icon: '🤖', group: 'Navigation', action: () => switchTab('agent-status') },
       { id: 'goto-models', title: 'Go to Model Switcher', desc: 'Change AI models and fallbacks', icon: '⚙️', group: 'Navigation', action: () => switchTab('model-switcher') },
       { id: 'goto-scheduler', title: 'Go to Scheduler', desc: 'Scheduled tasks and cron jobs', icon: '📅', group: 'Navigation', action: () => switchTab('scheduler') },
       { id: 'goto-analytics', title: 'Go to Analytics', desc: 'Charts, costs, and metrics', icon: '📊', group: 'Navigation', action: () => switchTab('analytics') },
