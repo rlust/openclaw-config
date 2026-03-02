@@ -3670,15 +3670,37 @@ function switchTab(tabId) {
   try {
     console.log('switchTab called:', tabId);
     
-    // Hide ALL tabs completely - COMPLETE LIST including legacy tabs
-    const allTabs = [
-      'overview', 'run-controls', 'tasks', 'hvac-control', 'discord-relations', 
+    // Tab to element mapping - which elements belong to which tab
+    const tabMappings = {
+      'overview': ['overview', 'secondary-overview', 'run-controls'], // Also show run controls in overview view
+      'run-controls': ['run-controls'],
+      'tasks': ['tasks'],
+      'hvac-control': ['hvac-control'],
+      'discord-relations': ['discord-relations'],
+      'data-flow': ['data-flow'],
+      'piwigo': ['piwigo'],
+      'system-health': ['system-health'],
+      'cost-tracker': ['cost-tracker'],
+      'agent-status': ['agent-status'],
+      'model-switcher': ['model-switcher'],
+      'scheduler': ['scheduler'],
+      'analytics': ['analytics'],
+      'diagnostics': ['diagnostics'],
+      'digest': ['digest'],
+      'workflows': ['workflows'],
+      'thresholds': ['thresholds'],
+      'discord-integration': ['discord-integration']
+    };
+    
+    // Hide ALL elements (both ID-based and .card divs)
+    const allTabIds = [
+      'overview', 'secondary-overview', 'run-controls', 'tasks', 'hvac-control', 'discord-relations',
       'data-flow', 'piwigo', 'system-health', 'cost-tracker', 'agent-status',
       'model-switcher', 'scheduler', 'analytics', 'diagnostics', 'digest',
       'workflows', 'thresholds', 'discord-integration'
     ];
     
-    allTabs.forEach(id => {
+    allTabIds.forEach(id => {
       const el = document.getElementById(id);
       if (el) {
         el.style.display = 'none';
@@ -3686,14 +3708,32 @@ function switchTab(tabId) {
       }
     });
     
-    // Show only selected tab
-    const selectedTab = document.getElementById(tabId);
-    if (selectedTab) {
-      selectedTab.style.display = 'block';
-      selectedTab.style.visibility = 'visible';
-      console.log('Tab shown:', tabId);
-    } else {
-      console.warn('Tab element not found:', tabId);
+    // Also hide ALL .card divs that aren't smart-widgets
+    document.querySelectorAll('.card:not(.smart-card)').forEach(card => {
+      card.style.display = 'none';
+    });
+    
+    // Hide smart grid and widgets if not overview
+    if (tabId !== 'overview') {
+      const smartGrid = document.querySelector('.smart-grid');
+      if (smartGrid) smartGrid.style.display = 'none';
+    }
+    
+    // Show only elements for the selected tab
+    const elementsToShow = tabMappings[tabId] || [];
+    elementsToShow.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.display = 'block';
+        el.style.visibility = 'visible';
+        console.log('Showing element:', id);
+      }
+    });
+    
+    // Special case: show .smart-grid and widgets for overview
+    if (tabId === 'overview') {
+      const smartGrid = document.querySelector('.smart-grid');
+      if (smartGrid) smartGrid.style.display = 'grid';
     }
     
     // Update nav buttons
@@ -3705,6 +3745,7 @@ function switchTab(tabId) {
     });
     
     location.hash = tabId;
+    console.log('Tab switch complete:', tabId);
     
     // Safe toast call
     if (typeof toast !== 'undefined' && toast.success) {
