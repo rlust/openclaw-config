@@ -218,20 +218,20 @@
     <aside class="sidebar">
       <div class="brand" style="font-size:12px;font-weight:700;margin-bottom:12px;padding:4px">MC</div>
       <nav class="snav" style="display:flex;flex-direction:column;gap:4px">
-        <a href="#overview" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Overview</a>
-        <a href="#run-controls" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Run</a>
-        <a href="#tasks" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Tasks</a>
-        <a href="#hvac-control" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">🌡️ HVAC</a>
-        <a href="#discord-relations" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Discord</a>
-        <a href="#data-flow" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📊 Flow</a>
-        <a href="#piwigo" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📸 Piwigo</a>
-        <a href="#system-health" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">💻 Health</a>
-        <a href="#cost-tracker" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">💰 Costs</a>
-        <a href="#agent-status" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">🤖 Agents</a>
-        <a href="#diagnostics" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Diag</a>
-        <a href="#model-switcher" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">⚙️ Models</a>
-        <a href="#scheduler" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📅 Schedule</a>
-        <a href="#analytics" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📊 Analytics</a>
+        <a href="#overview" onclick="switchTab('overview');return false" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Overview</a>
+        <a href="#run-controls" onclick="switchTab('run-controls');return false" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Run</a>
+        <a href="#tasks" onclick="switchTab('tasks');return false" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Tasks</a>
+        <a href="#hvac-control" onclick="switchTab('hvac-control');return false" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">🌡️ HVAC</a>
+        <a href="#discord-relations" onclick="switchTab('discord-relations');return false" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Discord</a>
+        <a href="#data-flow" onclick="switchTab('data-flow');return false" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📊 Flow</a>
+        <a href="#piwigo" onclick="switchTab('piwigo');return false" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📸 Piwigo</a>
+        <a href="#system-health" onclick="switchTab('system-health');return false" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">💻 Health</a>
+        <a href="#cost-tracker" onclick="switchTab('cost-tracker');return false" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">💰 Costs</a>
+        <a href="#agent-status" onclick="switchTab('agent-status');return false" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">🤖 Agents</a>
+        <a href="#diagnostics" onclick="switchTab('diagnostics');return false" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">Diag</a>
+        <a href="#model-switcher" onclick="switchTab('model-switcher');return false" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">⚙️ Models</a>
+        <a href="#scheduler" onclick="switchTab('scheduler');return false" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📅 Schedule</a>
+        <a href="#analytics" onclick="switchTab('analytics');return false" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📊 Analytics</a>
         <a href="#" onclick="testAllToasts();return false;" style="display:block;padding:8px;background:#1d3d20;color:#86efac;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #22c55e;cursor:pointer;margin-top:12px">🔔 Test Toasts</a>
       </nav>
     </aside>
@@ -258,7 +258,7 @@
       #overview { display: none; padding: 12px; }
     </style>
 
-    <div class="grid" id="overview" style="display:none;padding:12px;max-width:100%">
+    <div class="grid" id="overview" style="padding:12px;max-width:100%">
       <div class="card"><div class="kpi">Gateway Uptime</div><strong id="k_gateway" class="good">--</strong></div>
       <div class="card"><div class="kpi">Success Rate</div><strong id="k_success_rate" class="good">--</strong></div>
       <div class="card"><div class="kpi">Active Runs</div><strong id="k_active_runs">0</strong></div>
