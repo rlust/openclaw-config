@@ -1904,19 +1904,18 @@ async function refreshAll(){
     k_success_rate.innerHTML = `<span class="${op.successRate >= 95 ? 'good' : op.successRate >= 80 ? 'warn' : 'bad'}">${op.successRate || 0}%</span>`;
     k_active_runs.textContent = op.totalRuns || 0;
     
-    // Cost display
-    const cost = metrics.costs || {};
-    costTotal.textContent = `$${(cost.totalEstimated || 0).toFixed(4)}`;
-    costAvg.textContent = `$${(cost.avgPerRun || 0).toFixed(4)}`;
+    // Cost display (old dashboard - elements removed, use costTracker instead)
+    // const cost = metrics.costs || {};
+    // if (document.getElementById('costTotal')) costTotal.textContent = `$${(cost.totalEstimated || 0).toFixed(4)}`;
+    // if (document.getElementById('costAvg')) costAvg.textContent = `$${(cost.avgPerRun || 0).toFixed(4)}`;
+    // const modelCounts = metrics.models || {};
+    // const topModel = Object.entries(modelCounts).sort((a,b) => b[1] - a[1])[0];
+    // if (document.getElementById('costModel')) costModel.textContent = topModel ? topModel[0].split('/').pop() : '--';
     
-    const modelCounts = metrics.models || {};
-    const topModel = Object.entries(modelCounts).sort((a,b) => b[1] - a[1])[0];
-    costModel.textContent = topModel ? topModel[0].split('/').pop() : '--';
-    
-    // Budget alert (assuming $5 daily cap)
-    const dailyCap = 5;
-    const budgetStatus = cost.totalEstimated > dailyCap * 0.75 ? 'warn' : cost.totalEstimated > dailyCap ? 'bad' : 'good';
-    costBudget.innerHTML = `<span class="${budgetStatus}">${cost.totalEstimated > dailyCap ? '⚠️ Over' : '✓ On Track'}</span>`;
+    // Budget alert (old dashboard - use costTracker instead)
+    // const dailyCap = 5;
+    // const budgetStatus = cost.totalEstimated > dailyCap * 0.75 ? 'warn' : cost.totalEstimated > dailyCap ? 'bad' : 'good';
+    // if (document.getElementById('costBudget')) costBudget.innerHTML = `<span class="${budgetStatus}">${cost.totalEstimated > dailyCap ? '⚠️ Over' : '✓ On Track'}</span>`;
     
     // Cost by model breakdown
     const costByModel = cost.byModel || {};
