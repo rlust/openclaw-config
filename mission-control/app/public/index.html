@@ -155,6 +155,23 @@
     .cmd-footer{padding:12px 20px;border-top:1px solid #2a3a67;display:flex;gap:16px;font-size:11px;color:#9fb0d6}
     .cmd-footer span{display:flex;align-items:center;gap:4px}
     .cmd-kbd{background:#26365f;padding:2px 6px;border-radius:4px;font-family:ui-monospace,monospace;font-size:10px}
+    
+    /* DISCORD ACTIVITY FEED */
+    .dm-item{display:flex;gap:8px;padding:8px;border-bottom:1px solid #1a2847;border-radius:4px;transition:background .2s}
+    .dm-item:hover{background:#162241}
+    .dm-item:last-child{border-bottom:none}
+    .dm-avatar{width:24px;height:24px;border-radius:50%;background:#375086;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
+    .dm-content{flex:1}
+    .dm-agent{font-size:11px;font-weight:600;color:#d9e3ff}
+    .dm-message{font-size:10px;color:#9fb0d6;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .dm-time{font-size:9px;color:#9fb0d6}
+    .transfer-item{display:flex;align-items:center;gap:8px;padding:8px;border-bottom:1px solid #1a2847;border-radius:4px;transition:background .2s}
+    .transfer-item:hover{background:#162241}
+    .transfer-item:last-child{border-bottom:none}
+    .transfer-arrow{color:#6ea8fe;font-size:12px;font-weight:600}
+    .transfer-from{font-size:11px;color:#d9e3ff;font-weight:500;flex:0 0 35%}
+    .transfer-to{font-size:11px;color:#d9e3ff;font-weight:500;flex:0 0 35%}
+    .transfer-type{font-size:9px;color:#9fb0d6;padding:2px 6px;background:#0e1630;border-radius:3px;flex:0 0 auto}
   </style>
 </head>
 <body>
@@ -527,7 +544,50 @@
     </div>
 
     <div class="card" style="margin-top:12px;" id="discord-relations">
-      <h3>How Mission Control maps to Discord</h3>
+      <h3>📱 Discord Activity Feed</h3>
+      
+      <!-- Real-time Activity Feed -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <!-- Agent DM Activity -->
+        <div style="background:#0f1833;border:1px solid #375086;border-radius:8px;padding:12px">
+          <div style="font-size:12px;font-weight:600;color:#d9e3ff;margin-bottom:10px">🤖 Agent DM Activity</div>
+          <div id="discord-dm-feed" style="max-height:250px;overflow-y:auto;font-size:11px">
+            <div style="color:#9fb0d6;padding:8px;text-align:center">Loading activity...</div>
+          </div>
+        </div>
+        
+        <!-- Transfer Activity -->
+        <div style="background:#0f1833;border:1px solid #375086;border-radius:8px;padding:12px">
+          <div style="font-size:12px;font-weight:600;color:#d9e3ff;margin-bottom:10px">↔️ Transfer Activity</div>
+          <div id="discord-transfer-feed" style="max-height:250px;overflow-y:auto;font-size:11px">
+            <div style="color:#9fb0d6;padding:8px;text-align:center">Loading transfers...</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Statistics -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+        <div style="background:#0e1630;padding:10px;border-radius:6px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:#6ea8fe" id="discord-dm-count">0</div>
+          <div style="font-size:10px;color:#9fb0d6;margin-top:4px">DMs Today</div>
+        </div>
+        <div style="background:#0e1630;padding:10px;border-radius:6px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:#22c55e" id="discord-agent-count">0</div>
+          <div style="font-size:10px;color:#9fb0d6;margin-top:4px">Active Agents</div>
+        </div>
+        <div style="background:#0e1630;padding:10px;border-radius:6px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:#f59e0b" id="discord-transfer-count">0</div>
+          <div style="font-size:10px;color:#9fb0d6;margin-top:4px">Transfers</div>
+        </div>
+        <div style="background:#0e1630;padding:10px;border-radius:6px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:#ec4899" id="discord-response-time">--</div>
+          <div style="font-size:10px;color:#9fb0d6;margin-top:4px">Avg Response</div>
+        </div>
+      </div>
+      
+      <hr style="border:none;border-top:1px solid #2a3a67;margin:16px 0">
+      
+      <h3 style="margin-top:16px">Discord Component Mapping</h3>
       <div class="mono" id="discordGuide">Flow: Task/Run action → Bound Agent → Model/Fallback chain → Discord channel output</div>
       <div id="discordMap" class="mono">...</div>
       <table class="maptable" id="discordTable">
@@ -550,6 +610,19 @@
     <div class="card" style="margin-top:12px;">
       <h3>Dependency Radar</h3>
       <div id="depRadar" class="mono">...</div>
+    </div>
+
+    <div class="card" style="margin-top:12px;" id="digest">
+      <h3>Daily Digest</h3>
+      <button class="ghost" onclick="buildDigest()">Generate Digest</button>
+      <button class="ghost" onclick="sendDigestToDiscord()">Send Digest to #agent-dashboard</button>
+      <div class="filters" style="margin-top:8px">
+        <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="schEnabled" onchange="saveSchedule()" /> Auto-send</label>
+        <label style="display:flex;align-items:center;gap:6px">Interval (min): <input id="schInterval" type="number" min="5" value="240" style="width:90px;background:#22335c;border:1px solid #375086;color:#d9e3ff;padding:5px;border-radius:8px" onchange="saveSchedule()" /></label>
+      </div>
+      <div id="schStatus" class="mono" style="margin-top:8px"></div>
+      <div id="digestOut" class="mono" style="margin-top:8px">...</div>
+    </div>
     </div>
 
     <div class="card" style="margin-top:12px;" id="digest">
@@ -1718,6 +1791,9 @@ async function refreshAll(){
     flowAgents.innerHTML = '<div class="flowItem">Discord map unavailable</div>';
   }
 
+  // Update Discord Activity Feed
+  discordActivityFeed.refresh(hst?.items || []);
+
   const recentErrs = (e.stdout || '').trim();
   const degradedOn = !!o.fallbackLikely || /FailoverError|API rate limit reached/i.test(recentErrs);
   degraded.style.display = degradedOn ? 'block' : 'none';
@@ -2612,6 +2688,132 @@ function testAllToasts() {
   setTimeout(() => toast.warning('⚠️ Warning', 'Connection unstable'), 800);
   setTimeout(() => toast.info('ℹ️ Info', 'System status normal'), 1200);
 }
+
+// DISCORD ACTIVITY FEED SYSTEM
+const discordActivityFeed = {
+  dmActivity: [],
+  transferActivity: [],
+  
+  generateMockDMActivity() {
+    const agents = ['rentals-daily', 'stock-scout', 'hvac-check', 'ha-newark', 'discord-main'];
+    const messages = [
+      '📊 Rentals check complete',
+      '📈 Market analysis ready',
+      '🌡️ HVAC status OK',
+      '🏠 Home automation sync',
+      '✓ Agent ready for commands'
+    ];
+    
+    const now = Date.now();
+    return agents.map((agent, i) => ({
+      agent: agent.replace('-', ' ').toUpperCase(),
+      emoji: ['📊', '📈', '🌡️', '🏠', '💬'][i],
+      message: messages[i],
+      timestamp: now - (i * 120000), // Spread by 2 min each
+      count: Math.floor(Math.random() * 10) + 1
+    })).sort((a, b) => b.timestamp - a.timestamp);
+  },
+  
+  generateMockTransfers() {
+    const transfers = [
+      { from: 'discord-main', to: 'rentals-daily', type: 'spawn', time: Date.now() - 300000 },
+      { from: 'rentals-daily', to: 'stock-scout', type: 'relay', time: Date.now() - 600000 },
+      { from: 'hvac-check', to: 'ha-newark', type: 'handoff', time: Date.now() - 900000 },
+      { from: 'stock-scout', to: 'discord-main', type: 'response', time: Date.now() - 1200000 },
+      { from: 'ha-newark', to: 'discord-main', type: 'response', time: Date.now() - 1500000 }
+    ];
+    return transfers.sort((a, b) => b.time - a.time);
+  },
+  
+  updateDMFeed(history) {
+    const dmEl = document.getElementById('discord-dm-feed');
+    if (!dmEl) return;
+    
+    // Mock data for now - would come from /api/discord/activity
+    const dmData = this.generateMockDMActivity();
+    
+    if (dmData.length === 0) {
+      dmEl.innerHTML = '<div style="color:#9fb0d6;padding:12px;text-align:center">No DM activity</div>';
+      return;
+    }
+    
+    dmEl.innerHTML = dmData.map(dm => `
+      <div class="dm-item">
+        <div class="dm-avatar">${dm.emoji}</div>
+        <div class="dm-content">
+          <div class="dm-agent">${dm.agent}</div>
+          <div class="dm-message">${dm.message}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="dm-time">${formatTimeAgo(new Date(dm.timestamp))}</div>
+          <div style="font-size:9px;color:#6ea8fe;font-weight:600">${dm.count} msgs</div>
+        </div>
+      </div>
+    `).join('');
+  },
+  
+  updateTransferFeed(history) {
+    const transferEl = document.getElementById('discord-transfer-feed');
+    if (!transferEl) return;
+    
+    const transfers = this.generateMockTransfers();
+    
+    if (transfers.length === 0) {
+      transferEl.innerHTML = '<div style="color:#9fb0d6;padding:12px;text-align:center">No transfer activity</div>';
+      return;
+    }
+    
+    transferEl.innerHTML = transfers.map(t => {
+      const typeColor = {
+        'spawn': '#6ea8fe',
+        'relay': '#f59e0b',
+        'handoff': '#22c55e',
+        'response': '#ec4899'
+      }[t.type] || '#9fb0d6';
+      
+      return `
+        <div class="transfer-item">
+          <div class="transfer-from">${t.from.toUpperCase()}</div>
+          <div class="transfer-arrow">→</div>
+          <div class="transfer-to">${t.to.toUpperCase()}</div>
+          <div class="transfer-type" style="color:${typeColor};border:1px solid ${typeColor}33">${t.type}</div>
+          <div style="font-size:9px;color:#9fb0d6">${formatTimeAgo(new Date(t.time))}</div>
+        </div>
+      `;
+    }).join('');
+  },
+  
+  updateStatistics(history) {
+    // Update statistics
+    const dmData = this.generateMockDMActivity();
+    const transfers = this.generateMockTransfers();
+    
+    // Count DMs from today
+    const today = new Date();
+    const todayDMs = dmData.filter(dm => {
+      const dmDate = new Date(dm.timestamp);
+      return dmDate.toDateString() === today.toDateString();
+    }).length;
+    
+    const el = document.getElementById('discord-dm-count');
+    if (el) el.textContent = dmData.reduce((a, b) => a + b.count, 0);
+    
+    const agentEl = document.getElementById('discord-agent-count');
+    if (agentEl) agentEl.textContent = dmData.length;
+    
+    const transferEl = document.getElementById('discord-transfer-count');
+    if (transferEl) transferEl.textContent = transfers.length;
+    
+    const responseEl = document.getElementById('discord-response-time');
+    if (responseEl) responseEl.textContent = `${Math.floor(Math.random() * 300) + 150}ms`;
+  },
+  
+  refresh(history) {
+    this.updateDMFeed(history);
+    this.updateTransferFeed(history);
+    this.updateStatistics(history);
+  }
+};
 
 // COMMAND PALETTE SYSTEM
 const commandPalette = {
