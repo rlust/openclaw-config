@@ -3668,33 +3668,52 @@ function openCommandPalette() { commandPalette.open(); }
 function closeCommandPalette() { commandPalette.close(); }
 
 function switchTab(tabId) {
-  // Hide ALL tabs completely - COMPLETE LIST including legacy tabs
-  const allTabs = [
-    'overview', 'run-controls', 'tasks', 'hvac-control', 'discord-relations', 
-    'data-flow', 'piwigo', 'system-health', 'cost-tracker', 'agent-status',
-    'model-switcher', 'scheduler', 'analytics', 'diagnostics', 'digest',
-    'workflows', 'thresholds', 'discord-integration',  // OLD TABS - HIDE THESE
-    'run-controls'  // Double-check run tab
-  ];
-  
-  allTabs.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
-  });
-  
-  // Show only selected tab
-  const selectedTab = document.getElementById(tabId);
-  if (selectedTab) selectedTab.style.display = 'block';
-  
-  // Update nav buttons
-  document.querySelectorAll('.snav a').forEach(a => { 
-    const isActive = a.getAttribute('href') === `#${tabId}`;
-    a.style.background = isActive ? '#6ea8fe' : '#22335c'; 
-    a.style.color = isActive ? '#08122d' : '#d9e3ff'; 
-  });
-  
-  location.hash = tabId;
-  toast.success('Navigation', `Switched to ${tabId.replace(/-/g, ' ')}`);
+  try {
+    console.log('switchTab called:', tabId);
+    
+    // Hide ALL tabs completely - COMPLETE LIST including legacy tabs
+    const allTabs = [
+      'overview', 'run-controls', 'tasks', 'hvac-control', 'discord-relations', 
+      'data-flow', 'piwigo', 'system-health', 'cost-tracker', 'agent-status',
+      'model-switcher', 'scheduler', 'analytics', 'diagnostics', 'digest',
+      'workflows', 'thresholds', 'discord-integration'
+    ];
+    
+    allTabs.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.display = 'none';
+        el.style.visibility = 'hidden';
+      }
+    });
+    
+    // Show only selected tab
+    const selectedTab = document.getElementById(tabId);
+    if (selectedTab) {
+      selectedTab.style.display = 'block';
+      selectedTab.style.visibility = 'visible';
+      console.log('Tab shown:', tabId);
+    } else {
+      console.warn('Tab element not found:', tabId);
+    }
+    
+    // Update nav buttons
+    document.querySelectorAll('.snav a').forEach(a => { 
+      const isActive = a.getAttribute('href') === `#${tabId}`;
+      a.style.background = isActive ? '#6ea8fe' : '#22335c'; 
+      a.style.color = isActive ? '#08122d' : '#d9e3ff';
+      a.style.fontWeight = isActive ? '700' : '400';
+    });
+    
+    location.hash = tabId;
+    
+    // Safe toast call
+    if (typeof toast !== 'undefined' && toast.success) {
+      toast.success('Navigation', `Switched to ${tabId.replace(/-/g, ' ')}`);
+    }
+  } catch(e) {
+    console.error('switchTab error:', e);
+  }
 }
 
 function switchModel(modelId) {
