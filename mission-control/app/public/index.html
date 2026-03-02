@@ -3668,65 +3668,89 @@ function closeCommandPalette() { commandPalette.close(); }
 
 function switchTab(tabId) {
   try {
-    console.log('switchTab called:', tabId);
+    console.log('🎯 switchTab called:', tabId);
     
-    // Step 1: Hide ALL ID-based tab containers
-    const allTabIds = [
-      'overview', 'secondary-overview', 'run-controls', 'tasks', 'hvac-control', 'discord-relations',
+    // CRUCIAL: Tab content mapping
+    // Overview = KPIs + smart-grid + run-controls + kanban
+    // All others = just that single tab
+    const tabToShow = {
+      'overview': ['overview', 'secondary-overview', 'run-controls', 'kanban-workflows'],
+      'tasks': ['tasks'],
+      'piwigo': ['piwigo'],
+      'cost-tracker': ['cost-tracker'],
+      'agent-status': ['agent-status'],
+      'system-health': ['system-health'],
+      'hvac-control': ['hvac-control'],
+      'discord-relations': ['discord-relations'],
+      'data-flow': ['data-flow'],
+      'model-switcher': ['model-switcher'],
+      'scheduler': ['scheduler'],
+      'analytics': ['analytics'],
+      'diagnostics': ['diagnostics'],
+      'digest': ['digest'],
+      'workflows': ['workflows'],
+      'thresholds': ['thresholds'],
+      'discord-integration': ['discord-integration']
+    };
+    
+    // Step 1: HIDE EVERYTHING
+    const allPossibleIds = ['overview', 'secondary-overview', 'run-controls', 'tasks', 'hvac-control', 'discord-relations',
       'data-flow', 'piwigo', 'system-health', 'cost-tracker', 'agent-status',
       'model-switcher', 'scheduler', 'analytics', 'diagnostics', 'digest',
-      'workflows', 'thresholds', 'discord-integration'
-    ];
+      'workflows', 'thresholds', 'discord-integration', 'kanban-workflows'];
     
-    // Also hide KANBAN and any other orphaned cards
-    const orphanedIds = ['kanban-workflows'];
-    const allIdsToHide = allTabIds.concat(orphanedIds);
-    
-    allIdsToHide.forEach(id => {
+    allPossibleIds.forEach(id => {
       const el = document.getElementById(id);
       if (el) {
         el.style.display = 'none';
+        console.log(`  ✓ Hidden ${id}`);
       }
     });
     
-    // Step 2: Hide smart grid (special widget container)
+    // Also hide smart grid initially
     const smartGrid = document.querySelector('.smart-grid');
-    if (smartGrid) smartGrid.style.display = 'none';
-    
-    // Step 3: Show the selected tab
-    const selectedTab = document.getElementById(tabId);
-    if (selectedTab) {
-      selectedTab.style.display = 'block';
-      console.log('Showing tab:', tabId);
-    } else {
-      console.warn('Tab not found:', tabId);
+    if (smartGrid) {
+      smartGrid.style.display = 'none';
+      console.log('  ✓ Hidden smart-grid');
     }
     
-    // Step 4: Special handling for overview - show smart-grid and kanban
-    if (tabId === 'overview') {
-      if (smartGrid) smartGrid.style.display = 'grid';
-      const kanban = document.getElementById('kanban-workflows');
-      if (kanban) kanban.style.display = 'block';
-      console.log('Overview tab: showing smart-grid + kanban');
+    // Step 2: SHOW ONLY WHAT BELONGS TO THIS TAB
+    const toShow = tabToShow[tabId] || [];
+    console.log(`  Showing ${toShow.length} elements for ${tabId}:`, toShow);
+    
+    toShow.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.display = 'block';
+        console.log(`  ✓ Shown ${id}`);
+      }
+    });
+    
+    // Step 3: SPECIAL: Show smart-grid for overview
+    if (tabId === 'overview' && smartGrid) {
+      smartGrid.style.display = 'grid';
+      console.log('  ✓ Shown smart-grid (overview special)');
     }
     
-    // Step 5: Update nav buttons
+    // Step 4: Update nav button highlighting
     document.querySelectorAll('.snav a').forEach(a => { 
-      const isActive = a.getAttribute('href') === `#${tabId}`;
+      const href = a.getAttribute('href');
+      const isActive = href === `#${tabId}`;
       a.style.background = isActive ? '#6ea8fe' : '#22335c'; 
       a.style.color = isActive ? '#08122d' : '#d9e3ff';
       a.style.fontWeight = isActive ? '700' : '400';
     });
     
     location.hash = tabId;
-    console.log('Tab switch complete:', tabId);
+    console.log(`✅ Tab switch complete: ${tabId}\n`);
     
     // Safe toast call
     if (typeof toast !== 'undefined' && toast.success) {
       toast.success('Navigation', `Switched to ${tabId.replace(/-/g, ' ')}`);
     }
   } catch(e) {
-    console.error('switchTab error:', e);
+    console.error('❌ switchTab error:', e);
+    console.error(e.stack);
   }
 }
 
