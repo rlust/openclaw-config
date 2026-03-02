@@ -150,6 +150,7 @@
         <a href="#model-switcher" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">⚙️ Models</a>
         <a href="#scheduler" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📅 Schedule</a>
         <a href="#analytics" style="display:block;padding:8px;background:#22335c;color:#d9e3ff;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #375086;cursor:pointer">📊 Analytics</a>
+        <a href="#" onclick="testAllToasts();return false;" style="display:block;padding:8px;background:#1d3d20;color:#86efac;text-decoration:none;border-radius:6px;font-size:11px;text-align:center;border:1px solid #22c55e;cursor:pointer;margin-top:12px">🔔 Test Toasts</a>
       </nav>
     </aside>
     <main>
@@ -2269,6 +2270,21 @@ const toast = {
     return this.create({ type: 'info', title: title || 'Info', message: message || '', duration: duration || 4000 });
   }
 };
+
+// Auto-trigger test toast on page load (shows system is ready)
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    toast.success('🎉 Toast System Active', 'Click "🔔 Test Toasts" in sidebar!');
+  }, 800);
+});
+
+// Test all toast types
+function testAllToasts() {
+  toast.success('✓ Success', 'Task completed successfully!');
+  setTimeout(() => toast.error('✗ Error', 'Something went wrong!'), 400);
+  setTimeout(() => toast.warning('⚠️ Warning', 'Connection unstable'), 800);
+  setTimeout(() => toast.info('ℹ️ Info', 'System status normal'), 1200);
+}
 
 // keyboard shortcuts
 window.addEventListener('keydown', (e) => {
