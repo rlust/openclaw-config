@@ -1,4 +1,5 @@
 import http from 'http';
+import https from 'https';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -10,14 +11,77 @@ const __dirname = path.dirname(__filename);
 const PORT = 18888;
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
+// Load Home Assistant credentials
+const HA_CREDS = loadHACredentials();
+
+function loadHACredentials() {
+  try {
+    const credPath = path.join(process.env.HOME, '.openclaw/workspace/.credentials');
+    const content = fs.readFileSync(credPath, 'utf-8');
+    
+    const aspireMatch = content.match(/## Home Assistant \(Aspire RV\)([\s\S]*?)## /);
+    const newarkMatch = content.match(/## Home Assistant \(Newark Home\)([\s\S]*?)## /);
+    
+    const aspireUrl = aspireMatch?.[1].match(/URL: (.*)/)?.[1]?.trim();
+    const aspireToken = aspireMatch?.[1].match(/token: (.*)/)?.[1]?.trim();
+    const newarkUrl = newarkMatch?.[1].match(/URL: (.*)/)?.[1]?.trim();
+    const newarkToken = newarkMatch?.[1].match(/token: (.*)/)?.[1]?.trim();
+    
+    return {
+      aspire: { url: aspireUrl, token: aspireToken },
+      newark: { url: newarkUrl, token: newarkToken }
+    };
+  } catch (err) {
+    console.warn('⚠️ Could not load HA credentials:', err.message);
+    return { aspire: {}, newark: {} };
+  }
+}
+
+// Helper to fetch from Home Assistant
+async function fetchHA(instance, endpoint) {
+  return new Promise((resolve) => {
+    if (!HA_CREDS[instance].token) {
+      console.warn(`⚠️ No token for ${instance} HA`);
+      resolve(null);
+      return;
+    }
+
+    const url = new URL(endpoint, HA_CREDS[instance].url);
+    const protocol = url.protocol === 'https:' ? https : http;
+    
+    const options = {
+      headers: {
+        'Authorization': `Bearer ${HA_CREDS[instance].token}`,
+        'Content-Type': 'application/json'
+      }
+    };
+
+    protocol.get(url, options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          resolve(JSON.parse(data));
+        } catch (e) {
+          console.error(`Parse error from ${instance}:`, e.message);
+          resolve(null);
+        }
+      });
+    }).on('error', (err) => {
+      console.warn(`❌ HA fetch error (${instance}):`, err.message);
+      resolve(null);
+    });
+  });
+}
+
 /**
  * API Handlers - Return real data or mock fallback
  */
 const api = {
-  health: () => {
+  health: async () => {
     try {
-      // Try to get real data from Home Assistant
-      // For now, return mock data with some randomness
+      // Return mock data with some randomness for now
+      // (Could fetch from HA later)
       return {
         mac: {
           cpu: Math.floor(Math.random() * 80) + 10,
@@ -36,7 +100,7 @@ const api = {
     }
   },
 
-  costs: () => {
+  costs: async () => {
     return {
       daily: Math.random() * 0.5 + 0.2,
       dailyCap: 5.0,
@@ -51,7 +115,7 @@ const api = {
     };
   },
 
-  agents: () => {
+  agents: async () => {
     return {
       running: Math.floor(Math.random() * 4) + 3,
       idle: Math.floor(Math.random() * 6) + 5,
@@ -64,7 +128,7 @@ const api = {
     };
   },
 
-  piwigo: () => {
+  piwigo: async () => {
     const percent = Math.floor(Math.random() * 10) + 30;
     return {
       transferred: `${(percent * 7.8 / 100).toFixed(1)} GB`,
@@ -77,26 +141,39 @@ const api = {
     };
   },
 
-  homeassistant: () => {
-    // Mock Home Assistant data
+  homeassistant: async () => {
+    // Fetch real Home Assistant data
+    console.log('🏠 Fetching real HA data...');
+    
+    const newark = await fetchHA('newark', '/api/states/sensor.family_room_temperature');
+    const newarkHumidity = await fetchHA('newark', '/api/states/sensor.family_room_humidity');
+    const newarkDoor = await fetchHA('newark', '/api/states/binary_sensor.front_door');
+    const newarkGarage = await fetchHA('newark', '/api/states/cover.garage_door');
+    const newarkAlarm = await fetchHA('newark', '/api/states/alarm_control_panel.omnilink_area_1');
+    
+    const aspireTemp = await fetchHA('aspire', '/api/states/sensor.aspire_thermostat_temp');
+    const aspireAC = await fetchHA('aspire', '/api/states/climate.aspire_ac');
+    const aspireWater = await fetchHA('aspire', '/api/states/sensor.water_tank');
+    const aspireBattery = await fetchHA('aspire', '/api/states/sensor.chassis_battery');
+
     return {
       newark: {
-        temperature: '72°F',
-        humidity: '45%',
-        frontDoor: 'closed',
-        garage: 'closed',
-        alarm: 'disarmed'
+        temperature: newark?.state || 'N/A',
+        humidity: newarkHumidity?.state || 'N/A',
+        frontDoor: newarkDoor?.state || 'unknown',
+        garage: newarkGarage?.state || 'unknown',
+        alarm: newarkAlarm?.state || 'unknown'
       },
       aspire: {
-        temperature: '70°F',
-        acStatus: 'off',
-        water: '50%',
-        battery: '95%'
+        temperature: aspireTemp?.state || 'N/A',
+        acStatus: aspireAC?.state || 'unknown',
+        water: aspireWater?.state || 'N/A',
+        battery: aspireBattery?.state || 'N/A'
       }
     };
   },
 
-  'agents/control': (req, body) => {
+  'agents/control': async (req, body) => {
     // Handle agent control actions
     let data = {};
     try {
@@ -134,8 +211,8 @@ const server = http.createServer((req, res) => {
       if (req.method === 'POST') {
         let body = '';
         req.on('data', chunk => body += chunk);
-        req.on('end', () => {
-          const data = handler(req, body);
+        req.on('end', async () => {
+          const data = await handler(req, body);
           if (data) {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(data));
@@ -147,13 +224,21 @@ const server = http.createServer((req, res) => {
 
       // Handle GET requests
       if (req.method === 'GET') {
-        const data = handler();
-        if (data) {
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(data));
-          console.log(`✅ API ${endpoint} returned data`);
-          return;
-        }
+        handler().then(data => {
+          if (data) {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(data));
+            console.log(`✅ API ${endpoint} returned data`);
+          } else {
+            res.writeHead(500);
+            res.end(JSON.stringify({ error: 'Failed to fetch data' }));
+          }
+        }).catch(err => {
+          console.error(`API error: ${endpoint}`, err);
+          res.writeHead(500);
+          res.end(JSON.stringify({ error: err.message }));
+        });
+        return;
       }
     }
 
