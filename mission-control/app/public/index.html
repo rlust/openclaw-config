@@ -19,6 +19,7 @@
         <button class="nav-btn" data-tab="costs">💰 Costs</button>
         <button class="nav-btn" data-tab="agents">🤖 Agents</button>
         <button class="nav-btn" data-tab="aspire">🚐 Aspire RV</button>
+        <button class="nav-btn" data-tab="calendar">📅 Schedule</button>
         <button class="nav-btn" data-tab="hvac">🌡️ HVAC</button>
         <button class="nav-btn" data-tab="discord">Discord</button>
       </div>
@@ -265,6 +266,39 @@
         </div>
       </section>
 
+      <!-- Calendar Tab -->
+      <section id="calendar" class="tab-content">
+        <h1>📅 Scheduled Jobs</h1>
+        
+        <div class="card">
+          <h3>⏰ Recurring Jobs</h3>
+          <div data-panel="schedule-recurring">
+            <p style="color: #9fb0d6; font-size: 13px;">Loading schedule...</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>📊 Daily Reports</h3>
+          <div data-panel="schedule-daily">
+            <p style="color: #9fb0d6; font-size: 13px;">Loading schedule...</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>📈 Market Updates</h3>
+          <div data-panel="schedule-market">
+            <p style="color: #9fb0d6; font-size: 13px;">Loading schedule...</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>💰 Cost Summary</h3>
+          <div data-panel="schedule-costs">
+            <p style="color: #9fb0d6; font-size: 13px;">Loading costs...</p>
+          </div>
+        </div>
+      </section>
+
       <!-- HVAC Tab -->
       <section id="hvac" class="tab-content">
         <h1>🌡️ Newark HVAC</h1>
@@ -289,6 +323,7 @@
   <script src="/js/config.js"></script>
   <script src="/js/homeassistant.js"></script>
   <script src="/js/agents.js"></script>
+  <script src="/js/schedule.js"></script>
   <script src="/js/app.js"></script>
   <script src="/js/data.js"></script>
 </body>
