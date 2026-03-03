@@ -575,6 +575,68 @@ td {
   margin: 8px 0;
 }
 
+/* Category Tabs */
+.category-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.category-tab {
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  color: #9fb0d6;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.category-tab:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.category-tab.active {
+  background: rgba(159,176,214,0.2);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.category-tab .count {
+  background: rgba(0,0,0,0.3);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+/* Doc Items - Enhanced */
+.doc-category-badge {
+  margin: 0;
+  font-size: 11px;
+  background: rgba(159,176,214,0.2);
+  color: #9fb0d6;
+  padding: 3px 8px;
+  border-radius: 3px;
+  display: inline-block;
+  margin-top: 6px;
+}
+
+.doc-date {
+  font-size: 11px;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
 @media (max-width: 1200px) {
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
   .shell { grid-template-columns: 200px 1fr; }
