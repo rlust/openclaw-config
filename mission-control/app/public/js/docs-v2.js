@@ -946,13 +946,32 @@ All applications accessible via Tailscale VPN from anywhere.
     if (viewContainer) {
       viewContainer.innerHTML = `<div class="doc-content markdown-content">${this.renderMarkdown(doc.content)}</div>`;
       viewContainer.scrollTop = 0;
+      
+      // Attach click handlers to all links for better Safari compatibility
+      this.attachLinkHandlers(viewContainer);
     }
   }
 
+  attachLinkHandlers(container) {
+    container.querySelectorAll('a.doc-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (href) {
+          // For Safari compatibility, use window.open with proper protocol
+          if (href.startsWith('http')) {
+            window.open(href, '_blank');
+          } else {
+            // Ensure protocol is included
+            const url = href.startsWith('//') ? 'http:' + href : 'http://' + href;
+            window.open(url, '_blank');
+          }
+          e.preventDefault();
+        }
+      });
+    });
+  }
+
   renderMarkdown(md) {
-    // Convert URLs to clickable links
-    const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]*[a-zA-Z0-9/]/g;
-    
     let html = md
       // Headers
       .replace(/^# (.*?)$/gm, '<h1>$1</h1>')
@@ -960,7 +979,7 @@ All applications accessible via Tailscale VPN from anywhere.
       .replace(/^### (.*?)$/gm, '<h3>$1</h3>')
       // Bold
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      // Code blocks
+      // Code blocks (preserve these first)
       .replace(/\`\`\`(.*?)\`\`\`/gs, '<pre><code>$1</code></pre>')
       // Inline code
       .replace(/\`(.*?)\`/g, '<code>$1</code>')
@@ -973,16 +992,24 @@ All applications accessible via Tailscale VPN from anywhere.
       .replace(/$/gm, '</p>')
       // Wrap paragraphs
       .replace(/^<p>(<h[1-3]|<pre|<ul)/gm, '$1')
-      .replace(/(<\/h[1-3]|<\/pre|<\/ul>)<\/p>$/gm, '$1')
-      // Convert URLs to clickable links (but not in code blocks)
-      .replace(/(?<!<code>|<pre><code>)https?:\/\/[^\s<>"{}|\\^`\[\]]*[a-zA-Z0-9/](?!<\/code>|<\/pre>)/g, 
-        '<a href="$&" target="_blank" class="doc-link">$&</a>')
-      // IP addresses with ports
-      .replace(/(?<![<>\w])(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?(?![<>\w])/g, 
-        '<a href="http://$1$2" target="_blank" class="doc-link">$1$2</a>')
-      // localhost URLs
-      .replace(/(?<!<code>|<pre><code>)http:\/\/localhost(:\d+)?[^\s<>"{}|\\^`\[\]]*(?!<\/code>|<\/pre>)/g, 
-        '<a href="$&" target="_blank" class="doc-link">$&</a>');
+      .replace(/(<\/h[1-3]|<\/pre|<\/ul>)<\/p>$/gm, '$1');
+    
+    // Now convert URLs to clickable links (avoiding code blocks and existing links)
+    html = html.replace(/(?<!<code>|<pre><code>|href=")https?:\/\/[^\s<>"{}|\\^`\[\]]+(?!<\/code>|<\/pre>)/g, 
+      match => `<a href="${match}" target="_blank" class="doc-link">${match}</a>`)
+      // Handle IP:port format (http://x.x.x.x:port)
+      .replace(/(?<!<code>|<pre><code>|href=")(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d{2,5})(?!<\/code>|<\/pre>)/g, 
+        (match, ip, port) => {
+          const url = `http://${ip}${port}`;
+          // Only linkify if not already in a link
+          if (!match.includes('<a')) {
+            return `<a href="${url}" target="_blank" class="doc-link">${match}</a>`;
+          }
+          return match;
+        })
+      // Handle localhost:port
+      .replace(/(?<!<code>|<pre><code>|href=")http:\/\/localhost(:\d{2,5})?(?!<\/code>|<\/pre>|\/)/g,
+        match => `<a href="${match}" target="_blank" class="doc-link">${match}</a>`);
     
     return html;
   }

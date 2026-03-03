@@ -640,21 +640,28 @@ td {
 /* Documentation Links */
 .doc-link {
   color: var(--accent);
-  text-decoration: none;
-  border-bottom: 1px solid var(--accent);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  border-radius: 3px;
+  padding: 2px 4px;
   transition: all 0.2s;
   word-break: break-all;
+  cursor: pointer;
+  display: inline-block;
 }
 
 .doc-link:hover {
-  background: rgba(159,176,214,0.1);
-  padding: 2px 4px;
-  border-radius: 3px;
-  border-bottom-color: #fff;
+  background: rgba(159,176,214,0.15);
+  text-decoration-color: #fff;
+  color: #fff;
+  transform: translateY(-1px);
 }
 
 .doc-link:active {
   color: #fff;
+  background: rgba(159,176,214,0.25);
 }
 
 /* Documentation Content Improvements */
