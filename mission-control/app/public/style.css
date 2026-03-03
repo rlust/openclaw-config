@@ -314,6 +314,161 @@ td {
   padding-left: 8px;
 }
 
+/* Professional Calendar */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  min-height: 500px;
+}
+
+.calendar-header {
+  display: contents;
+}
+
+.calendar-day-header {
+  font-weight: 600;
+  text-align: center;
+  padding: 15px 10px;
+  color: var(--accent);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid var(--accent);
+}
+
+.calendar-day {
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 12px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar-day-title {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.calendar-day-jobs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.calendar-job {
+  padding: 8px;
+  border-radius: 5px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-left: 3px solid;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.calendar-job:hover {
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.job-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.job-name {
+  flex: 1;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.job-time {
+  font-size: 10px;
+  color: #9fb0d6;
+  white-space: nowrap;
+}
+
+.job-cost {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--accent);
+  white-space: nowrap;
+  background: rgba(159,176,214,0.15);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+/* Job Type Colors */
+.job-system {
+  background: rgba(139, 92, 246, 0.2);
+  border-left-color: #8b5cf6;
+  color: #d8b4fe;
+}
+
+.job-system .job-name {
+  color: #d8b4fe;
+}
+
+.job-ollama {
+  background: rgba(34, 197, 94, 0.15);
+  border-left-color: #22c55e;
+  color: #bbf7d0;
+}
+
+.job-ollama .job-name {
+  color: #bbf7d0;
+}
+
+.job-haiku {
+  background: rgba(59, 130, 246, 0.15);
+  border-left-color: #3b82f6;
+  color: #bfdbfe;
+}
+
+.job-haiku .job-name {
+  color: #bfdbfe;
+}
+
+/* Calendar Legend */
+.calendar-legend {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #d1d5db;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
 @media (max-width: 1200px) {
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
   .shell { grid-template-columns: 200px 1fr; }

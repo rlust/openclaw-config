@@ -268,34 +268,33 @@
 
       <!-- Calendar Tab -->
       <section id="calendar" class="tab-content">
-        <h1>📅 Scheduled Jobs</h1>
+        <h1>📅 Weekly Schedule</h1>
         
-        <div class="card">
-          <h3>⏰ Recurring Jobs</h3>
-          <div data-panel="schedule-recurring">
-            <p style="color: #9fb0d6; font-size: 13px;">Loading schedule...</p>
+        <div class="card" style="padding: 20px;">
+          <div data-panel="calendar" style="overflow-x: auto;">
+            <p style="color: #9fb0d6; font-size: 13px;">Loading calendar...</p>
           </div>
         </div>
 
         <div class="card">
-          <h3>📊 Daily Reports</h3>
-          <div data-panel="schedule-daily">
-            <p style="color: #9fb0d6; font-size: 13px;">Loading schedule...</p>
+          <h3>💰 Monthly Cost Summary</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="stat">
+              <span>Water Heater Monitor</span>
+              <span class="value" style="font-size: 16px; color: var(--accent);">~$0.14/mo</span>
+            </div>
+            <div class="stat">
+              <span>Hourly Updates (4x)</span>
+              <span class="value" style="font-size: 16px; color: var(--accent);">~$23.00/mo</span>
+            </div>
+            <div class="stat" style="grid-column: 1/3; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 6px;">
+              <span style="font-weight: 500;">Total Monthly Cost</span>
+              <span class="value" style="font-size: 18px; color: var(--accent); font-weight: bold;">~$23.14</span>
+            </div>
           </div>
-        </div>
-
-        <div class="card">
-          <h3>📈 Market Updates</h3>
-          <div data-panel="schedule-market">
-            <p style="color: #9fb0d6; font-size: 13px;">Loading schedule...</p>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>💰 Cost Summary</h3>
-          <div data-panel="schedule-costs">
-            <p style="color: #9fb0d6; font-size: 13px;">Loading costs...</p>
-          </div>
+          <p style="margin-top: 15px; font-size: 12px; color: #9fb0d6;">
+            💡 Tip: All Ollama jobs are <strong>free</strong> (local execution). Haiku is ~$0.0008/run with caching.
+          </p>
         </div>
       </section>
 
@@ -323,7 +322,7 @@
   <script src="/js/config.js"></script>
   <script src="/js/homeassistant.js"></script>
   <script src="/js/agents.js"></script>
-  <script src="/js/schedule.js"></script>
+  <script src="/js/calendar.js"></script>
   <script src="/js/app.js"></script>
   <script src="/js/data.js"></script>
 </body>
