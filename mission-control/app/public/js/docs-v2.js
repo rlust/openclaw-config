@@ -697,6 +697,114 @@ Configuration for sending voice responses via Telegram.
 
 ## Usage
 HAL automatically sends voice responses alongside text messages.`
+      },
+      {
+        id: 'tailscale-external-urls',
+        title: 'Tailscale External URLs',
+        category: 'System',
+        date: '2026-03-03',
+        content: `# Tailscale External URLs & VPN Access
+
+**Created:** Mar 3, 2026
+**Tailnet:** rlust (Randy Lust)
+
+All applications accessible via Tailscale VPN from anywhere.
+
+## Current Tailscale Devices
+
+### 🖥️ Active Servers
+- **randys-mac-mini** - 100.78.223.120 (MacOS) — Dashboard host
+- **ha-aspire-rvc-new** - 100.91.161.37 (Linux) — Aspire HA + RVC
+- **homeassistant-amd-london** - 100.110.218.30 (Linux) — Backup HA
+- **homeassistant-amd-beta** - 100.94.219.114 (Linux) — Beta testing
+
+### 📱 Apple TV Exits
+- **apple-tv-aspire** - 100.87.228.51 (tvOS) — Aspire RV exit node
+- **apple-tv-home** - 100.108.10.103 (tvOS) — Newark exit node
+
+## Applications via Tailscale
+
+### Mission Control Dashboard
+**Local URL:** http://127.0.0.1:18888
+**Tailscale URL:** http://100.78.223.120:18888
+**Access:** From any Tailscale device (Mac mini)
+
+### Lust Rentals App
+**Local Network:** http://100.78.223.120:8000/dashboard
+**Tailscale URL:** http://100.78.223.120:8000/dashboard
+**Access:** From any Tailscale device
+
+### Kanban Board
+**Local:** http://localhost:5000
+**Tailscale:** http://100.78.223.120:5000
+**Access:** SSH to Mac mini or local network
+
+### Home Assistant - Newark
+**Nabu Casa (Cloud):** https://ykm02dybhyaob0myui6lj13x8kl7n996.ui.nabu.casa
+**Tailscale via ha-aspire:** http://100.110.218.30:8123
+**Token:** In .credentials
+
+### Home Assistant - Aspire RV
+**Nabu Casa (Cloud):** https://xrragqdun8wc4zeezbrx0q7ge9xzzrcw.ui.nabu.casa
+**Tailscale Direct:** http://100.91.161.37:8123
+**Token:** In .credentials
+
+### Piwigo Gallery
+**Direct:** https://5.161.111.192 (self-signed) or http://5.161.111.192:8080
+**Admin Panel:** http://5.161.111.192:8080/admin.php
+**Domain:** rlust.com (waiting DNS)
+**Tailscale:** Use direct IP (Hetzner VPS, not on Tailscale)
+
+## How to Access via Tailscale
+
+### From iPhone/iPad
+1. Install Tailscale app (App Store)
+2. Log in with rlust@gmail.com
+3. Access any Tailscale URL:
+   - http://100.78.223.120:18888 (Mission Control)
+   - http://100.91.161.37:8123 (Aspire HA)
+   - http://100.110.218.30:8123 (Newark HA backup)
+
+### From Mac/Windows
+1. Install Tailscale
+2. Connect to rlust tailnet
+3. Access via Tailscale IPs or .ts.net DNS names
+
+### SSH Access
+\`ssh user@100.78.223.120\` (Randy's Mac mini)
+\`ssh user@100.91.161.37\` (Aspire HA)
+
+## Offline/Backup Devices
+- aspirehabackup (100.92.5.84) - offline
+- aspirenonrvc (100.72.110.22) - offline
+- deb-aspire-tail-sub (100.94.2.77) - offline
+- deb-london-tailscale-subnet (100.120.82.53) - offline
+- docker-llm-aspire (100.92.20.1) - offline
+- ha-aspire-new-windsurf (100.71.90.105) - offline
+- ha-aspire-rvc-prox-intel (100.78.191.82) - offline
+- ha-rvc-109-prox (100.120.153.39) - offline
+- home-assistant-rvcssh (100.65.79.66) - offline
+- homeassistant-paul-p (100.118.230.44) - offline
+- homeassistant-prox-new-min (100.121.114.44) - offline
+- homeassistant-aspire-rvc (100.83.93.119) - offline
+- idp (100.68.119.82) - offline
+- immich (100.71.185.31) - offline
+
+## Quick Reference
+| Service | Tailscale URL | Port | Status |
+|---------|---------------|------|--------|
+| Mission Control | 100.78.223.120 | 18888 | Active |
+| Lust Rentals | 100.78.223.120 | 8000 | Active |
+| Kanban | 100.78.223.120 | 5000 | Active |
+| Aspire HA | 100.91.161.37 | 8123 | Active |
+| Newark HA | 100.110.218.30 | 8123 | Active |
+| Piwigo | 5.161.111.192 | 8080 | Active (VPS) |
+
+## Notes
+- All Tailscale IPs are on private 100.x.x.x network
+- VPN required for remote access
+- Local network access available on same subnet
+- Nabu Casa provides cloud access for HA instances`
       }
     ];
   }
