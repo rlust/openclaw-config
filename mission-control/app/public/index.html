@@ -20,6 +20,7 @@
         <button class="nav-btn" data-tab="agents">🤖 Agents</button>
         <button class="nav-btn" data-tab="aspire">🚐 Aspire RV</button>
         <button class="nav-btn" data-tab="calendar">📅 Schedule</button>
+        <button class="nav-btn" data-tab="docs">📚 Docs</button>
         <button class="nav-btn" data-tab="hvac">🌡️ HVAC</button>
         <button class="nav-btn" data-tab="discord">Discord</button>
       </div>
@@ -266,6 +267,35 @@
         </div>
       </section>
 
+      <!-- Docs Tab -->
+      <section id="docs" class="tab-content">
+        <h1>📚 Documentation</h1>
+        
+        <div style="display: grid; grid-template-columns: 300px 1fr; gap: 20px; height: 600px;">
+          <!-- Sidebar: Doc List -->
+          <div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 15px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.08);">
+            <div style="margin-bottom: 15px;">
+              <input 
+                type="text" 
+                placeholder="Search docs..." 
+                data-panel="docs-search"
+                style="width: 100%; padding: 8px 10px; background: rgba(0,0,0,0.2); color: var(--text); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; font-size: 13px;"
+              />
+            </div>
+            <div data-panel="docs-list" style="display: flex; flex-direction: column; gap: 10px;">
+              <p style="color: #9fb0d6; font-size: 13px;">Loading docs...</p>
+            </div>
+          </div>
+
+          <!-- Main: Doc Content -->
+          <div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 20px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.08);">
+            <div data-panel="docs-view">
+              <p style="color: #9fb0d6; font-size: 13px;">Select a document to view.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Calendar Tab -->
       <section id="calendar" class="tab-content">
         <h1>📅 Weekly Schedule</h1>
@@ -323,6 +353,7 @@
   <script src="/js/homeassistant.js"></script>
   <script src="/js/agents.js"></script>
   <script src="/js/calendar.js"></script>
+  <script src="/js/docs.js"></script>
   <script src="/js/app.js"></script>
   <script src="/js/data.js"></script>
 </body>
