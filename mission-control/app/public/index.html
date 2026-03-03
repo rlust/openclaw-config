@@ -23,97 +23,174 @@
     </nav>
 
     <main class="content">
+      <!-- Overview Tab -->
       <section id="overview" class="tab-content active">
         <h1>Mission Control</h1>
         <div class="grid-3">
           <div class="card">
             <h3>System Health</h3>
-            <div class="stat">Mac Mini CPU: <strong>45%</strong></div>
-            <div class="stat">Memory: <strong>62%</strong></div>
+            <div class="stat" data-metric="mac-cpu">
+              <span>Mac Mini CPU</span>
+              <div class="progress"><div class="fill" style="width: 45%"></div></div>
+              <span class="value">45%</span>
+            </div>
+            <div class="stat" data-metric="mac-memory">
+              <span>Memory</span>
+              <div class="progress"><div class="fill" style="width: 62%"></div></div>
+              <span class="value">62%</span>
+            </div>
           </div>
+
           <div class="card">
-            <h3>Budget</h3>
-            <div class="stat">Daily: <strong>$0.32</strong> / $5.00</div>
-            <div class="stat">Monthly: <strong>$18.47</strong> / $100.00</div>
+            <h3>Budget Status</h3>
+            <div class="stat" data-metric="cost-daily">
+              <span>Daily Budget</span>
+              <div class="progress"><div class="fill warn" style="width: 32%"></div></div>
+              <span class="value">$0.32 / $5.00</span>
+            </div>
+            <div class="stat" data-metric="cost-monthly">
+              <span>Monthly Budget</span>
+              <div class="progress"><div class="fill" style="width: 18%"></div></div>
+              <span class="value">$18.47 / $100.00</span>
+            </div>
           </div>
+
           <div class="card">
             <h3>Agents</h3>
-            <div class="stat">Running: <strong>5</strong></div>
-            <div class="stat">Idle: <strong>8</strong></div>
-            <div class="stat">Error: <strong>2</strong></div>
+            <div data-metric="agents">
+              <div class="agent-stat"><span class="ok">●</span> 5 Running</div>
+              <div class="agent-stat"><span class="muted">●</span> 8 Idle</div>
+              <div class="agent-stat"><span class="bad">●</span> 2 Error</div>
+            </div>
           </div>
         </div>
       </section>
 
+      <!-- Health Tab -->
+      <section id="health" class="tab-content">
+        <h1>💻 System Health</h1>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Mac Mini</h3>
+            <div class="stat" data-metric="mac-cpu">
+              <span>CPU</span>
+              <div class="progress"><div class="fill" style="width: 45%"></div></div>
+              <span class="value">45%</span>
+            </div>
+            <div class="stat" data-metric="mac-memory">
+              <span>Memory</span>
+              <div class="progress"><div class="fill" style="width: 62%"></div></div>
+              <span class="value">62%</span>
+            </div>
+            <div class="stat" data-metric="mac-disk">
+              <span>Disk</span>
+              <div class="progress"><div class="fill bad" style="width: 85%"></div></div>
+              <span class="value">85%</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Hetzner VPS</h3>
+            <div class="stat" data-metric="vps-cpu">
+              <span>CPU</span>
+              <div class="progress"><div class="fill" style="width: 28%"></div></div>
+              <span class="value">28%</span>
+            </div>
+            <div class="stat" data-metric="vps-memory">
+              <span>Memory</span>
+              <div class="progress"><div class="fill" style="width: 41%"></div></div>
+              <span class="value">41%</span>
+            </div>
+            <div class="stat" data-metric="vps-disk">
+              <span>Disk</span>
+              <div class="progress"><div class="fill" style="width: 55%"></div></div>
+              <span class="value">55%</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Piwigo Tab -->
+      <section id="piwigo" class="tab-content">
+        <h1>📸 Piwigo Upload Monitor</h1>
+        <div class="card">
+          <h3>Upload Progress</h3>
+          <div data-metric="piwigo">
+            <div class="stat">
+              <span>Data Transferred</span>
+              <div class="progress"><div class="fill" style="width: 35%"></div></div>
+              <span class="value">2.7 GB / 7.8 GB (35%)</span>
+            </div>
+            <div style="margin-top: 15px; font-size: 13px; color: #9fb0d6;">
+              Galleries: 37/37 ✓ | ETA: ~45 minutes | Running
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Costs Tab -->
+      <section id="costs" class="tab-content">
+        <h1>💰 Cost Tracking</h1>
+        <div class="card">
+          <h3>Budget Status</h3>
+          <div class="stat" data-metric="cost-daily">
+            <span>Daily Budget</span>
+            <div class="progress"><div class="fill warn" style="width: 32%"></div></div>
+            <span class="value">$0.32 / $5.00</span>
+          </div>
+          <div class="stat" data-metric="cost-monthly">
+            <span>Monthly Budget</span>
+            <div class="progress"><div class="fill" style="width: 18%"></div></div>
+            <span class="value">$18.47 / $100.00</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Agents Tab -->
+      <section id="agents" class="tab-content">
+        <h1>🤖 Agent Status</h1>
+        <div class="card">
+          <h3>Overview</h3>
+          <div data-metric="agents">
+            <div class="agent-stat"><span class="ok">●</span> 5 Running</div>
+            <div class="agent-stat"><span class="muted">●</span> 8 Idle</div>
+            <div class="agent-stat"><span class="bad">●</span> 2 Error</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tasks Tab -->
       <section id="tasks" class="tab-content">
         <h1>Tasks</h1>
         <div class="card">
           <p>Task 1: Fix dashboard ✓</p>
-          <p>Task 2: Connect APIs ⋯</p>
+          <p>Task 2: Connect APIs ⏳</p>
+          <p>Task 3: Add features ⋯</p>
         </div>
       </section>
 
-      <section id="piwigo" class="tab-content">
-        <h1>📸 Piwigo</h1>
-        <div class="card">
-          <p>Transferred: <strong>2.7 GB / 7.8 GB</strong></p>
-          <p>Galleries: <strong>37 / 37</strong> ✓</p>
-          <p>ETA: ~45 minutes</p>
-        </div>
-      </section>
-
-      <section id="health" class="tab-content">
-        <h1>💻 Health</h1>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Mac Mini</h3>
-            <p>CPU: 45%</p>
-            <p>Memory: 62%</p>
-            <p>Disk: 85%</p>
-          </div>
-          <div class="card">
-            <h3>Hetzner VPS</h3>
-            <p>CPU: 28%</p>
-            <p>Memory: 41%</p>
-            <p>Disk: 55%</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="costs" class="tab-content">
-        <h1>💰 Costs</h1>
-        <div class="card">
-          <p>Daily: $0.32 / $5.00</p>
-          <p>Monthly: $18.47 / $100.00</p>
-        </div>
-      </section>
-
-      <section id="agents" class="tab-content">
-        <h1>🤖 Agents</h1>
-        <div class="card">
-          <p>Running: 5</p>
-          <p>Idle: 8</p>
-          <p>Error: 2</p>
-        </div>
-      </section>
-
+      <!-- HVAC Tab -->
       <section id="hvac" class="tab-content">
         <h1>🌡️ HVAC Control</h1>
         <div class="card">
           <p>Temperature: 72°F</p>
           <p>Mode: Cool</p>
+          <p>Status: Running</p>
         </div>
       </section>
 
+      <!-- Discord Tab -->
       <section id="discord" class="tab-content">
-        <h1>Discord</h1>
+        <h1>Discord Integration</h1>
         <div class="card">
-          <p>Connected ✓</p>
+          <p>Status: Connected ✓</p>
+          <p>Last sync: 2m ago</p>
         </div>
       </section>
     </main>
   </div>
 
   <script src="/js/app.js"></script>
+  <script src="/js/data.js"></script>
 </body>
 </html>
