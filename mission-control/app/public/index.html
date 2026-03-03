@@ -148,13 +148,19 @@
 
       <!-- Agents Tab -->
       <section id="agents" class="tab-content">
-        <h1>🤖 Agent Status</h1>
+        <h1>🤖 Agent Control Panel</h1>
         <div class="card">
-          <h3>Overview</h3>
+          <h3>Agent Status Overview</h3>
           <div data-metric="agents">
             <div class="agent-stat"><span class="ok">●</span> 5 Running</div>
             <div class="agent-stat"><span class="muted">●</span> 8 Idle</div>
             <div class="agent-stat"><span class="bad">●</span> 2 Error</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Agent Controls</h3>
+          <div data-panel="agents">
+            <p style="color: #9fb0d6; font-size: 13px;">Loading agents...</p>
           </div>
         </div>
       </section>
@@ -190,6 +196,9 @@
     </main>
   </div>
 
+  <script src="/js/config.js"></script>
+  <script src="/js/homeassistant.js"></script>
+  <script src="/js/agents.js"></script>
   <script src="/js/app.js"></script>
   <script src="/js/data.js"></script>
 </body>

@@ -75,6 +75,46 @@ const api = {
       eta: '~45 minutes',
       status: 'Running'
     };
+  },
+
+  homeassistant: () => {
+    // Mock Home Assistant data
+    return {
+      newark: {
+        temperature: '72°F',
+        humidity: '45%',
+        frontDoor: 'closed',
+        garage: 'closed',
+        alarm: 'disarmed'
+      },
+      aspire: {
+        temperature: '70°F',
+        acStatus: 'off',
+        water: '50%',
+        battery: '95%'
+      }
+    };
+  },
+
+  'agents/control': (req, body) => {
+    // Handle agent control actions
+    let data = {};
+    try {
+      data = JSON.parse(body);
+    } catch (e) {
+      return { error: 'Invalid request' };
+    }
+
+    const { action, agentId } = data;
+    console.log(`🤖 Agent control: ${action} ${agentId}`);
+
+    // Mock implementation - in production, this would actually control agents
+    return {
+      success: true,
+      action,
+      agentId,
+      message: `Agent ${agentId} ${action} command sent`
+    };
   }
 };
 
@@ -90,12 +130,30 @@ const server = http.createServer((req, res) => {
     const handler = api[endpoint];
 
     if (handler) {
-      const data = handler();
-      if (data) {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(data));
-        console.log(`✅ API ${endpoint} returned data`);
+      // Handle POST requests (for agent control)
+      if (req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+          const data = handler(req, body);
+          if (data) {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(data));
+            console.log(`✅ API ${endpoint} (POST) returned data`);
+          }
+        });
         return;
+      }
+
+      // Handle GET requests
+      if (req.method === 'GET') {
+        const data = handler();
+        if (data) {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(data));
+          console.log(`✅ API ${endpoint} returned data`);
+          return;
+        }
       }
     }
 
