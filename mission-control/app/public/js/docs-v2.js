@@ -23,9 +23,11 @@ class DocsManager {
         date: '2026-03-02',
         content: `# Mission Control Dashboard
 
-**URL:** http://127.0.0.1:18888
-**Access:** Local (no auth needed)
-**Created:** Mar 2, 2026
+## Access Information
+- **Primary URL:** http://127.0.0.1:18888
+- **Tailscale URL:** http://100.78.223.120:18888
+- **Authentication:** None (local access)
+- **Created:** Mar 2, 2026
 
 Real-time monitoring of homes, RV, agents, and scheduled jobs.
 
@@ -37,10 +39,10 @@ Real-time monitoring of homes, RV, agents, and scheduled jobs.
 - **Agents** - Running/idle/error counts
 
 ## Data Sources
-- Newark HA: https://ykm02dybhyaob0myui6lj13x8kl7n996.ui.nabu.casa
-- Aspire HA: https://xrragqdun8wc4zeezbrx0q7ge9xzzrcw.ui.nabu.casa
-- Lust Rentals: http://100.78.223.120:8000
-- Kanban: http://localhost:5000`
+- **Newark Home Assistant:** https://ykm02dybhyaob0myui6lj13x8kl7n996.ui.nabu.casa (Nabu Casa Cloud)
+- **Aspire Home Assistant:** https://xrragqdun8wc4zeezbrx0q7ge9xzzrcw.ui.nabu.casa (Nabu Casa Cloud)
+- **Lust Rentals App:** http://100.78.223.120:8000/dashboard
+- **Kanban Board:** http://localhost:5000`
       },
 
       // ===== APPLICATIONS =====
@@ -51,27 +53,36 @@ Real-time monitoring of homes, RV, agents, and scheduled jobs.
         date: '2026-02-08',
         content: `# Lust Rentals Property Management
 
-**URL:** http://100.78.223.120:8000/dashboard
-**Username:** N/A (open access)
-**Password:** N/A
-**Created:** Feb 8, 2026
+## Access Information
+- **Dashboard URL:** http://100.78.223.120:8000/dashboard
+- **Tailscale URL:** http://100.78.223.120:8000/dashboard
+- **Local Network:** http://100.78.223.120:8000
+- **Authentication:** None (open access)
+- **Username:** N/A
+- **Password:** N/A
+- **Created:** Feb 8, 2026
 
 Manage rental properties with revenue tracking and Excel export.
 
 ## Features
-- Property list + status
+- Property list with status
 - Monthly revenue tracking
-- Transaction creation (manual)
-- Excel export (Property | Date | Amount)
-- Dashboard charts
+- Transaction creation (manual entry)
+- Excel export (Property | Date | Amount format)
+- Dashboard charts and analytics
 
-## Monitoring
-- Hourly status check (cron)
-- Auto-restart if down
-- Cost: $0 (Ollama)
+## Monitoring & Automation
+- **Hourly Status Check:** Cron job every 1 hour
+- **Auto-Restart:** Automatic if app goes down
+- **Cost:** $0 (runs on local Ollama)
+- **Job ID:** 250494eb-df1a-43c8-bbde-096b7c56ce1f
 
-## Excel Format
-Columns: Property | Date | Amount`
+## Export Format
+\`\`\`
+Property | Date | Amount
+Rental 1 | 2026-03-03 | 1500.00
+Rental 2 | 2026-03-03 | 2000.00
+\`\`\``
       },
       {
         id: 'kanban',
@@ -80,55 +91,81 @@ Columns: Property | Date | Amount`
         date: '2026-02-03',
         content: `# Kanban v3 - Task Board
 
-**URL:** http://localhost:5000
-**Username:** N/A
-**Password:** N/A
-**Created:** Feb 3, 2026 (v3 Recurring update)
+## Access Information
+- **Local URL:** http://localhost:5000
+- **Tailscale URL:** http://100.78.223.120:5000
+- **Authentication:** None
+- **Username:** N/A
+- **Password:** N/A
+- **Created:** Feb 3, 2026 (v3 Recurring Tasks Update)
 
 Simple task management with drag-and-drop and recurring task support.
 
 ## Features
-- Columns: To Do, In Progress, Done
-- Recurring task support
-- Local storage persistence
-- Python backend
+- **Columns:** To Do, In Progress, Done
+- **Recurring Tasks:** Cron-style scheduling support
+- **Drag & Drop:** Reorder tasks between columns
+- **Local Storage:** Persistence in browser
+- **Python Backend:** Fast and lightweight
 
-## Start
-\`cd workspace && python3 kanban-server-v3.py\`
+## Starting the Server
+\`\`\`bash
+cd workspace
+python3 kanban-server-v3.py
+\`\`\`
 
-## Monitoring
-- Every 5 minutes: systemEvent check
-- Auto-restart if down
-- Cost: $0`
+## Monitoring & Automation
+- **Check Frequency:** Every 5 minutes (systemEvent)
+- **Auto-Restart:** If Python server crashes
+- **Cost:** $0 (local execution)
+
+## Server Status
+\`\`\`bash
+curl http://localhost:5000
+\`\`\``
       },
       {
         id: 'piwigo',
         title: 'Piwigo Photo Gallery',
         category: 'Applications',
         date: '2026-03-01',
-        content: `# Piwigo Photo Gallery
+        content: `# Piwigo Photo Gallery - rlust.com
 
-**URL:** https://5.161.111.192 (self-signed) or http://5.161.111.192:8080
-**Admin:** http://5.161.111.192:8080/admin.php
-**Domain:** rlust.com (waiting DNS propagation)
-**Created:** Mar 1, 2026
+## Access Information
+- **Gallery URL (HTTPS):** https://5.161.111.192 (self-signed cert)
+- **Gallery URL (HTTP):** http://5.161.111.192:8080
+- **Admin Panel:** http://5.161.111.192:8080/admin.php
+- **Domain:** rlust.com (DNS propagation in progress)
+- **Server IP:** 5.161.111.192 (Hetzner VPS)
+- **Created:** Mar 1, 2026
+- **Status:** ✅ Live and ready for uploads
 
-Self-hosted photo gallery on Hetzner VPS.
+## Server Details
+- **Host Provider:** Hetzner Cloud
+- **OS:** Ubuntu 24.04 LTS
+- **Database:** MariaDB (credentials: piwigo/piwigo_secure)
+- **Web Server:** Nginx (Docker container)
+- **SSL:** Self-signed (will auto-upgrade to Let's Encrypt once DNS fully propagates)
 
-## Access
-- Server IP: 5.161.111.192
-- SSH: ssh -i ~/.ssh/rlust-vps root@5.161.111.192
-- Database: MariaDB (piwigo/piwigo_secure)
-- Status: Live and ready for photo uploads
+## Access & Management
+### SSH Access
+\`\`\`bash
+ssh -i ~/.ssh/rlust-vps root@5.161.111.192
+\`\`\`
 
-## Setup
-- Ubuntu 24.04 on Hetzner
-- Docker containers (Nginx, Piwigo, MariaDB)
-- Self-signed SSL (will auto-upgrade to Let's Encrypt)
+### Admin Panel
+Access at: http://5.161.111.192:8080/admin.php
 
-## Next
-- Export from Zenfolio
-- Upload to Piwigo`
+### Docker Status
+\`\`\`bash
+docker ps  # View running containers
+\`\`\`
+
+## Next Steps
+- Export photos from Zenfolio
+- Upload to Piwigo gallery
+- Configure Let's Encrypt SSL (auto on DNS propagation)
+- Set up rlust.com domain`
       },
 
       // ===== SMART HOME =====
@@ -141,32 +178,45 @@ Self-hosted photo gallery on Hetzner VPS.
 
 **Created:** Feb 25, 2026
 
-## Instances
+## Newark Home Instance (Nabu Casa Cloud)
 
-### Newark Home (Nabu Casa)
-**URL:** https://ykm02dybhyaob0myui6lj13x8kl7n996.ui.nabu.casa
-**Token:** In .credentials
-**Entities:**
-- sensor.family_room_temperature
-- sensor.family_room_humidity
-- binary_sensor.front_door
-- cover.garage_door
-- alarm_control_panel.omnilink_area_1
+- **Cloud URL:** https://ykm02dybhyaob0myui6lj13x8kl7n996.ui.nabu.casa
+- **Tailscale Backup:** http://100.110.218.30:8123
+- **Access Token:** Stored in \`.credentials\` file
+- **Location:** Newark, OH
 
-### Aspire RV (Nabu Casa)
-**URL:** https://xrragqdun8wc4zeezbrx0q7ge9xzzrcw.ui.nabu.casa
-**Token:** In .credentials
-**Entities:**
-- climate.thermostat_status_1 (Front AC)
-- climate.air_conditioner_status_4 (Mid AC)
-- climate.air_conditioner_status_2 (Rear AC)
-- sensor.tank_status_2 (Fresh water)
-- sensor.tank_status (Gray waste)
-- sensor.tank_status_3 (Black waste)
-- sensor.dchouse_battery_ble_dchouse_soc (Battery)
+### Entity Mappings - Newark
+| Entity | Type | Description |
+|--------|------|-------------|
+| sensor.family_room_temperature | Temperature | Living room temp |
+| sensor.family_room_humidity | Humidity | Living room humidity |
+| binary_sensor.front_door | Binary Sensor | Front door open/closed |
+| cover.garage_door | Cover | Garage door status |
+| alarm_control_panel.omnilink_area_1 | Alarm | HAI OmniLink alarm |
 
-## Tools
-\`node discover-ha.js\` - List all entities`
+## Aspire RV Instance (Nabu Casa Cloud)
+
+- **Cloud URL:** https://xrragqdun8wc4zeezbrx0q7ge9xzzrcw.ui.nabu.casa
+- **Tailscale Direct:** http://100.91.161.37:8123
+- **Access Token:** Stored in \`.credentials\` file
+- **Location:** Aspire Motorhome (travels)
+
+### Entity Mappings - Aspire
+| Entity | Type | Value |
+|--------|------|-------|
+| climate.thermostat_status_1 | Climate | Front AC (82°F) |
+| climate.air_conditioner_status_4 | Climate | Mid AC (80°F) |
+| climate.air_conditioner_status_2 | Climate | Rear AC (73°F) |
+| sensor.tank_status_2 | Tank | Fresh water (71.4%) |
+| sensor.tank_status | Tank | Gray waste (0%) |
+| sensor.tank_status_3 | Tank | Black waste (50%) |
+| sensor.dchouse_battery_ble_dchouse_soc | Battery | Main SOC (85%) |
+
+## Discovery Tools
+Find all entities:
+\`\`\`bash
+node discover-ha.js
+\`\`\``
       },
 
       // ===== AGENTS =====
@@ -900,16 +950,41 @@ All applications accessible via Tailscale VPN from anywhere.
   }
 
   renderMarkdown(md) {
-    return md
+    // Convert URLs to clickable links
+    const urlRegex = /https?:\/\/[^\s<>"{}|\\^`\[\]]*[a-zA-Z0-9/]/g;
+    
+    let html = md
+      // Headers
       .replace(/^# (.*?)$/gm, '<h1>$1</h1>')
       .replace(/^## (.*?)$/gm, '<h2>$1</h2>')
       .replace(/^### (.*?)$/gm, '<h3>$1</h3>')
+      // Bold
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      // Code blocks
       .replace(/\`\`\`(.*?)\`\`\`/gs, '<pre><code>$1</code></pre>')
+      // Inline code
       .replace(/\`(.*?)\`/g, '<code>$1</code>')
+      // Lists
       .replace(/^- (.*?)$/gm, '<li>$1</li>')
       .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
-      .replace(/\n/g, '<br>');
+      // Line breaks
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/^(?!<)/gm, '<p>')
+      .replace(/$/gm, '</p>')
+      // Wrap paragraphs
+      .replace(/^<p>(<h[1-3]|<pre|<ul)/gm, '$1')
+      .replace(/(<\/h[1-3]|<\/pre|<\/ul>)<\/p>$/gm, '$1')
+      // Convert URLs to clickable links (but not in code blocks)
+      .replace(/(?<!<code>|<pre><code>)https?:\/\/[^\s<>"{}|\\^`\[\]]*[a-zA-Z0-9/](?!<\/code>|<\/pre>)/g, 
+        '<a href="$&" target="_blank" class="doc-link">$&</a>')
+      // IP addresses with ports
+      .replace(/(?<![<>\w])(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?(?![<>\w])/g, 
+        '<a href="http://$1$2" target="_blank" class="doc-link">$1$2</a>')
+      // localhost URLs
+      .replace(/(?<!<code>|<pre><code>)http:\/\/localhost(:\d+)?[^\s<>"{}|\\^`\[\]]*(?!<\/code>|<\/pre>)/g, 
+        '<a href="$&" target="_blank" class="doc-link">$&</a>');
+    
+    return html;
   }
 
   setupSearch() {

@@ -637,6 +637,85 @@ td {
   white-space: nowrap;
 }
 
+/* Documentation Links */
+.doc-link {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+  transition: all 0.2s;
+  word-break: break-all;
+}
+
+.doc-link:hover {
+  background: rgba(159,176,214,0.1);
+  padding: 2px 4px;
+  border-radius: 3px;
+  border-bottom-color: #fff;
+}
+
+.doc-link:active {
+  color: #fff;
+}
+
+/* Documentation Content Improvements */
+.doc-content ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.doc-content li {
+  margin: 5px 0;
+  line-height: 1.5;
+}
+
+.doc-content pre {
+  background: rgba(0,0,0,0.4);
+  padding: 12px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 10px 0;
+  border-left: 3px solid var(--accent);
+}
+
+.doc-content code {
+  font-family: 'Monaco', 'Courier New', monospace;
+  line-height: 1.4;
+}
+
+.doc-content pre code {
+  background: transparent;
+  padding: 0;
+  color: #bbf7d0;
+}
+
+.doc-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+}
+
+.doc-content th {
+  background: rgba(159,176,214,0.1);
+  padding: 10px;
+  text-align: left;
+  border-bottom: 2px solid var(--accent);
+  font-weight: 600;
+}
+
+.doc-content td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.doc-content tr:hover {
+  background: rgba(159,176,214,0.05);
+}
+
+.doc-content p {
+  line-height: 1.6;
+  margin: 10px 0;
+}
+
 @media (max-width: 1200px) {
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
   .shell { grid-template-columns: 200px 1fr; }
