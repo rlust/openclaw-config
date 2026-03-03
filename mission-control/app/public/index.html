@@ -14,6 +14,7 @@
         <button class="nav-btn active" data-tab="overview">Overview</button>
         <button class="nav-btn" data-tab="tasks">Tasks</button>
         <button class="nav-btn" data-tab="piwigo">📸 Piwigo</button>
+        <button class="nav-btn" data-tab="newark">🏠 Newark</button>
         <button class="nav-btn" data-tab="health">💻 Health</button>
         <button class="nav-btn" data-tab="costs">💰 Costs</button>
         <button class="nav-btn" data-tab="agents">🤖 Agents</button>
@@ -62,6 +63,41 @@
               <div class="agent-stat"><span class="ok">●</span> 5 Running</div>
               <div class="agent-stat"><span class="muted">●</span> 8 Idle</div>
               <div class="agent-stat"><span class="bad">●</span> 2 Error</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Newark Home Tab -->
+      <section id="newark" class="tab-content">
+        <h1>🏠 Newark Home Status</h1>
+        
+        <div class="grid-2">
+          <div class="card">
+            <h3>🌡️ Climate</h3>
+            <div class="stat" data-metric="newark-temp">
+              <span>Temperature</span>
+              <span class="value" style="font-size: 24px; color: var(--accent);">46.58°F</span>
+            </div>
+            <div class="stat" data-metric="newark-humidity">
+              <span>Humidity</span>
+              <span class="value" style="font-size: 24px; color: var(--accent);">43%</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>🔐 Security Status</h3>
+            <div class="stat" data-metric="newark-door">
+              <span>Front Door</span>
+              <span class="value ok">● Closed</span>
+            </div>
+            <div class="stat" data-metric="newark-garage">
+              <span>Garage Door</span>
+              <span class="value ok">● Closed</span>
+            </div>
+            <div class="stat" data-metric="newark-alarm">
+              <span>Alarm System</span>
+              <span class="value ok">● Disarmed</span>
             </div>
           </div>
         </div>

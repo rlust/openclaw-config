@@ -209,6 +209,7 @@ class DashboardRenderer {
     this.renderAgents(data.agents);
     this.renderPiwigo(data.piwigo);
     if (data.homeassistant) {
+      this.renderNewark(data.homeassistant.newark);
       this.renderAspire(data.homeassistant.aspire);
     }
   }
@@ -303,6 +304,47 @@ class DashboardRenderer {
     if (percent > 80) return 'bad';
     if (percent > 60) return 'warn';
     return '';
+  }
+
+  renderNewark(newark) {
+    // Temperature
+    const temp = document.querySelector('[data-metric="newark-temp"]');
+    if (temp) {
+      temp.querySelector('.value').textContent = newark.temperature + '°F';
+    }
+
+    // Humidity
+    const humidity = document.querySelector('[data-metric="newark-humidity"]');
+    if (humidity) {
+      humidity.querySelector('.value').textContent = newark.humidity + '%';
+    }
+
+    // Front Door
+    const door = document.querySelector('[data-metric="newark-door"]');
+    if (door) {
+      const doorStatus = newark.frontDoor === 'on' ? 'Open' : 'Closed';
+      const doorClass = newark.frontDoor === 'on' ? 'bad' : 'ok';
+      door.querySelector('.value').textContent = `● ${doorStatus}`;
+      door.querySelector('.value').className = `value ${doorClass}`;
+    }
+
+    // Garage Door
+    const garage = document.querySelector('[data-metric="newark-garage"]');
+    if (garage) {
+      const garageStatus = newark.garage === 'open' ? 'Open' : 'Closed';
+      const garageClass = newark.garage === 'open' ? 'bad' : 'ok';
+      garage.querySelector('.value').textContent = `● ${garageStatus}`;
+      garage.querySelector('.value').className = `value ${garageClass}`;
+    }
+
+    // Alarm
+    const alarm = document.querySelector('[data-metric="newark-alarm"]');
+    if (alarm) {
+      const alarmStatus = newark.alarm === 'armed' ? 'Armed' : newark.alarm === 'disarmed' ? 'Disarmed' : 'Unknown';
+      const alarmClass = newark.alarm === 'armed' ? 'ok' : 'muted';
+      alarm.querySelector('.value').textContent = `● ${alarmStatus}`;
+      alarm.querySelector('.value').className = `value ${alarmClass}`;
+    }
   }
 
   renderAspire(aspire) {
