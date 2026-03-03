@@ -63,7 +63,10 @@ async function fetchHA(instance, endpoint) {
         try {
           resolve(JSON.parse(data));
         } catch (e) {
-          console.error(`Parse error from ${instance}:`, e.message);
+          console.error(`Parse error from ${instance} at ${endpoint}:`);
+          console.error(`  Response status: ${res.statusCode}`);
+          console.error(`  Response starts with: ${data.substring(0, 100)}`);
+          console.error(`  Error: ${e.message}`);
           resolve(null);
         }
       });
@@ -151,10 +154,14 @@ const api = {
     const newarkGarage = await fetchHA('newark', '/api/states/cover.garage_door');
     const newarkAlarm = await fetchHA('newark', '/api/states/alarm_control_panel.omnilink_area_1');
     
-    const aspireTemp = await fetchHA('aspire', '/api/states/sensor.aspire_thermostat_temp');
-    const aspireAC = await fetchHA('aspire', '/api/states/climate.aspire_ac');
-    const aspireWater = await fetchHA('aspire', '/api/states/sensor.water_tank');
-    const aspireBattery = await fetchHA('aspire', '/api/states/sensor.chassis_battery');
+    // Aspire RV - Tank sensors + AC temps
+    const aspireTemp = await fetchHA('aspire', '/api/states/climate.thermostat_status_1');
+    const aspireACMid = await fetchHA('aspire', '/api/states/climate.air_conditioner_status_4');
+    const aspireACRear = await fetchHA('aspire', '/api/states/climate.air_conditioner_status_2');
+    const aspireFreshWater = await fetchHA('aspire', '/api/states/sensor.tank_status_2');
+    const aspireGrayWaste = await fetchHA('aspire', '/api/states/sensor.tank_status');
+    const aspireBlackWaste = await fetchHA('aspire', '/api/states/sensor.tank_status_3');
+    const aspireBattery = await fetchHA('aspire', '/api/states/sensor.dchouse_battery_ble_dchouse_soc');
 
     return {
       newark: {
@@ -165,9 +172,13 @@ const api = {
         alarm: newarkAlarm?.state || 'unknown'
       },
       aspire: {
-        temperature: aspireTemp?.state || 'N/A',
-        acStatus: aspireAC?.state || 'unknown',
-        water: aspireWater?.state || 'N/A',
+        temperature: aspireTemp?.attributes?.temperature || 'N/A',
+        tempFront: aspireTemp?.attributes?.temperature || 'N/A',
+        tempMid: aspireACMid?.attributes?.temperature || 'N/A',
+        tempRear: aspireACRear?.attributes?.temperature || 'N/A',
+        freshWater: aspireFreshWater?.state || 'N/A',
+        grayWaste: aspireGrayWaste?.state || 'N/A',
+        blackWaste: aspireBlackWaste?.state || 'N/A',
         battery: aspireBattery?.state || 'N/A'
       }
     };
