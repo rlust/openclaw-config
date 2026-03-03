@@ -30,17 +30,19 @@ class DataManager {
       console.log('🔄 Refreshing dashboard data...');
       
       // Fetch all data in parallel
-      const [health, costs, agents, piwigo] = await Promise.all([
+      const [health, costs, agents, piwigo, homeassistant] = await Promise.all([
         this.fetchHealth(),
         this.fetchCosts(),
         this.fetchAgents(),
-        this.fetchPiwigo()
+        this.fetchPiwigo(),
+        this.fetchHomeAssistant()
       ]);
 
       this.data.health = health;
       this.data.costs = costs;
       this.data.agents = agents;
       this.data.piwigo = piwigo;
+      this.data.homeassistant = homeassistant;
       this.data.lastUpdate = new Date();
 
       console.log('✅ Data refreshed', this.data);
@@ -151,6 +153,34 @@ class DataManager {
     };
   }
 
+  async fetchHomeAssistant() {
+    try {
+      const response = await fetch('/api/homeassistant');
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (err) {
+      console.warn('Home Assistant API unavailable');
+    }
+
+    return {
+      newark: {
+        temperature: 'N/A',
+        humidity: 'N/A'
+      },
+      aspire: {
+        temperature: 'N/A',
+        tempFront: 'N/A',
+        tempMid: 'N/A',
+        tempRear: 'N/A',
+        freshWater: 'N/A',
+        grayWaste: 'N/A',
+        blackWaste: 'N/A',
+        battery: 'N/A'
+      }
+    };
+  }
+
   // Observer pattern for reactive updates
   listeners = [];
 
@@ -178,6 +208,9 @@ class DashboardRenderer {
     this.renderCosts(data.costs);
     this.renderAgents(data.agents);
     this.renderPiwigo(data.piwigo);
+    if (data.homeassistant) {
+      this.renderAspire(data.homeassistant.aspire);
+    }
   }
 
   renderHealth(health) {
@@ -270,6 +303,62 @@ class DashboardRenderer {
     if (percent > 80) return 'bad';
     if (percent > 60) return 'warn';
     return '';
+  }
+
+  renderAspire(aspire) {
+    // AC Front
+    const front = document.querySelector('[data-metric="aspire-temp-front"]');
+    if (front) {
+      front.querySelector('.value').textContent = aspire.tempFront + '°F';
+    }
+
+    // AC Mid
+    const mid = document.querySelector('[data-metric="aspire-temp-mid"]');
+    if (mid) {
+      mid.querySelector('.value').textContent = aspire.tempMid + '°F';
+    }
+
+    // AC Rear
+    const rear = document.querySelector('[data-metric="aspire-temp-rear"]');
+    if (rear) {
+      rear.querySelector('.value').textContent = aspire.tempRear + '°F';
+    }
+
+    // Battery
+    const battery = document.querySelector('[data-metric="aspire-battery"]');
+    if (battery) {
+      const batVal = parseFloat(aspire.battery);
+      battery.querySelector('.value').textContent = aspire.battery + '%';
+      battery.querySelector('.fill').style.width = batVal + '%';
+      battery.querySelector('.fill').className = 'fill ' + (batVal < 30 ? 'bad' : batVal < 60 ? 'warn' : 'ok');
+    }
+
+    // Fresh Water
+    const water = document.querySelector('[data-metric="aspire-water"]');
+    if (water) {
+      const waterVal = parseFloat(aspire.freshWater);
+      water.querySelector('.value').textContent = aspire.freshWater + '%';
+      water.querySelector('.fill').style.width = waterVal + '%';
+      water.querySelector('.fill').className = 'fill ' + (waterVal < 20 ? 'bad' : waterVal < 50 ? 'warn' : 'ok');
+    }
+
+    // Gray Waste
+    const gray = document.querySelector('[data-metric="aspire-gray"]');
+    if (gray) {
+      const grayVal = parseFloat(aspire.grayWaste);
+      gray.querySelector('.value').textContent = aspire.grayWaste + '%';
+      gray.querySelector('.fill').style.width = grayVal + '%';
+      gray.querySelector('.fill').className = 'fill ' + (grayVal > 85 ? 'bad' : grayVal > 60 ? 'warn' : 'ok');
+    }
+
+    // Black Waste
+    const black = document.querySelector('[data-metric="aspire-black"]');
+    if (black) {
+      const blackVal = parseFloat(aspire.blackWaste);
+      black.querySelector('.value').textContent = aspire.blackWaste + '%';
+      black.querySelector('.fill').style.width = blackVal + '%';
+      black.querySelector('.fill').className = 'fill ' + (blackVal > 85 ? 'bad' : blackVal > 60 ? 'warn' : 'ok');
+    }
   }
 }
 
